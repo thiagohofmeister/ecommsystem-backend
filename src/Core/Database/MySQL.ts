@@ -7,31 +7,27 @@ export class MySQL {
 
   constructor() {}
 
-  public async createDataSource(
-    host: string,
-    port: number,
-    database: string,
-    username: string,
-    password: string,
-    logging: boolean = true
-  ) {
+  public async createDataSource() {
     MySQL.dataSource = new typeORM.DataSource({
       type: 'mysql',
-      host,
-      port,
-      database,
-      username,
-      password,
+      host: process.env.MYSQL_HOST,
+      port: parseInt(process.env.MYSQL_PORT),
+      database: process.env.MYSQL_DATABASE,
+      username: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASS,
       entities: [
         path.join(__dirname, '..', 'Entities', 'Dao', '*.ts'),
         path.join(__dirname, '..', 'Entities', 'Dao', '*.js')
       ],
-      logging
+      logging: true
     })
 
-    await MySQL.dataSource.initialize()
-
-    console.info('Database MySQL initialized.')
+    try {
+      await MySQL.dataSource.initialize()
+      console.info('Database MySQL initialized.')
+    } catch (e) {
+      console.error('Error to initialize Database MySQL:', { e })
+    }
   }
 
   public static getDataSource(): DataSource {

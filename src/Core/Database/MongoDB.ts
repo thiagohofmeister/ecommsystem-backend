@@ -18,9 +18,12 @@ export class MongoDB {
       logging: true
     })
 
-    await MongoDB.dataSource.initialize()
-
-    console.info('Database MongoDB initialized.')
+    try {
+      await MongoDB.dataSource.initialize()
+      console.info('Database MongoDB initialized.')
+    } catch (e) {
+      console.error('Error to initialize Database MongoDB:', { e })
+    }
   }
 
   public static getDataSource(): DataSource {

@@ -61,7 +61,6 @@ export abstract class TypeOrmMongoDBRepositoryContract<
 
       return this.getDomainEntityByDaoEntity(result)
     } catch (e) {
-      console.log(e)
       return null
     }
   }

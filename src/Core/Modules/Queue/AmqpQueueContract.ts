@@ -6,7 +6,7 @@ export abstract class AmqpQueueContract {
   public async sendToQueue(messageId: string, message: {}) {
     const channel = await this.connect()
     await this.createQueue(channel, this.queue)
-    console.log('Sending message')
+    console.info('Sending message')
     channel.sendToQueue(this.queue, Buffer.from(JSON.stringify(message)), {
       messageId
     })
@@ -18,7 +18,7 @@ export abstract class AmqpQueueContract {
     channel.consume(
       this.queue,
       msg => {
-        console.log('Consuming message')
+        console.info('Consuming message')
         action(msg)
         channel.ack(msg)
       },

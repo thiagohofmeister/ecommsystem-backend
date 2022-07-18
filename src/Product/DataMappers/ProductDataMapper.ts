@@ -1,4 +1,4 @@
-import { ProductDao } from '../../Infra/Entities/ProductDao'
+import { ProductDao } from '../../Infra/Entities/Models/ProductDao'
 import { Product } from '../Models/Product'
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 
@@ -21,7 +21,6 @@ export class ProductDataMapper extends EntityDataMapperContract<
   }
 
   toDaoEntity(domain: Product): ProductDao {
-    console.log({ id: domain.getId() })
     return new ProductDao(
       domain.getTitle(),
       domain.getPriceList(),

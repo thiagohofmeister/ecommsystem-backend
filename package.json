@@ -6,7 +6,7 @@
   "author": "Thiago Hofmeister <thiago.hofmeister@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/api.ts",
+    "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Api.ts",
     "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/worker.ts"
   },
   "dependencies": {
