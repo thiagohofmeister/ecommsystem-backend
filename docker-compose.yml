@@ -3,12 +3,31 @@ services:
   mysql:
     image: mysql:8.0
     volumes:
-      - ./dockler/mysql/data:/var/lib/mysql
+      - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+    command: ['--default-authentication-plugin=mysql_native_password']
     environment:
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=docker
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     ports:
       - 3306:3306
+
+  flyway:
+    image: flyway/flyway
+    command: migrate
+    volumes:
+      - ./resources/migrations/sql:/flyway/sql
+      - ./docker/flyway/flyway.conf:/flyway/conf/flyway.conf
+    depends_on:
+      - mysql
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    command:
+      - 'mongod'
 
   rabbitmq:
     image: rabbitmq:3.7.4
@@ -31,8 +50,7 @@ services:
       - 3000:80
     depends_on:
       - mysql
-      - redis
-      - worker
+      - flyway
 
   worker:
     image: node:14
