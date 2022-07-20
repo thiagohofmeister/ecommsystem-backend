@@ -1,5 +1,5 @@
-import { ProductDao } from '../../Infra/Entities/Models/ProductDao'
-import { Product } from '../Models/Product'
+import { ProductDao } from '../Models/ProductDao'
+import { Product } from '../../Product/Models/Product'
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 
 export class ProductDataMapper extends EntityDataMapperContract<
@@ -8,24 +8,24 @@ export class ProductDataMapper extends EntityDataMapperContract<
 > {
   toDomainEntity(entity: ProductDao): Product {
     return new Product(
+      entity.storeId,
       entity.title,
-      '',
-      0,
-      0,
-      0,
-      0,
-      null,
-      entity.priceList,
-      entity.priceSale
+      entity.description,
+      entity.active,
+      entity.id,
+      entity.createdAt,
+      entity.updatedAt
     )
   }
 
   toDaoEntity(domain: Product): ProductDao {
     return new ProductDao(
+      domain.getId(),
+      domain.getStoreId(),
       domain.getTitle(),
-      domain.getPriceList(),
-      domain.getPriceSale(),
-      domain.getId()
+      domain.getDescription(),
+      domain.isActive(),
+      domain.getCreatedAt()
     )
   }
 }

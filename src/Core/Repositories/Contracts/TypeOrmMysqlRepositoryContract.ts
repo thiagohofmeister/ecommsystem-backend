@@ -1,8 +1,8 @@
 import { Repository as TypeOrmRepository, SelectQueryBuilder } from 'typeorm'
 import { EntityDataMapperContract } from '../../DataMappers/Contracts/EntityDataMapperContract'
-import { DataNotFoundException } from '../../../Shared/Models/Exceptions/DataNotFoundException'
-import { IFilterDefault } from '../../../Shared/Models/Interfaces/IFilterDefault'
-import { IItemListModel } from '../../../Shared/Models/Interfaces/IItemListModel'
+import { DataNotFoundException } from '../../Models/Exceptions/DataNotFoundException'
+import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
+import { IItemListModel } from '../../Models/Interfaces/IItemListModel'
 import { RepositoryContract } from './RepositoryContract'
 
 export abstract class TypeOrmMysqlRepositoryContract<

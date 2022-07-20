@@ -16,8 +16,8 @@ export class MySQL {
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASS,
       entities: [
-        path.join(__dirname, '..', 'Entities', 'Dao', '*.ts'),
-        path.join(__dirname, '..', 'Entities', 'Dao', '*.js')
+        path.join(__dirname, '..', '..', 'Infra', 'Models', '*.ts'),
+        path.join(__dirname, '..', '..', 'Infra', 'Models', '*.js')
       ],
       logging: true
     })

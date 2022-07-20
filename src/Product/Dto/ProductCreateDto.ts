@@ -1,7 +1,8 @@
 export interface ProductCreateDto {
   title: string
-  price: {
-    list: number
-    sale: number
+  description: string
+  category: {
+    id: string
   }
+  id: string
 }

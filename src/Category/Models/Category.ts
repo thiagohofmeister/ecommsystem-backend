@@ -1,14 +1,12 @@
 import { randomUUID } from 'crypto'
-import { Category } from '../../Category/Models/Category'
 
-export class Product {
-  private category: Category
-
+export class Category {
   constructor(
     private storeId: string,
-    private title: string,
+    private label: string,
+    private urn: string,
     private description: string,
-    private active: boolean,
+    private parent: Category,
     private id?: string,
     private createdAt?: Date,
     private updatedAt?: Date
@@ -20,25 +18,20 @@ export class Product {
     return this.storeId
   }
 
-  public getTitle(): string {
-    return this.title
+  public getLabel(): string {
+    return this.label
+  }
+
+  public getUrn(): string {
+    return this.urn
   }
 
   public getDescription(): string {
     return this.description
   }
 
-  public isActive(): boolean {
-    return this.active
-  }
-
-  public getCategory(): Category {
-    return this.category
-  }
-
-  public setCategory(category: Category) {
-    this.category = category
-    return this
+  public getParent(): Category {
+    return this.parent
   }
 
   public getId(): string {

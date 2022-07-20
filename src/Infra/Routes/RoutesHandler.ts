@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { SimpleConsoleLogger } from 'typeorm'
+import { CreateContext } from '../../Core/Middlewares/CreateContext'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
-import { RouteContract } from './Contracts/RouteContract'
+import { CategoryRoutes } from './WithAuth/CategoryRoutes'
 import { ProductRoutes } from './WithAuth/ProductRoutes'
 
 export class RoutesHandler {
@@ -13,11 +13,11 @@ export class RoutesHandler {
   }
 
   private getRoutes() {
-    return [new ProductRoutes()]
+    return [new CategoryRoutes(), new ProductRoutes()]
   }
 
   private getAuthMiddlewares() {
-    return []
+    return [new CreateContext().create]
   }
 
   private getDefaultMiddlewares() {
@@ -36,8 +36,8 @@ export class RoutesHandler {
       const routes = route.getRoutes()
 
       for (let j = 0; j < routes.length; j++) {
-        const { method, handle, path } = routes[j]
-        router[method](path, handle)
+        const route = routes[j]
+        router[route.getMethod()](route.getPath(), route.getHandle())
       }
     }
 
@@ -50,8 +50,8 @@ export class RoutesHandler {
       const routes = route.getRoutes()
 
       for (let j = 0; j < routes.length; j++) {
-        const { method, handle, path } = routes[j]
-        router[method](path, handle)
+        const route = routes[j]
+        router[route.getMethod()](route.getPath(), route.getHandle())
       }
     }
 
@@ -59,7 +59,9 @@ export class RoutesHandler {
   }
 
   private getNoAuthRoutes() {
-    return this.getRoutes().filter(route => !!(route instanceof RouteContract))
+    return this.getRoutes().filter(
+      route => !(route instanceof AuthRouteContract)
+    )
   }
 
   private getAuthRoutes() {

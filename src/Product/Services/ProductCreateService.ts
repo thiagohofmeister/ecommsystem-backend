@@ -1,24 +1,39 @@
+import { DataNotFoundException } from '../../Core/Models/Exceptions/DataNotFoundException'
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
+import { ProductConflict } from '../Exceptions/ProductConflict'
 import { Product } from '../Models/Product'
+import { ProductRepository } from '../Repositories/ProductRepository'
+import { ProductValidator } from '../Validators/ProductValidator'
+import { ProductSaveService } from './ProductSaveService'
 
 export class ProductCreateService {
-  constructor() {}
+  constructor(
+    private readonly productRepository: ProductRepository,
+    private readonly productValidator: ProductValidator,
+    private readonly productSaveService: ProductSaveService
+  ) {}
 
-  public async execute(data: ProductCreateDto): Promise<Product> {
-    console.log('Cria produto', data)
+  public async execute(
+    storeId: string,
+    data: ProductCreateDto
+  ): Promise<Product> {
+    await this.validateProductAlreadyExists(data.id)
 
-    const product = new Product(
-      data.title,
-      '',
-      1,
-      0,
-      0,
-      0,
-      null,
-      data.price.list,
-      data.price.sale
-    )
+    await this.productValidator.productCreatePayloadValidate(data)
 
-    return product
+    return this.productSaveService.execute(storeId, data)
+  }
+
+  private async validateProductAlreadyExists(id: string) {
+    let exists = false
+
+    try {
+      await this.productRepository.findOneById(id)
+      exists = true
+    } catch (e) {
+      if (!(e instanceof DataNotFoundException)) throw e
+    }
+
+    if (exists) throw new ProductConflict()
   }
 }

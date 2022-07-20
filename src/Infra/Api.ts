@@ -1,19 +1,18 @@
-import * as express from 'express'
 import * as cors from 'cors'
+import * as dotenv from 'dotenv'
+import * as express from 'express'
+
+import { MySQL } from '../Core/Database/MySQL'
 import { ErrorHandler } from '../Core/Middlewares/ErrorHandler'
 import { RoutesHandler } from './Routes/RoutesHandler'
-import { MySQL } from '../Core/Database/MySQL'
-import * as dotenv from 'dotenv'
 
-export class Api {
+class Api {
   private app
 
   constructor(private readonly routesHandler: RoutesHandler) {
     dotenv.config()
     this.app = express()
-  }
 
-  private create() {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(cors())
@@ -28,13 +27,11 @@ export class Api {
     this.app.use(errorHandler.notFound)
   }
 
-  private async afterInitialize() {
+  private async afterInitialized() {
     await new MySQL().createDataSource()
   }
 
-  public listen() {
-    this.create()
-
+  public start() {
     this.app.listen(this.app.get('port'), async () => {
       console.info(
         'App is running at http://localhost:%d in %s mode',
@@ -42,9 +39,9 @@ export class Api {
         this.app.get('env')
       )
 
-      await this.afterInitialize()
+      await this.afterInitialized()
     })
   }
 }
 
-new Api(new RoutesHandler()).listen()
+new Api(new RoutesHandler()).start()

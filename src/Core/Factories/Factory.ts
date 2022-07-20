@@ -28,7 +28,6 @@ export class Factory {
   public buildRepositoryFactory() {
     if (!this.repositoryFactory) {
       this.repositoryFactory = new RepositoryFactory(
-        MySQL.getDataSource(),
         this.buildDataMapperFactory()
       )
     }

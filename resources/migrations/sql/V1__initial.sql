@@ -8,8 +8,10 @@ CREATE TABLE IF NOT EXISTS `category` (
   `label` VARCHAR(60) NOT NULL,
   `urn` VARCHAR(60) NULL,
   `description` TEXT NULL,
-  `parent_id` CHAR(36) NOT NULL,
+  `parent_id` CHAR(36) NULL,
   `store_id` CHAR(36) NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_category_category1`
     FOREIGN KEY (`parent_id`)
@@ -20,7 +22,7 @@ ENGINE = InnoDB;
 
 CREATE INDEX `fk_category_category1_idx` ON `category` (`parent_id` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `category_id_store_id_UNIQUE` ON `category` (`id` ASC, `store_id` ASC) VISIBLE;
+CREATE UNIQUE INDEX `category_urn_store_id_UNIQUE` ON `category` (`urn` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------

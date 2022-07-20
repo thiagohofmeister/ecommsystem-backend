@@ -1,5 +1,5 @@
 import { Schema } from 'joi'
-import { InvalidDataException } from '../../Shared/Models/Exceptions/InvalidDataException'
+import { InvalidDataException } from '../Models/Exceptions/InvalidDataException'
 
 export class JoiSchemaValidatorContract {
   protected async validateBySchema<TBody>(body: TBody, schema: Schema) {
@@ -9,9 +9,7 @@ export class JoiSchemaValidatorContract {
       throw new InvalidDataException(
         'Invalid data.',
         e.details.map(detail => ({
-          id: `${detail.path.length ? `${detail.path.join('.')}` : ''}${
-            detail.type
-          }`,
+          id: `${detail.path.join('.')}.${detail.type}`,
           message: detail.message
         }))
       )

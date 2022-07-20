@@ -1,7 +1,7 @@
 import { ProductController } from '../../../Product/Controllers/ProductController'
+import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
-import { Route } from '../Interfaces/Route'
 
 export class ProductRoutes extends AuthRouteContract {
   private static productController: ProductController
@@ -17,15 +17,11 @@ export class ProductRoutes extends AuthRouteContract {
     return this.productController
   }
 
-  public getRoutes(): Route[] {
+  public getRoutes(): RouteDto[] {
     const controller = ProductRoutes.getProductController()
 
     return [
-      {
-        path: this.getFullEndpoint(''),
-        method: MethodEnum.POST,
-        handle: controller.create.bind(controller)
-      }
+      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post)
     ]
   }
 }
