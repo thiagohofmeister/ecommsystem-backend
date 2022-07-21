@@ -1,9 +1,7 @@
-import { ServiceFactory } from '../../Core/Factories/ServiceFactory'
+import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
 
-export class ProductFacade {
-  constructor(private readonly serviceFactory: ServiceFactory) {}
-
+export class ProductFacade extends FacadeContract {
   public async create(storeId: string, data: ProductCreateDto) {
     return this.serviceFactory
       .buildTransactionalService()
