@@ -1,3 +1,5 @@
+import { ProductSaveVariationDto } from './ProductSaveVariationDto'
+
 export interface ProductCreateDto {
   title: string
   description: string
@@ -5,4 +7,5 @@ export interface ProductCreateDto {
     id: string
   }
   id: string
+  variations: ({ sku: string } & ProductSaveVariationDto)[]
 }

@@ -7,11 +7,14 @@ import { CategoryRepository } from '../../Category/Repositories/CategoryReposito
 import { CategoryTreeCacheRepository } from '../../Category/Repositories/CategoryTreeCacheRepository'
 import { CategoryDao } from '../../Infra/Models/CategoryDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
+import { VariationDao } from '../../Infra/Models/VariationDao'
 import { CategoryRepositoryImpl } from '../../Infra/Repositories/CategoryRepositoryImpl'
 import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/CategoryTreeCacheRepositoryImpl'
 import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositoryImpl'
+import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
 import { ProductDataNotFound } from '../../Product/Exceptions/ProductDataNotFound'
 import { ProductRepository } from '../../Product/Repositories/ProductRepository'
+import { VariationRepository } from '../../Product/Repositories/VariationRepository'
 import { DataMapperFactory } from './DataMapperFactory'
 
 export class RepositoryFactory {
@@ -46,6 +49,16 @@ export class RepositoryFactory {
       redisClient,
       this.dataMapperFactory.buildCategoryTreeCacheDataMapper(),
       new CategoryTreeCacheDataNotFound()
+    )
+  }
+
+  public buildVariationRepository(
+    manager?: EntityManager
+  ): VariationRepository {
+    return new VariationRepositoryImpl(
+      this.getManager(manager).getRepository(VariationDao),
+      this.dataMapperFactory.buildVariationDataMapperMediator(),
+      new ProductDataNotFound()
     )
   }
 

@@ -1,5 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn
+} from 'typeorm'
 import { CategoryDao } from './CategoryDao'
+import { VariationDao } from './VariationDao'
 
 @Entity('product')
 export class ProductDao {
@@ -25,6 +33,12 @@ export class ProductDao {
     name: 'category_id'
   })
   category?: CategoryDao
+
+  @OneToMany(() => VariationDao, variation => variation.product)
+  @JoinColumn({
+    name: 'sku'
+  })
+  variations?: VariationDao
 
   @Column({
     name: 'created_at'

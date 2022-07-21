@@ -4,11 +4,13 @@ import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataEx
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
 import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
+import { ProductSaveVariationService } from './ProductSaveVariationService'
 
 export class ProductSaveService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
-    private readonly productRepository: ProductRepository
+    private readonly productRepository: ProductRepository,
+    private readonly productSaveVariationService: ProductSaveVariationService
   ) {}
 
   public async execute(
@@ -23,7 +25,21 @@ export class ProductSaveService {
       data.id
     ).setCategory(await this.getCategory(data.category.id))
 
-    return this.productRepository.save(product)
+    const productSaved = await this.productRepository.save(product)
+
+    if (!!data.variations?.length) {
+      await Promise.all(
+        data.variations.map(async variation =>
+          this.productSaveVariationService.execute(
+            productSaved,
+            variation.sku,
+            variation
+          )
+        )
+      )
+    }
+
+    return productSaved
   }
 
   private async getCategory(id) {
