@@ -2,9 +2,10 @@ import * as dotenv from 'dotenv'
 import { Consumer } from '../Core/Events/Consumer'
 import { Factory } from '../Core/Factories/Factory'
 import { AmqpQueueContract } from '../Core/Modules/Queue/AmqpQueueContract'
+import { MySQL } from './Database/MySQL'
+import { Redis } from './Database/Redis'
 
 class Worker {
-  private queue: AmqpQueueContract
   private factory: Factory
 
   constructor() {
@@ -13,20 +14,18 @@ class Worker {
     this.factory = Factory.getInstance()
   }
 
+  private async beforeStart() {
+    await new MySQL().createDataSource()
+    await new Redis().createClient()
+  }
+
   public async start() {
-    this.queue.consume(async msg => {
-      const messageId = msg.properties.messageId
-      const payload = JSON.parse(msg.content.toString())
+    await this.beforeStart()
 
-      const consumer = new Consumer(this.factory.buildFacadeFactory())
+    const consumer = new Consumer(this.factory.buildFacadeFactory())
 
-      if (!consumer[messageId]) {
-        console.error(`MessageId (${messageId}) not implemented.`)
-        return
-      }
-
-      consumer[messageId](payload)
-    })
+    const categoryQueue = this.factory.buildQueueFactory().buildCategoryQueue()
+    categoryQueue.consume(consumer.consume)
   }
 }
 

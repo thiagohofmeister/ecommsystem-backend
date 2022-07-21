@@ -1,11 +1,15 @@
-import { ProviderFactory } from './ProviderFactory'
-import { QueueFactory } from './QueueFactory,'
-import { RepositoryFactory } from './RepositoryFactory'
+import { CategoryFacade } from '../../Category/Facade/CategoryFacade'
+import { ProductFacade } from '../../Product/Facade/ProductFacade'
+import { ServiceFactory } from './ServiceFactory'
 
 export class FacadeFactory {
-  constructor(
-    private readonly repositoryFactory: RepositoryFactory,
-    private readonly providerFactory: ProviderFactory,
-    private readonly queueFactory: QueueFactory
-  ) {}
+  constructor(private readonly serviceFactory: ServiceFactory) {}
+
+  public buildCategoryFacade() {
+    return new CategoryFacade(this.serviceFactory)
+  }
+
+  public buildProductFacade() {
+    return new ProductFacade(this.serviceFactory)
+  }
 }

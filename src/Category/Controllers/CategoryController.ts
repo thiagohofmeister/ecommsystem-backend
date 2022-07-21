@@ -20,19 +20,11 @@ export class CategoryController extends BaseController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const serviceFactory = Factory.getInstance().buildServiceFactory()
+      const facadeFactory = Factory.getInstance().buildFacadeFactory()
 
-      const result = await serviceFactory
-        .buildTransactionalService()
-        .execute(async manager => {
-          const categoryCreateService =
-            serviceFactory.buildCategoryCreateService(manager)
-
-          return await categoryCreateService.execute(
-            request.context.storeId,
-            request.body
-          )
-        })
+      const result = await facadeFactory
+        .buildCategoryFacade()
+        .create(request.context.storeId, request.body)
 
       this.successResponseHandler(
         new CreatedResponse(new CategoryView().render(result)),
@@ -49,11 +41,9 @@ export class CategoryController extends BaseController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const serviceFactory = Factory.getInstance().buildServiceFactory()
+      const facadeFactory = Factory.getInstance().buildFacadeFactory()
 
-      const categoryCreateService = serviceFactory.buildCategoryGetTreeService()
-
-      const result = await categoryCreateService.execute()
+      const result = await facadeFactory.buildCategoryFacade().getTree()
 
       this.successResponseHandler(
         new CreatedResponse(new CategoryTreeView().renderMany(result)),

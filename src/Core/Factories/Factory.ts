@@ -15,11 +15,7 @@ export class Factory {
   private constructor() {}
 
   public buildFacadeFactory() {
-    return new FacadeFactory(
-      this.buildRepositoryFactory(),
-      this.buildProviderFactory(),
-      this.buildQueueFactory()
-    )
+    return new FacadeFactory(this.buildServiceFactory())
   }
 
   public buildProviderFactory() {
@@ -39,7 +35,10 @@ export class Factory {
   }
 
   public buildServiceFactory() {
-    return new ServiceFactory(this.buildRepositoryFactory())
+    return new ServiceFactory(
+      this.buildRepositoryFactory(),
+      this.buildQueueFactory()
+    )
   }
 
   public buildDataMapperFactory() {

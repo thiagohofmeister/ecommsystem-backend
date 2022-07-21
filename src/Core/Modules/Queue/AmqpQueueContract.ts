@@ -3,7 +3,7 @@ import { Channel, connect, ConsumeMessage } from 'amqplib'
 export abstract class AmqpQueueContract {
   constructor(private readonly url: string, private readonly queue: string) {}
 
-  public async sendToQueue(messageId: string, message: {}) {
+  public async sendMessage(messageId: string, message: {}) {
     const channel = await this.connect()
     await this.createQueue(channel, this.queue)
     console.info('Sending message')

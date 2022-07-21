@@ -19,19 +19,11 @@ export class ProductController extends BaseController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const serviceFactory = Factory.getInstance().buildServiceFactory()
+      const facadeFactory = Factory.getInstance().buildFacadeFactory()
 
-      const result = await serviceFactory
-        .buildTransactionalService()
-        .execute(async manager => {
-          const productCreateService =
-            serviceFactory.buildProductCreateService(manager)
-
-          return await productCreateService.execute(
-            request.context.storeId,
-            request.body
-          )
-        })
+      const result = await facadeFactory
+        .buildProductFacade()
+        .create(request.context.storeId, request.body)
 
       this.successResponseHandler(
         new CreatedResponse(new ProductView(new CategoryView()).render(result)),

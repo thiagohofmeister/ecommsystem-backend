@@ -7,10 +7,14 @@ import { TransactionalService } from '../../Core/Services/TransactionalService'
 import { ProductCreateService } from '../../Product/Services/ProductCreateService'
 import { ProductSaveService } from '../../Product/Services/ProductSaveService'
 import { ProductValidator } from '../../Product/Validators/ProductValidator'
+import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
-  constructor(private readonly repositoryFactory: RepositoryFactory) {}
+  constructor(
+    private readonly repositoryFactory: RepositoryFactory,
+    private readonly queueFactory: QueueFactory
+  ) {}
 
   public buildProductSaveService(manager?: EntityManager) {
     return new ProductSaveService(
@@ -30,7 +34,8 @@ export class ServiceFactory {
   public buildCategoryCreateService(manager?: EntityManager) {
     return new CategoryCreateService(
       this.repositoryFactory.buildCategoryRepository(manager),
-      new CategoryValidator()
+      new CategoryValidator(),
+      this.queueFactory.buildCategoryQueue()
     )
   }
 

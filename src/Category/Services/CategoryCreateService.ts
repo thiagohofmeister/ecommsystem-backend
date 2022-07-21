@@ -5,11 +5,13 @@ import { CategoryValidator } from '../Validators/CategoryValidator'
 import { CategoryCreateDto } from '../Dto/CategoryCreateDto'
 import { Category } from '../Models/Category'
 import { kebabCase } from 'lodash'
+import { CategoryQueue } from '../../Infra/Queues/CategoryQueue'
 
 export class CategoryCreateService {
   constructor(
     private readonly categoryRepository: CategoryRepository,
-    private readonly categoryValidator: CategoryValidator
+    private readonly categoryValidator: CategoryValidator,
+    private readonly categoryQueue: CategoryQueue
   ) {}
 
   public async execute(
@@ -32,6 +34,10 @@ export class CategoryCreateService {
     )
 
     await this.categoryRepository.save(category)
+
+    await this.categoryQueue.sendMessage('categoryCreated', {
+      categoryId: category.getId()
+    })
 
     return category
   }
