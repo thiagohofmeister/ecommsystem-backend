@@ -4,6 +4,7 @@ import { BaseController } from '../../Core/Controllers/BaseController'
 import { Factory } from '../../Core/Factories/Factory'
 import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
 import { CreatedResponse } from '../../Core/Models/Response/CreatedResponse'
+import { OkResponse } from '../../Core/Models/Response/OkResponse'
 import { CategoryTreeView } from '../Views/CategoryTreeView'
 import { CategoryView } from '../Views/CategoryView'
 
@@ -46,7 +47,7 @@ export class CategoryController extends BaseController {
       const result = await facadeFactory.buildCategoryFacade().getTree()
 
       this.successResponseHandler(
-        new CreatedResponse(new CategoryTreeView().renderMany(result)),
+        new OkResponse(new CategoryTreeView().renderMany(result)),
         response
       )
     } catch (error) {
