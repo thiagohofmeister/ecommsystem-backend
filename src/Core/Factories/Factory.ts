@@ -1,4 +1,5 @@
-import { MySQL } from '../../Core/Database/MySQL'
+import { MySQL } from '../../Infra/Database/MySQL'
+import { Redis } from '../../Infra/Database/Redis'
 import { DataMapperFactory } from './DataMapperFactory'
 import { FacadeFactory } from './FacadeFactory'
 import { ProviderFactory } from './ProviderFactory'
@@ -28,7 +29,9 @@ export class Factory {
   public buildRepositoryFactory() {
     if (!this.repositoryFactory) {
       this.repositoryFactory = new RepositoryFactory(
-        this.buildDataMapperFactory()
+        this.buildDataMapperFactory(),
+        MySQL.getDataSource(),
+        Redis.getClient()
       )
     }
 
@@ -36,10 +39,7 @@ export class Factory {
   }
 
   public buildServiceFactory() {
-    return new ServiceFactory(
-      this.buildRepositoryFactory(),
-      MySQL.getDataSource()
-    )
+    return new ServiceFactory(this.buildRepositoryFactory())
   }
 
   public buildDataMapperFactory() {

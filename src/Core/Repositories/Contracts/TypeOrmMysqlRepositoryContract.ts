@@ -19,10 +19,10 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async save(entity: TDomainEntity): Promise<TDomainEntity> {
     const result = await this.repository.save(
-      this.getDaoEntityByDomainEntity(entity)
+      this.dataMapper.toDaoEntity(entity)
     )
 
-    return this.getDomainEntityByDaoEntity(result)
+    return this.dataMapper.toDomainEntity(result)
   }
 
   public async findAll<TFilter extends IFilterDefault>(
@@ -82,13 +82,5 @@ export abstract class TypeOrmMysqlRepositoryContract<
     query: SelectQueryBuilder<TDaoEntity>
   ): SelectQueryBuilder<TDaoEntity> {
     return query
-  }
-
-  protected getDaoEntityByDomainEntity(domain: TDomainEntity): TDaoEntity {
-    return this.dataMapper.toDaoEntity(domain)
-  }
-
-  protected getDomainEntityByDaoEntity(dao: TDaoEntity): TDomainEntity {
-    return this.dataMapper.toDomainEntity(dao)
   }
 }

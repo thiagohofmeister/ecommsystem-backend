@@ -2,9 +2,10 @@ import * as cors from 'cors'
 import * as dotenv from 'dotenv'
 import * as express from 'express'
 
-import { MySQL } from '../Core/Database/MySQL'
+import { MySQL } from './Database/MySQL'
 import { ErrorHandler } from '../Core/Middlewares/ErrorHandler'
 import { RoutesHandler } from './Routes/RoutesHandler'
+import { Redis } from './Database/Redis'
 
 class Api {
   private app
@@ -29,6 +30,7 @@ class Api {
 
   private async afterInitialized() {
     await new MySQL().createDataSource()
+    await new Redis().createClient()
   }
 
   public start() {

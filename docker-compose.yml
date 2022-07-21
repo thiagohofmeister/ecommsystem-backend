@@ -51,6 +51,7 @@ services:
     depends_on:
       - mysql
       - flyway
+      - redis
 
   worker:
     image: node:14

@@ -1,4 +1,5 @@
 import { CategoryDataMapper } from '../../Infra/DataMappers/CategoryDataMapper'
+import { CategoryTreeCacheDataMapper } from '../../Infra/DataMappers/CategoryTreeCacheDataMapper'
 import { ProductDataMapper } from '../../Infra/DataMappers/ProductDataMapper'
 import { ProductDataMapperMediator } from '../../Infra/DataMappers/ProductDataMapperMediator'
 
@@ -16,5 +17,9 @@ export class DataMapperFactory {
       this.buildProductDataMapper(),
       this.buildCategoryDataMapper()
     )
+  }
+
+  public buildCategoryTreeCacheDataMapper() {
+    return new CategoryTreeCacheDataMapper()
   }
 }

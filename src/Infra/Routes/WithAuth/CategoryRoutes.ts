@@ -21,7 +21,12 @@ export class CategoryRoutes extends AuthRouteContract {
     const controller = CategoryRoutes.getCategoryController()
 
     return [
-      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post)
+      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
+      new RouteDto(
+        this.getFullEndpoint('/tree'),
+        MethodEnum.GET,
+        controller.getTree
+      )
     ]
   }
 }

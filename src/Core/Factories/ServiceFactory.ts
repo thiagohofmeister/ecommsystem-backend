@@ -1,5 +1,7 @@
-import { DataSource, EntityManager } from 'typeorm'
+import { EntityManager } from 'typeorm'
+
 import { CategoryCreateService } from '../../Category/Services/CategoryCreateService'
+import { CategoryGetTreeService } from '../../Category/Services/CategoryGetTreeService'
 import { CategoryValidator } from '../../Category/Validators/CategoryValidator'
 import { TransactionalService } from '../../Core/Services/TransactionalService'
 import { ProductCreateService } from '../../Product/Services/ProductCreateService'
@@ -8,14 +10,9 @@ import { ProductValidator } from '../../Product/Validators/ProductValidator'
 import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
-  constructor(
-    private readonly repositoryFactory: RepositoryFactory,
-    private readonly dataSource: DataSource
-  ) {}
+  constructor(private readonly repositoryFactory: RepositoryFactory) {}
 
   public buildProductSaveService(manager?: EntityManager) {
-    if (!manager) manager = this.dataSource.manager
-
     return new ProductSaveService(
       this.repositoryFactory.buildCategoryRepository(manager),
       this.repositoryFactory.buildProductRepository(manager)
@@ -23,8 +20,6 @@ export class ServiceFactory {
   }
 
   public buildProductCreateService(manager?: EntityManager) {
-    if (!manager) manager = this.dataSource.manager
-
     return new ProductCreateService(
       this.repositoryFactory.buildProductRepository(manager),
       new ProductValidator(),
@@ -33,15 +28,22 @@ export class ServiceFactory {
   }
 
   public buildCategoryCreateService(manager?: EntityManager) {
-    if (!manager) manager = this.dataSource.manager
-
     return new CategoryCreateService(
       this.repositoryFactory.buildCategoryRepository(manager),
       new CategoryValidator()
     )
   }
 
+  public buildCategoryGetTreeService(manager?: EntityManager) {
+    return new CategoryGetTreeService(
+      this.repositoryFactory.buildCategoryRepository(manager),
+      this.repositoryFactory.buildCategoryTreeCacheRepository(
+        this.repositoryFactory.getRedisClient()
+      )
+    )
+  }
+
   public buildTransactionalService() {
-    return new TransactionalService(this.dataSource)
+    return new TransactionalService(this.repositoryFactory.getDataSource())
   }
 }

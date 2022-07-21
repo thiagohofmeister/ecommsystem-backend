@@ -12,6 +12,6 @@ export class ProductRepositoryImpl
 
     if (!product) throw this.dataNotFoundException
 
-    return this.getDomainEntityByDaoEntity(product)
+    return this.dataMapper.toDomainEntity(product)
   }
 }
