@@ -1,13 +1,16 @@
 import { EntityManager } from 'typeorm'
+import { BrandCreateService } from '../../Domain/Brand/Services/CategoryCreateService'
+import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 
-import { CategoryCreateService } from '../../Category/Services/CategoryCreateService'
-import { CategoryGetTreeService } from '../../Category/Services/CategoryGetTreeService'
-import { CategoryValidator } from '../../Category/Validators/CategoryValidator'
+import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
+import { CategoryGetTreeService } from '../../Domain/Category/Services/CategoryGetTreeService'
+import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
 import { TransactionalService } from '../../Core/Services/TransactionalService'
-import { ProductCreateService } from '../../Product/Services/ProductCreateService'
-import { ProductSaveService } from '../../Product/Services/ProductSaveService'
-import { ProductSaveVariationService } from '../../Product/Services/ProductSaveVariationService'
-import { ProductValidator } from '../../Product/Validators/ProductValidator'
+import { ProductCreateService } from '../../Domain/Product/Services/ProductCreateService'
+import { ProductDeleteVariationService } from '../../Domain/Product/Services/ProductDeleteVariationService'
+import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
+import { ProductSaveVariationService } from '../../Domain/Product/Services/ProductSaveVariationService'
+import { ProductValidator } from '../../Domain/Product/ProductValidator'
 import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
 
@@ -20,8 +23,10 @@ export class ServiceFactory {
   public buildProductSaveService(manager?: EntityManager) {
     return new ProductSaveService(
       this.repositoryFactory.buildCategoryRepository(manager),
+      this.repositoryFactory.buildBrandRepository(manager),
       this.repositoryFactory.buildProductRepository(manager),
-      this.buildProductSaveVariationService(manager)
+      this.buildProductSaveVariationService(manager),
+      this.buildProductDeleteVariationService(manager)
     )
   }
 
@@ -30,6 +35,13 @@ export class ServiceFactory {
       this.repositoryFactory.buildProductRepository(manager),
       new ProductValidator(),
       this.buildProductSaveService(manager)
+    )
+  }
+
+  public buildBrandCreateService(manager?: EntityManager) {
+    return new BrandCreateService(
+      this.repositoryFactory.buildBrandRepository(manager),
+      new BrandValidator()
     )
   }
 
@@ -52,6 +64,12 @@ export class ServiceFactory {
 
   public buildProductSaveVariationService(manager?: EntityManager) {
     return new ProductSaveVariationService(
+      this.repositoryFactory.buildVariationRepository(manager)
+    )
+  }
+
+  public buildProductDeleteVariationService(manager?: EntityManager) {
+    return new ProductDeleteVariationService(
       this.repositoryFactory.buildVariationRepository(manager)
     )
   }

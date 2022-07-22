@@ -1,4 +1,9 @@
-import { Repository as TypeOrmRepository, SelectQueryBuilder } from 'typeorm'
+import {
+  FindOptionsWhere,
+  ObjectID,
+  Repository as TypeOrmRepository,
+  SelectQueryBuilder
+} from 'typeorm'
 import { EntityDataMapperContract } from '../../DataMappers/Contracts/EntityDataMapperContract'
 import { DataNotFoundException } from '../../Models/Exceptions/DataNotFoundException'
 import { IFilterDefault } from '../../Models/Interfaces/IFilterDefault'
@@ -12,6 +17,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
   constructor(
     protected readonly repository: TypeOrmRepository<TDaoEntity>,
     protected dataMapper: EntityDataMapperContract<TDomainEntity, TDaoEntity>,
+    protected storeId: string | null,
     dataNotFoundException: DataNotFoundException
   ) {
     super(dataNotFoundException)
@@ -23,6 +29,23 @@ export abstract class TypeOrmMysqlRepositoryContract<
     )
 
     return this.dataMapper.toDomainEntity(result)
+  }
+
+  public async delete(
+    criteria:
+      | string
+      | string[]
+      | number
+      | number[]
+      | Date
+      | Date[]
+      | ObjectID
+      | ObjectID[]
+      | FindOptionsWhere<TDaoEntity>
+  ): Promise<boolean> {
+    await this.repository.delete(criteria)
+
+    return true
   }
 
   public async findAll<TFilter extends IFilterDefault>(
@@ -82,5 +105,21 @@ export abstract class TypeOrmMysqlRepositoryContract<
     query: SelectQueryBuilder<TDaoEntity>
   ): SelectQueryBuilder<TDaoEntity> {
     return query
+  }
+
+  protected hasColumn(columnName: string): boolean {
+    return this.repository.metadata.columns
+      .map(column => column.propertyName)
+      .includes(columnName)
+  }
+
+  protected hasRelation(propertyName: string): boolean {
+    return this.repository.metadata.relations
+      .map(relation => relation.propertyName)
+      .includes(propertyName)
+  }
+
+  protected getTableName(): string {
+    return this.repository.metadata.targetName
   }
 }

@@ -1,5 +1,5 @@
 import { ProductDao } from '../Models/ProductDao'
-import { Product } from '../../Product/Models/Product'
+import { Product } from '../../Domain/Product/Models/Product'
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 
 export class ProductDataMapper extends EntityDataMapperContract<

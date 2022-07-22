@@ -1,4 +1,4 @@
-import { CategoryTree } from '../../Category/Models/CategoryTree'
+import { CategoryTree } from '../../Domain/Category/Models/CategoryTree'
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 
 export class CategoryTreeCacheDataMapper extends EntityDataMapperContract<

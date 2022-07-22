@@ -1,3 +1,4 @@
+import { BrandDataMapper } from '../../Infra/DataMappers/BrandDataMapper'
 import { CategoryDataMapper } from '../../Infra/DataMappers/CategoryDataMapper'
 import { CategoryTreeCacheDataMapper } from '../../Infra/DataMappers/CategoryTreeCacheDataMapper'
 import { ProductDataMapper } from '../../Infra/DataMappers/ProductDataMapper'
@@ -14,10 +15,15 @@ export class DataMapperFactory {
     return new CategoryDataMapper()
   }
 
+  public buildBrandDataMapper() {
+    return new BrandDataMapper()
+  }
+
   public buildProductDataMapperMediator() {
     return new ProductDataMapperMediator(
       this.buildProductDataMapper(),
-      this.buildCategoryDataMapper()
+      this.buildCategoryDataMapper(),
+      this.buildBrandDataMapper()
     )
   }
 

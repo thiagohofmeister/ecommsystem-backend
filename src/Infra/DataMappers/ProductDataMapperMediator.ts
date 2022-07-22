@@ -1,6 +1,7 @@
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
-import { Product } from '../../Product/Models/Product'
+import { Product } from '../../Domain/Product/Models/Product'
 import { ProductDao } from '../Models/ProductDao'
+import { BrandDataMapper } from './BrandDataMapper'
 import { CategoryDataMapper } from './CategoryDataMapper'
 import { ProductDataMapper } from './ProductDataMapper'
 
@@ -10,7 +11,8 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
 > {
   constructor(
     private readonly productDataMapper: ProductDataMapper,
-    private readonly categoryDataMapper: CategoryDataMapper
+    private readonly categoryDataMapper: CategoryDataMapper,
+    private readonly brandDataMapper: BrandDataMapper
   ) {
     super()
   }
@@ -24,6 +26,10 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
       )
     }
 
+    if (entity.brand) {
+      product.setBrand(this.brandDataMapper.toDomainEntity(entity.brand))
+    }
+
     return product
   }
 
@@ -34,6 +40,10 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
       product.category = this.categoryDataMapper.toDaoEntity(
         domain.getCategory()
       )
+    }
+
+    if (domain.getBrand()) {
+      product.brand = this.brandDataMapper.toDaoEntity(domain.getBrand())
     }
 
     return product

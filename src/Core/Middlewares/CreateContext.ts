@@ -1,4 +1,5 @@
 import { Response, NextFunction } from 'express'
+import { BadRequestException } from '../Models/Exceptions/BadRequestException'
 import { CatalogRequest } from '../Models/Request/CatalogRequest'
 
 export class CreateContext {
@@ -11,8 +12,12 @@ export class CreateContext {
     response: Response,
     next: NextFunction
   ) {
+    if (!request.header('PLATFORM-STORE-ID')) {
+      next(new BadRequestException('Store ID is required.'))
+    }
+
     request.context = {
-      storeId: 'store-id'
+      storeId: request.header('PLATFORM-STORE-ID')
     }
 
     next()

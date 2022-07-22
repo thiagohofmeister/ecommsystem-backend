@@ -1,4 +1,4 @@
-import { ProductController } from '../../../Product/Controllers/ProductController'
+import { ProductController } from '../../../Domain/Product/ProductController'
 import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
@@ -22,6 +22,10 @@ export class ProductRoutes extends AuthRouteContract {
 
     return [
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post)
+      // TODO: PATCH
+      // TODO: DELETE
+      // TODO: GET ONE
+      // TODO: PUT
     ]
   }
 }

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
+import { BadRequestException } from '../Models/Exceptions/BadRequestException'
 import { BaseError } from '../Models/Exceptions/BaseError'
 import { ConflictException } from '../Models/Exceptions/ConflictException'
 import { DataNotFoundException } from '../Models/Exceptions/DataNotFoundException'
@@ -67,6 +68,10 @@ export class ErrorHandler {
 
     if (error instanceof ConflictException) {
       return 409
+    }
+
+    if (error instanceof BadRequestException) {
+      return 400
     }
 
     return 500

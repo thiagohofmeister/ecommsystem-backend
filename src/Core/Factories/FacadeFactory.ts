@@ -1,5 +1,6 @@
-import { CategoryFacade } from '../../Category/Facade/CategoryFacade'
-import { ProductFacade } from '../../Product/Facade/ProductFacade'
+import { BrandFacade } from '../../Domain/Brand/BrandFacade'
+import { CategoryFacade } from '../../Domain/Category/CategoryFacade'
+import { ProductFacade } from '../../Domain/Product/ProductFacade'
 import { ServiceFactory } from './ServiceFactory'
 
 export class FacadeFactory {
@@ -7,6 +8,10 @@ export class FacadeFactory {
 
   public buildCategoryFacade() {
     return new CategoryFacade(this.serviceFactory)
+  }
+
+  public buildBrandFacade() {
+    return new BrandFacade(this.serviceFactory)
   }
 
   public buildProductFacade() {

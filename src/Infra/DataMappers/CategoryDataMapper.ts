@@ -1,6 +1,6 @@
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 import { CategoryDao } from '../Models/CategoryDao'
-import { Category } from '../../Category/Models/Category'
+import { Category } from '../../Domain/Category/Models/Category'
 
 export class CategoryDataMapper extends EntityDataMapperContract<
   Category,
@@ -27,6 +27,7 @@ export class CategoryDataMapper extends EntityDataMapperContract<
       domain.getUrn(),
       domain.getDescription(),
       domain.getCreatedAt(),
+      domain.getUpdatedAt(),
       domain.getParent() ? this.toDaoEntity(domain.getParent()) : null
     )
   }

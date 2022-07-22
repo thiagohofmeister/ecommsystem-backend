@@ -1,6 +1,6 @@
 import { IsNull } from 'typeorm'
-import { Category } from '../../Category/Models/Category'
-import { CategoryRepository } from '../../Category/Repositories/CategoryRepository'
+import { Category } from '../../Domain/Category/Models/Category'
+import { CategoryRepository } from '../../Domain/Category/Repositories/CategoryRepository'
 import { TypeOrmMysqlRepositoryContract } from '../../Core/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { CategoryDao } from '../Models/CategoryDao'
 

@@ -1,12 +1,17 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
-import { MeasureUnitEnum } from '../../Product/Enums/MeasureUnitEnum'
-import { WeightUnitEnum } from '../../Product/Enums/WeightUnitEnum'
+import { MeasureUnitEnum } from '../../Domain/Product/Enums/MeasureUnitEnum'
+import { WeightUnitEnum } from '../../Domain/Product/Enums/WeightUnitEnum'
 import { ProductDao } from './ProductDao'
 
 @Entity('variation')
 export class VariationDao {
   @PrimaryColumn()
   sku: string
+
+  @Column({
+    name: 'store_id'
+  })
+  storeId: string
 
   @Column()
   width: number
@@ -45,13 +50,19 @@ export class VariationDao {
   updatedAt: Date
 
   @ManyToOne(() => ProductDao, product => product.variations)
-  @JoinColumn({
-    name: 'product_id'
-  })
+  @JoinColumn([
+    {
+      name: 'product_id'
+    },
+    {
+      name: 'store_id'
+    }
+  ])
   product: ProductDao
 
   constructor(
     sku: string,
+    storeId: string,
     width: number,
     length: number,
     height: number,
@@ -61,6 +72,7 @@ export class VariationDao {
     product?: ProductDao
   ) {
     this.sku = sku
+    this.storeId = storeId
     this.width = width
     this.length = length
     this.height = height

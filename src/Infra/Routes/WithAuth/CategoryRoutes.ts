@@ -1,4 +1,4 @@
-import { CategoryController } from '../../../Category/Controllers/CategoryController'
+import { CategoryController } from '../../../Domain/Category/CategoryController'
 import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
@@ -27,6 +27,9 @@ export class CategoryRoutes extends AuthRouteContract {
         MethodEnum.GET,
         controller.getTree
       )
+      // TODO: PATCH
+      // TODO: DELETE
+      // TODO: GET ONE
     ]
   }
 }

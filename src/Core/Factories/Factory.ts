@@ -14,29 +14,30 @@ export class Factory {
 
   private constructor() {}
 
-  public buildFacadeFactory() {
-    return new FacadeFactory(this.buildServiceFactory())
+  public buildFacadeFactory(storeId: string) {
+    return new FacadeFactory(this.buildServiceFactory(storeId))
   }
 
   public buildProviderFactory() {
     return new ProviderFactory()
   }
 
-  public buildRepositoryFactory() {
+  public buildRepositoryFactory(storeId: string) {
     if (!this.repositoryFactory) {
       this.repositoryFactory = new RepositoryFactory(
         this.buildDataMapperFactory(),
         MySQL.getDataSource(),
-        Redis.getClient()
+        Redis.getClient(),
+        storeId
       )
     }
 
     return this.repositoryFactory
   }
 
-  public buildServiceFactory() {
+  public buildServiceFactory(storeId: string) {
     return new ServiceFactory(
-      this.buildRepositoryFactory(),
+      this.buildRepositoryFactory(storeId),
       this.buildQueueFactory()
     )
   }

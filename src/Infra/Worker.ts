@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv'
 import { Consumer } from '../Core/Events/Consumer'
 import { Factory } from '../Core/Factories/Factory'
-import { AmqpQueueContract } from '../Core/Modules/Queue/AmqpQueueContract'
 import { MySQL } from './Database/MySQL'
 import { Redis } from './Database/Redis'
 
@@ -22,7 +21,9 @@ class Worker {
   public async start() {
     await this.beforeStart()
 
-    const consumer = new Consumer(this.factory.buildFacadeFactory())
+    // TODO: Start one consumer for each storeID
+
+    const consumer = new Consumer(this.factory.buildFacadeFactory(null))
 
     const categoryQueue = this.factory.buildQueueFactory().buildCategoryQueue()
     categoryQueue.consume(consumer.consume)

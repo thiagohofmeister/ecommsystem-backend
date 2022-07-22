@@ -54,6 +54,7 @@ export class CategoryDao {
     urn: string,
     description: string,
     createdAt?: Date,
+    updatedAt?: Date,
     parent?: CategoryDao
   ) {
     this.id = id
@@ -61,6 +62,7 @@ export class CategoryDao {
     this.label = label
     this.urn = urn
     this.description = description
+    this.createdAt = createdAt
     this.createdAt = createdAt
     this.parent = parent
   }

@@ -1,5 +1,5 @@
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
-import { Variation } from '../../Product/Models/Variation'
+import { Variation } from '../../Domain/Product/Models/Variation'
 import { VariationDao } from '../Models/VariationDao'
 
 export class VariationDataMapper extends EntityDataMapperContract<
@@ -9,6 +9,7 @@ export class VariationDataMapper extends EntityDataMapperContract<
   toDomainEntity(entity: VariationDao): Variation {
     return new Variation(
       entity.sku,
+      entity.storeId,
       entity.width,
       entity.length,
       entity.height,
@@ -21,6 +22,7 @@ export class VariationDataMapper extends EntityDataMapperContract<
   toDaoEntity(domain: Variation): VariationDao {
     return new VariationDao(
       domain.getSku(),
+      domain.getStoreId(),
       domain.getWidth(),
       domain.getLength(),
       domain.getHeight(),

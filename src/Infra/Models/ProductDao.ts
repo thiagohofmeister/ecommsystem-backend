@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryColumn
 } from 'typeorm'
+import { BrandDao } from './BrandDao'
 import { CategoryDao } from './CategoryDao'
 import { VariationDao } from './VariationDao'
 
@@ -34,10 +35,21 @@ export class ProductDao {
   })
   category?: CategoryDao
 
-  @OneToMany(() => VariationDao, variation => variation.product)
+  @ManyToOne(() => BrandDao, brand => brand.products)
   @JoinColumn({
-    name: 'sku'
+    name: 'brand_id'
   })
+  brand?: BrandDao
+
+  @OneToMany(() => VariationDao, variation => variation.product, {})
+  @JoinColumn([
+    {
+      name: 'product_id'
+    },
+    {
+      name: 'store_id'
+    }
+  ])
   variations?: VariationDao
 
   @Column({

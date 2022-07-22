@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { CreateContext } from '../../Core/Middlewares/CreateContext'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
+import { BrandRoutes } from './WithAuth/BrandRoutes'
 import { CategoryRoutes } from './WithAuth/CategoryRoutes'
 import { ProductRoutes } from './WithAuth/ProductRoutes'
 
@@ -13,7 +14,8 @@ export class RoutesHandler {
   }
 
   private getRoutes() {
-    return [new CategoryRoutes(), new ProductRoutes()]
+    // TODO: Automaticate
+    return [new CategoryRoutes(), new ProductRoutes(), new BrandRoutes()]
   }
 
   private getAuthMiddlewares() {

@@ -17,6 +17,7 @@ export abstract class RedisClientRepositoryContract<
       TDomainValue,
       TDaoValue
     >,
+    protected storeId: string | null,
     protected dataNotFoundException?: DataNotFoundException
   ) {
     if (!dataNotFoundException)
