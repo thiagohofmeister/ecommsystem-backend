@@ -1,8 +1,9 @@
 import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { IViewResponse } from '../../../Core/Views/Interfaces/IViewResponse'
 import { Brand } from '../Models/Brand'
 
-export class BrandView extends ViewContract<Brand, BrandResponse> {
-  render(entity: Brand): BrandResponse {
+export class BrandView extends ViewContract<Brand> {
+  protected renderOne(entity: Brand): BrandResponse {
     return {
       id: entity.getId(),
       label: entity.getLabel(),
@@ -14,7 +15,7 @@ export class BrandView extends ViewContract<Brand, BrandResponse> {
   }
 }
 
-export interface BrandResponse {
+export interface BrandResponse extends IViewResponse {
   id: string
   label: string
   urn: string

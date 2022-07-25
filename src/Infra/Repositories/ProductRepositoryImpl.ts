@@ -5,13 +5,4 @@ import { ProductDao } from '../Models/ProductDao'
 
 export class ProductRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Product, ProductDao>
-  implements ProductRepository
-{
-  async findOneById(id: string): Promise<Product> {
-    const product = await this.repository.findOne({ where: { id } })
-
-    if (!product) throw this.dataNotFoundException
-
-    return this.dataMapper.toDomainEntity(product)
-  }
-}
+  implements ProductRepository {}

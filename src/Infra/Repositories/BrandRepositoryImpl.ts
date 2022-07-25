@@ -14,12 +14,4 @@ export class BrandRepositoryImpl
 
     return this.dataMapper.toDomainEntity(category)
   }
-
-  async findOneById(id: string): Promise<Brand> {
-    const category = await this.repository.findOne({ where: { id } })
-
-    if (!category) throw this.dataNotFoundException
-
-    return this.dataMapper.toDomainEntity(category)
-  }
 }

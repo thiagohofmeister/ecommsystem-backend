@@ -20,7 +20,13 @@ export class BrandRoutes extends AuthRouteContract {
     const controller = BrandRoutes.getBrandController()
 
     return [
-      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post)
+      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.GET,
+        controller.getOneById
+      ),
+      new RouteDto(this.getFullEndpoint(), MethodEnum.GET, controller.get)
       // TODO: PATCH
       // TODO: DELETE
       // TODO: GET ONE

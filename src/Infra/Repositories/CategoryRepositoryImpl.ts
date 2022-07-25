@@ -11,22 +11,16 @@ export class CategoryRepositoryImpl
   async findAllByParentId(parentId: string): Promise<Category[]> {
     const categories = await this.repository
       .createQueryBuilder()
-      .where({ parent: { id: parentId || IsNull() } })
+      .where({ storeId: this.storeId, parent: { id: parentId || IsNull() } })
       .getMany()
 
     return this.dataMapper.toDomainMany(categories)
   }
 
   async findOneByUrn(urn: string): Promise<Category> {
-    const category = await this.repository.findOne({ where: { urn } })
-
-    if (!category) throw this.dataNotFoundException
-
-    return this.dataMapper.toDomainEntity(category)
-  }
-
-  async findOneById(id: string): Promise<Category> {
-    const category = await this.repository.findOne({ where: { id } })
+    const category = await this.repository.findOne({
+      where: { storeId: this.storeId, urn }
+    })
 
     if (!category) throw this.dataNotFoundException
 

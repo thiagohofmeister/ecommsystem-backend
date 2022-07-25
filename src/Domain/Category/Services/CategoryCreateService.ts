@@ -36,7 +36,8 @@ export class CategoryCreateService {
     await this.categoryRepository.save(category)
 
     await this.categoryQueue.sendMessage('categoryCreated', {
-      categoryId: category.getId()
+      categoryId: category.getId(),
+      storeId
     })
 
     return category
@@ -57,7 +58,7 @@ export class CategoryCreateService {
 
   private async getCategory(id) {
     try {
-      return await this.categoryRepository.findOneById(id)
+      return await this.categoryRepository.findOneByPrimaryColumn(id)
     } catch (err) {
       if (!(err instanceof DataNotFoundException)) throw err
 

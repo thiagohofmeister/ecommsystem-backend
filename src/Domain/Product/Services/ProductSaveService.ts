@@ -19,7 +19,8 @@ export class ProductSaveService {
 
   public async execute(
     storeId: string,
-    data: ProductCreateDto
+    data: ProductCreateDto,
+    isUpdate: boolean = true
   ): Promise<Product> {
     const product = new Product(
       storeId,
@@ -31,7 +32,9 @@ export class ProductSaveService {
       .setCategory(await this.getCategory(data.category.id))
       .setBrand(await this.getBrand(data.brand.id))
 
-    const productSaved = await this.productRepository.save(product)
+    const productSaved = isUpdate
+      ? await this.productRepository.save(product)
+      : await this.productRepository.create(product)
 
     if (!!data.variations) {
       const skusToRemove = product
@@ -43,7 +46,8 @@ export class ProductSaveService {
           this.productSaveVariationService.execute(
             productSaved,
             variation.sku,
-            variation
+            variation,
+            isUpdate
           )
         )
       )
@@ -60,7 +64,7 @@ export class ProductSaveService {
 
   private async getCategory(id: string) {
     try {
-      return await this.categoryRepository.findOneById(id)
+      return await this.categoryRepository.findOneByPrimaryColumn(id)
     } catch (err) {
       if (!(err instanceof DataNotFoundException)) throw err
 
@@ -75,7 +79,7 @@ export class ProductSaveService {
 
   private async getBrand(id: string) {
     try {
-      return await this.brandRepository.findOneById(id)
+      return await this.brandRepository.findOneByPrimaryColumn(id)
     } catch (err) {
       if (!(err instanceof DataNotFoundException)) throw err
 

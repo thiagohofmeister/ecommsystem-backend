@@ -1,9 +1,10 @@
 import { Channel, connect, ConsumeMessage } from 'amqplib'
+import { IEventPayload } from '../../Models/Interfaces/IEventPayload'
 
-export abstract class AmqpQueueContract {
+export abstract class AmqpQueueContract<T extends IEventPayload> {
   constructor(private readonly url: string, private readonly queue: string) {}
 
-  public async sendMessage(messageId: string, message: {}) {
+  public async sendMessage(messageId: string, message: T) {
     const channel = await this.connect()
     await this.createQueue(channel, this.queue)
     console.info('Sending message')
@@ -15,6 +16,7 @@ export abstract class AmqpQueueContract {
   public async consume(action: (msg: ConsumeMessage | null) => void) {
     const channel = await this.connect()
     await this.createQueue(channel, this.queue)
+    console.log('Listening for messages')
     channel.consume(
       this.queue,
       msg => {

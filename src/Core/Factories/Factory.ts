@@ -10,8 +10,6 @@ import { ServiceFactory } from './ServiceFactory'
 export class Factory {
   private static instance: Factory
 
-  private repositoryFactory: RepositoryFactory
-
   private constructor() {}
 
   public buildFacadeFactory(storeId: string) {
@@ -23,16 +21,12 @@ export class Factory {
   }
 
   public buildRepositoryFactory(storeId: string) {
-    if (!this.repositoryFactory) {
-      this.repositoryFactory = new RepositoryFactory(
-        this.buildDataMapperFactory(),
-        MySQL.getDataSource(),
-        Redis.getClient(),
-        storeId
-      )
-    }
-
-    return this.repositoryFactory
+    return new RepositoryFactory(
+      this.buildDataMapperFactory(),
+      MySQL.getDataSource(),
+      Redis.getClient(),
+      storeId
+    )
   }
 
   public buildServiceFactory(storeId: string) {

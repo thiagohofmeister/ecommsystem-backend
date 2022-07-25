@@ -1,8 +1,12 @@
 import { ConsumeMessage } from 'amqplib'
 import { FacadeFactory } from '../Factories/FacadeFactory'
+import { Factory } from '../Factories/Factory'
+import { IEventPayload } from '../Models/Interfaces/IEventPayload'
 
 export class Consumer {
-  constructor(private readonly facadeFactory: FacadeFactory) {
+  private static instance: Consumer
+
+  private constructor() {
     this.consume = this.consume.bind(this)
   }
 
@@ -18,7 +22,19 @@ export class Consumer {
     this[messageId](payload)
   }
 
-  public async categoryCreated(payload: any) {
-    await this.facadeFactory.buildCategoryFacade().getTree(true)
+  public static getInstance() {
+    if (!this.instance) {
+      this.instance = new Consumer()
+    }
+
+    return this.instance
+  }
+
+  public async categoryCreated(payload: IEventPayload) {
+    const facadeFactory = Factory.getInstance().buildFacadeFactory(
+      payload.storeId
+    )
+
+    await facadeFactory.buildCategoryFacade().getTree(true)
   }
 }

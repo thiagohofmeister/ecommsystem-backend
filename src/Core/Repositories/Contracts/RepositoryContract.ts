@@ -24,7 +24,9 @@ export abstract class RepositoryContract<TDomainEntity, TDaoEntity>
 
   abstract save(entity: TDomainEntity): Promise<TDomainEntity>
 
-  abstract findOneById(id: string): Promise<TDomainEntity>
+  abstract create(entity: TDomainEntity): Promise<TDomainEntity>
+
+  abstract findOneByPrimaryColumn(id: string): Promise<TDomainEntity>
 
   abstract findAll(
     filter: IFilterDefault

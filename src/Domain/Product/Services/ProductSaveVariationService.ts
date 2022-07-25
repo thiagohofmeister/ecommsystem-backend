@@ -9,7 +9,8 @@ export class ProductSaveVariationService {
   async execute(
     product: Product | string,
     sku: string,
-    data: ProductSaveVariationDto
+    data: ProductSaveVariationDto,
+    isUpdate: boolean = true
   ) {
     // If variable product is string, then it's the product id.
     // So, we need to find the product with this id
@@ -29,8 +30,10 @@ export class ProductSaveVariationService {
       product
     )
 
-    await this.variationRepository.save(variation)
+    if (isUpdate) {
+      return await this.variationRepository.save(variation)
+    }
 
-    return variation
+    return await this.variationRepository.create(variation)
   }
 }

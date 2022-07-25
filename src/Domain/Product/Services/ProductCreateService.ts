@@ -21,14 +21,14 @@ export class ProductCreateService {
 
     await this.productValidator.productCreatePayloadValidate(data)
 
-    return this.productSaveService.execute(storeId, data)
+    return this.productSaveService.execute(storeId, data, false)
   }
 
   private async validateProductAlreadyExists(id: string) {
     let exists = false
 
     try {
-      await this.productRepository.findOneById(id)
+      await this.productRepository.findOneByPrimaryColumn(id)
       exists = true
     } catch (e) {
       if (!(e instanceof DataNotFoundException)) throw e

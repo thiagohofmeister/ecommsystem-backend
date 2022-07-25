@@ -1,8 +1,8 @@
 import { ResponseTypeEnum } from '../../Enums/ResponseTypeEnum'
 import { SuccessContract } from './SuccessContract'
 
-export class CreatedResponse<TBody> extends SuccessContract<TBody> {
+export class AcceptedResponse<TBody> extends SuccessContract<TBody> {
   getStatus(): number {
-    return ResponseTypeEnum.CREATED
+    return ResponseTypeEnum.ACCEPTED
   }
 }

@@ -23,6 +23,19 @@ export abstract class TypeOrmMysqlRepositoryContract<
     super(dataNotFoundException)
   }
 
+  public async create(entity: TDomainEntity): Promise<TDomainEntity> {
+    const result = await this.repository.insert(
+      this.dataMapper.toDaoEntity(entity)
+    )
+
+    const primaryColumnValue =
+      result.identifiers[0][
+        this.repository.metadata.primaryColumns[0].propertyAliasName
+      ]
+
+    return this.findOneByPrimaryColumn(primaryColumnValue)
+  }
+
   public async save(entity: TDomainEntity): Promise<TDomainEntity> {
     const result = await this.repository.save(
       this.dataMapper.toDaoEntity(entity)
@@ -49,17 +62,46 @@ export abstract class TypeOrmMysqlRepositoryContract<
   }
 
   public async findAll<TFilter extends IFilterDefault>(
-    filter: TFilter
+    filter: TFilter,
+    bypassStoreId: boolean = false
   ): Promise<IItemListModel<TDomainEntity>> {
+    const hasStoreIdColumn = this.hasColumn('storeId')
+
     const query = this.applyPaginator(
       filter,
       this.customToFindAll(filter, this.repository.createQueryBuilder())
     )
 
+    if (hasStoreIdColumn && !bypassStoreId)
+      query.andWhere('store_id = :storeId', { storeId: this.storeId })
+
     return {
       items: this.dataMapper.toDomainMany(await query.getMany()),
       total: await query.getCount()
     }
+  }
+
+  public async findOneByPrimaryColumn(
+    value: string,
+    bypassStoreId: boolean = false
+  ): Promise<TDomainEntity> {
+    const hasStoreIdColumn = this.hasColumn('storeId')
+
+    const primaryColumn =
+      this.repository.metadata.primaryColumns[0].databaseName
+
+    const query = this.repository
+      .createQueryBuilder()
+      .where(`${primaryColumn} = :value`, { value })
+
+    if (hasStoreIdColumn && !bypassStoreId)
+      query.andWhere('store_id = :storeId', { storeId: this.storeId })
+
+    const result = await query.getOne()
+
+    if (!result) throw this.dataNotFoundException
+
+    return this.dataMapper.toDomainEntity(result)
   }
 
   public applyPaginator(

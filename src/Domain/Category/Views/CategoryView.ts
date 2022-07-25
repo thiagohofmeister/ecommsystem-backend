@@ -1,26 +1,27 @@
 import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { IViewResponse } from '../../../Core/Views/Interfaces/IViewResponse'
 import { Category } from '../Models/Category'
 
 export class CategoryView extends ViewContract<Category, CategoryResponse> {
-  render(entity: Category): CategoryResponse {
+  protected renderOne(entity: Category): CategoryResponse {
     return {
       id: entity.getId(),
       label: entity.getLabel(),
       urn: entity.getUrn(),
       description: entity.getDescription(),
-      parent: entity.getParent() ? this.render(entity.getParent()) : null,
+      parent: entity.getParent() ? this.renderOne(entity.getParent()) : null,
       createdAt: entity.getCreatedAt(),
       updatedAt: entity.getUpdatedAt() || null
     }
   }
 }
 
-export interface CategoryResponse {
+export interface CategoryResponse extends IViewResponse {
   id: string
   label: string
   urn: string
   description: string
-  parent: CategoryResponse
+  parent: CategoryResponse | null
   createdAt: Date
   updatedAt: Date
 }

@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm'
-import { BrandCreateService } from '../../Domain/Brand/Services/CategoryCreateService'
+import { BrandCreateService } from '../../Domain/Brand/Services/BrandCreateService'
 import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 
 import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
@@ -13,6 +13,8 @@ import { ProductSaveVariationService } from '../../Domain/Product/Services/Produ
 import { ProductValidator } from '../../Domain/Product/ProductValidator'
 import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
+import { BrandGetListService } from '../../Domain/Brand/Services/BrandGetListService'
+import { BrandGetOneByIdService } from '../../Domain/Brand/Services/BrandGetOneByIdService'
 
 export class ServiceFactory {
   constructor(
@@ -42,6 +44,18 @@ export class ServiceFactory {
     return new BrandCreateService(
       this.repositoryFactory.buildBrandRepository(manager),
       new BrandValidator()
+    )
+  }
+
+  public buildBrandGetListService(manager?: EntityManager) {
+    return new BrandGetListService(
+      this.repositoryFactory.buildBrandRepository(manager)
+    )
+  }
+
+  public buildBrandGetOneByIdService(manager?: EntityManager) {
+    return new BrandGetOneByIdService(
+      this.repositoryFactory.buildBrandRepository(manager)
     )
   }
 

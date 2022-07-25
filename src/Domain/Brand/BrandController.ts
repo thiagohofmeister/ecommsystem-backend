@@ -1,37 +1,55 @@
 import { NextFunction, Response } from 'express'
 
 import { BaseController } from '../../Core/Controllers/BaseController'
-import { Factory } from '../../Core/Factories/Factory'
+import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
 import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
-import { CreatedResponse } from '../../Core/Models/Response/CreatedResponse'
+import { BrandFacade } from './BrandFacade'
 import { BrandView } from './Views/BrandView'
 
 export class BrandController extends BaseController {
   constructor() {
     super()
     this.post = this.post.bind(this)
+    this.get = this.get.bind(this)
+    this.getOneById = this.getOneById.bind(this)
   }
 
-  public async post(
-    request: CatalogRequest,
-    response: Response,
+  public async post(req: CatalogRequest, res: Response, next: NextFunction) {
+    await this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).create(req.context.storeId, req.body),
+      ResponseTypeEnum.CREATED
+    )
+  }
+
+  public async get(req: CatalogRequest, res: Response, next: NextFunction) {
+    await this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).list(req.query),
+      ResponseTypeEnum.OK
+    )
+  }
+
+  public async getOneById(
+    req: CatalogRequest,
+    res: Response,
     next: NextFunction
-  ): Promise<void> {
-    try {
-      const facadeFactory = Factory.getInstance().buildFacadeFactory(
-        request.context.storeId
-      )
+  ) {
+    await this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).getOneById(req.params.id),
+      ResponseTypeEnum.OK
+    )
+  }
 
-      const result = await facadeFactory
-        .buildBrandFacade()
-        .create(request.context.storeId, request.body)
+  protected defaultFacade(request: CatalogRequest): BrandFacade {
+    return this.facadeFactory(request).buildBrandFacade()
+  }
 
-      this.successResponseHandler(
-        new CreatedResponse(new BrandView().render(result)),
-        response
-      )
-    } catch (error) {
-      next(error)
-    }
+  protected defaultView() {
+    return new BrandView()
   }
 }

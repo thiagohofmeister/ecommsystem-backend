@@ -5,12 +5,14 @@ export class CategoryTreeView extends ViewContract<
   CategoryTree,
   CategoryTreeResponse
 > {
-  render(entity: CategoryTree): CategoryTreeResponse {
+  protected renderOne(entity: CategoryTree): CategoryTreeResponse {
     return {
       id: entity.getId(),
       label: entity.getLabel(),
       urn: entity.getUrn(),
-      children: this.renderMany(entity.getChildren())
+      children: entity.getChildren()
+        ? this.renderMany(entity.getChildren())
+        : null
     }
   }
 }
@@ -19,5 +21,5 @@ export interface CategoryTreeResponse {
   id: string
   label: string
   urn: string
-  children: CategoryTreeResponse[]
+  children?: CategoryTreeResponse[]
 }

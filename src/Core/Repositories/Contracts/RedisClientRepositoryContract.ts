@@ -30,12 +30,14 @@ export abstract class RedisClientRepositoryContract<
     throw new Error('Method not implemented.')
   }
 
-  async findOneById(id: string): Promise<RedisCollection<TDomainValue>> {
-    const value = await this.repository.get(id)
+  async findOneByPrimaryColumn(
+    id: string
+  ): Promise<RedisCollection<TDomainValue>> {
+    const value = await this.repository.get(this.getFullKey(id))
 
     if (!value) throw this.dataNotFoundException
 
-    const ttl = await this.repository.ttl(id)
+    const ttl = await this.repository.ttl(this.getFullKey(id))
 
     return new RedisCollection(
       id,
@@ -46,7 +48,7 @@ export abstract class RedisClientRepositoryContract<
 
   async delete(key: string): Promise<boolean> {
     try {
-      await this.repository.del(key)
+      await this.repository.del(this.getFullKey(key))
 
       return true
     } catch (error) {
@@ -58,7 +60,7 @@ export abstract class RedisClientRepositoryContract<
     entity: RedisCollection<TDomainValue>
   ): Promise<RedisCollection<TDomainValue>> {
     await this.repository.set(
-      entity.getKey(),
+      this.getFullKey(entity.getKey()),
       JSON.stringify(entity.getValue()),
       { EX: this.getSecondsToExpire(entity.getExpiration()) }
     )
@@ -102,6 +104,10 @@ export abstract class RedisClientRepositoryContract<
 
   protected getDefaultExpirationInSeconds(): number {
     return 60 * 60 * 6 // 6 hours
+  }
+
+  protected getFullKey(key: string): string {
+    return [this.getKeyPrefix(), key, this.storeId].filter(i => !!i).join('.')
   }
 
   protected abstract getKeyPrefix(): string

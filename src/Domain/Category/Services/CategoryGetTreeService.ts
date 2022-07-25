@@ -25,7 +25,9 @@ export class CategoryGetTreeService {
 
   public async getCache() {
     try {
-      return await this.categoryTreeCacheRepository.findOneById(this.CACHE_NAME)
+      return await this.categoryTreeCacheRepository.findOneByPrimaryColumn(
+        this.CACHE_NAME
+      )
     } catch (e) {
       return null
     }

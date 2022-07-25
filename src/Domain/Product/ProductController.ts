@@ -1,10 +1,8 @@
 import { NextFunction, Response } from 'express'
 
-import { CategoryView } from '../Category/Views/CategoryView'
 import { BaseController } from '../../Core/Controllers/BaseController'
-import { Factory } from '../../Core/Factories/Factory'
+import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
 import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
-import { CreatedResponse } from '../../Core/Models/Response/CreatedResponse'
 import { ProductView } from './Views/ProductView'
 
 export class ProductController extends BaseController {
@@ -14,25 +12,22 @@ export class ProductController extends BaseController {
   }
 
   public async post(
-    request: CatalogRequest,
-    response: Response,
+    req: CatalogRequest,
+    res: Response,
     next: NextFunction
   ): Promise<void> {
-    try {
-      const facadeFactory = Factory.getInstance().buildFacadeFactory(
-        request.context.storeId
-      )
+    return this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).create(req.context.storeId, req.body),
+      ResponseTypeEnum.CREATED
+    )
+  }
 
-      const result = await facadeFactory
-        .buildProductFacade()
-        .create(request.context.storeId, request.body)
-
-      this.successResponseHandler(
-        new CreatedResponse(new ProductView(new CategoryView()).render(result)),
-        response
-      )
-    } catch (error) {
-      next(error)
-    }
+  protected defaultView() {
+    return new ProductView()
+  }
+  protected defaultFacade(request: CatalogRequest) {
+    return this.facadeFactory(request).buildProductFacade()
   }
 }

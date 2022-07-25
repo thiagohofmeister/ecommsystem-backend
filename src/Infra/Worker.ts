@@ -1,16 +1,17 @@
 import * as dotenv from 'dotenv'
 import { Consumer } from '../Core/Events/Consumer'
 import { Factory } from '../Core/Factories/Factory'
+import { QueueFactory } from '../Core/Factories/QueueFactory,'
 import { MySQL } from './Database/MySQL'
 import { Redis } from './Database/Redis'
 
 class Worker {
-  private factory: Factory
+  private queueFactory: QueueFactory
 
   constructor() {
     dotenv.config()
 
-    this.factory = Factory.getInstance()
+    this.queueFactory = Factory.getInstance().buildQueueFactory()
   }
 
   private async beforeStart() {
@@ -21,12 +22,8 @@ class Worker {
   public async start() {
     await this.beforeStart()
 
-    // TODO: Start one consumer for each storeID
-
-    const consumer = new Consumer(this.factory.buildFacadeFactory(null))
-
-    const categoryQueue = this.factory.buildQueueFactory().buildCategoryQueue()
-    categoryQueue.consume(consumer.consume)
+    const categoryQueue = this.queueFactory.buildCategoryQueue()
+    categoryQueue.consume(Consumer.getInstance().consume)
   }
 }
 
