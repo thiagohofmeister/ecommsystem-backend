@@ -1,5 +1,5 @@
-import { QueueFactory } from '../../../Shared/Factories/QueueFactory,'
-import { RepositoryFactory } from '../../../Shared/Factories/RepositoryFactory'
+import { QueueFactory } from '../../Factories/QueueFactory,'
+import { RepositoryFactory } from '../../Factories/RepositoryFactory'
 import { CronTimeEnum } from './Enum/CronTimeEnum'
 import { RoutineContract } from './Routines/Contracts/RoutineContract'
 

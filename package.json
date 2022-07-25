@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Api.ts",
     "dev-worker": "tsnd --transpile-only --respawn --inspect=0.0.0.0:9229 src/Infra/Worker.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "prod": "node ./Infra/Api.js"
   },
   "dependencies": {
     "amqplib": "^0.10.0",

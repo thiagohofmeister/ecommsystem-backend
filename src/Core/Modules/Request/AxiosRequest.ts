@@ -1,7 +1,7 @@
-import { ProviderResponse } from '../../../Shared/Models/ProviderResponse'
 import { HttpMethod } from '../../Providers/Enum/HttpMethod'
 import { BaseRequest } from './BaseRequest'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { ProviderResponse } from '../../Models/ProviderResponse'
 
 export class AxiosRequest extends BaseRequest<AxiosInstance> {
   constructor(private baseURL: string) {

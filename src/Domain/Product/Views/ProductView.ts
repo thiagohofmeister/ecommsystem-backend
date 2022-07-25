@@ -10,7 +10,7 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
     super()
   }
 
-  render(entity: Product): ProductResponse {
+  renderOne(entity: Product): ProductResponse {
     return {
       id: entity.getId(),
       title: entity.getTitle(),
@@ -18,7 +18,7 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
       active: entity.isActive(),
       category:
         this.categoryView && entity.getCategory()
-          ? this.categoryView.render(entity.getCategory())
+          ? (this.categoryView.render(entity.getCategory()) as CategoryResponse)
           : null,
       createdAt: entity.getCreatedAt(),
       updatedAt: entity.getUpdatedAt()

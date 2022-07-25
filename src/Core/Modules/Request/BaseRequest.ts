@@ -1,4 +1,4 @@
-import { ProviderResponse } from '../../../Shared/Models/ProviderResponse'
+import { ProviderResponse } from '../../Models/ProviderResponse'
 import { HttpMethod } from '../../Providers/Enum/HttpMethod'
 
 export abstract class BaseRequest<TInstance = any> {
