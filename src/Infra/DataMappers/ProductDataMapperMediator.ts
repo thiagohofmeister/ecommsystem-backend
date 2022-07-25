@@ -4,6 +4,7 @@ import { ProductDao } from '../Models/ProductDao'
 import { BrandDataMapper } from './BrandDataMapper'
 import { CategoryDataMapper } from './CategoryDataMapper'
 import { ProductDataMapper } from './ProductDataMapper'
+import { VariationDataMapper } from './VariationDataMapper'
 
 export class ProductDataMapperMediator extends EntityDataMapperContract<
   Product,
@@ -12,7 +13,8 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
   constructor(
     private readonly productDataMapper: ProductDataMapper,
     private readonly categoryDataMapper: CategoryDataMapper,
-    private readonly brandDataMapper: BrandDataMapper
+    private readonly brandDataMapper: BrandDataMapper,
+    private readonly variationDataMapper: VariationDataMapper
   ) {
     super()
   }
@@ -28,6 +30,14 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
 
     if (entity.brand) {
       product.setBrand(this.brandDataMapper.toDomainEntity(entity.brand))
+    }
+
+    console.log(entity.variations)
+
+    if (entity.variations) {
+      entity.variations.forEach(variation =>
+        product.addVariation(this.variationDataMapper.toDomainEntity(variation))
+      )
     }
 
     return product

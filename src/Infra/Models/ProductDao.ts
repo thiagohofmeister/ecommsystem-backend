@@ -41,7 +41,9 @@ export class ProductDao {
   })
   brand?: BrandDao
 
-  @OneToMany(() => VariationDao, variation => variation.product, {})
+  @OneToMany(() => VariationDao, variation => variation.product, {
+    eager: true
+  })
   @JoinColumn([
     {
       name: 'product_id'
@@ -50,7 +52,7 @@ export class ProductDao {
       name: 'store_id'
     }
   ])
-  variations?: VariationDao
+  variations?: VariationDao[]
 
   @Column({
     name: 'created_at'

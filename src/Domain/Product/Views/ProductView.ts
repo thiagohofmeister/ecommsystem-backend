@@ -1,12 +1,10 @@
-import {
-  CategoryResponse,
-  CategoryView
-} from '../../Category/Views/CategoryView'
 import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
+import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
 import { Product } from '../Models/Product'
 
 export class ProductView extends ViewContract<Product, ProductResponse> {
-  constructor(readonly categoryView?: CategoryView) {
+  constructor() {
     super()
   }
 
@@ -16,10 +14,27 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
       title: entity.getTitle(),
       description: entity.getDescription(),
       active: entity.isActive(),
-      category:
-        this.categoryView && entity.getCategory()
-          ? (this.categoryView.render(entity.getCategory()) as CategoryResponse)
-          : null,
+      category: {
+        id: entity.getCategory().getId(),
+        urn: entity.getCategory().getUrn(),
+        label: entity.getCategory().getLabel()
+      },
+      brand: {
+        id: entity.getBrand().getId(),
+        urn: entity.getBrand().getUrn(),
+        label: entity.getBrand().getLabel()
+      },
+      variations: entity.getVariations().map(variation => ({
+        sku: variation.getSku(),
+        width: variation.getWidth(),
+        length: variation.getLength(),
+        height: variation.getHeight(),
+        weight: variation.getWeight(),
+        measuresUnit: variation.getMeasuresUnit(),
+        weightUnit: variation.getWeightUnit(),
+        createdAt: variation.getCreatedAt(),
+        updatedAt: variation.getUpdatedAt()
+      })),
       createdAt: entity.getCreatedAt(),
       updatedAt: entity.getUpdatedAt()
     }
@@ -31,7 +46,28 @@ export interface ProductResponse {
   title: string
   description: string
   active: boolean
-  category: CategoryResponse
+  category: {
+    id: string
+    urn: string
+    label: string
+  }
+  brand: {
+    id: string
+    urn: string
+    label: string
+  }
+  variations: {
+    sku: string
+    width: number
+    length: number
+    height: number
+    weight: number
+    measuresUnit: MeasureUnitEnum
+    weightUnit: WeightUnitEnum
+    product?: Product
+    createdAt?: Date
+    updatedAt?: Date
+  }[]
   createdAt: Date
   updatedAt: Date
 }

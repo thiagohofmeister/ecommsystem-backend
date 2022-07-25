@@ -23,7 +23,8 @@ export class DataMapperFactory {
     return new ProductDataMapperMediator(
       this.buildProductDataMapper(),
       this.buildCategoryDataMapper(),
-      this.buildBrandDataMapper()
+      this.buildBrandDataMapper(),
+      this.buildVariationDataMapper()
     )
   }
 

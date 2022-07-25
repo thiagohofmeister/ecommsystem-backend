@@ -59,7 +59,7 @@ export class ProductSaveService {
       )
     }
 
-    return productSaved
+    return this.productRepository.findOneByPrimaryColumn(productSaved.getId())
   }
 
   private async getCategory(id: string) {

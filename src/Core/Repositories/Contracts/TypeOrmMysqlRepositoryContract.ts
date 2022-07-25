@@ -41,7 +41,15 @@ export abstract class TypeOrmMysqlRepositoryContract<
       this.dataMapper.toDaoEntity(entity)
     )
 
-    return this.dataMapper.toDomainEntity(result)
+    const primaryColumnName =
+      this.repository.metadata.primaryColumns[0].propertyAliasName
+        .split('')
+        .map((v, i) => (i === 0 ? v.toUpperCase() : v))
+        .join('')
+
+    const primaryColumnValue = result[`get${primaryColumnName}`]
+
+    return this.findOneByPrimaryColumn(primaryColumnValue)
   }
 
   public async delete(
@@ -73,7 +81,9 @@ export abstract class TypeOrmMysqlRepositoryContract<
     )
 
     if (hasStoreIdColumn && !bypassStoreId)
-      query.andWhere('store_id = :storeId', { storeId: this.storeId })
+      query.andWhere(`${this.getTableName()}.store_id = :storeId`, {
+        storeId: this.storeId
+      })
 
     return {
       items: this.dataMapper.toDomainMany(await query.getMany()),
@@ -90,12 +100,16 @@ export abstract class TypeOrmMysqlRepositoryContract<
     const primaryColumn =
       this.repository.metadata.primaryColumns[0].databaseName
 
-    const query = this.repository
-      .createQueryBuilder()
-      .where(`${primaryColumn} = :value`, { value })
+    const query = this.customToFindOneByPrimaryColumn(
+      this.repository
+        .createQueryBuilder()
+        .where(`${this.getTableName()}.${primaryColumn} = :value`, { value })
+    )
 
     if (hasStoreIdColumn && !bypassStoreId)
-      query.andWhere('store_id = :storeId', { storeId: this.storeId })
+      query.andWhere(`${this.getTableName()}.store_id = :storeId`, {
+        storeId: this.storeId
+      })
 
     const result = await query.getOne()
 
@@ -144,6 +158,12 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   protected customToFindAll(
     filter: IFilterDefault,
+    query: SelectQueryBuilder<TDaoEntity>
+  ): SelectQueryBuilder<TDaoEntity> {
+    return query
+  }
+
+  protected customToFindOneByPrimaryColumn(
     query: SelectQueryBuilder<TDaoEntity>
   ): SelectQueryBuilder<TDaoEntity> {
     return query
