@@ -28,7 +28,6 @@ export class CategoryRoutes extends AuthRouteContract<CategoryController> {
         MethodEnum.GET,
         controller.getOneById
       )
-      // TODO: PATCH
       // TODO: DELETE
     ]
   }
