@@ -21,19 +21,19 @@ export class CategorySaveService {
     data: CategorySaveDto,
     category?: Category
   ): Promise<Category> {
-    await this.categoryRepository.save(
+    const categorySaved = await this.categoryRepository.save(
       await this.getCategoryToSave(storeId, data, category)
     )
 
     await this.categoryQueue.sendMessage(
       !!category ? this.CATEGORY_UPDATED_EVENT : this.CATEGORY_CREATED_EVENT,
       {
-        categoryId: category.getId(),
+        categoryId: categorySaved.getId(),
         storeId
       }
     )
 
-    return category
+    return categorySaved
   }
 
   private async getCategoryToSave(
