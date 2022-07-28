@@ -11,6 +11,8 @@ import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
 import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
 import { CategoryGetOneByIdService } from '../../Domain/Category/Services/CategoryGetOneByIdService'
 import { CategoryGetTreeService } from '../../Domain/Category/Services/CategoryGetTreeService'
+import { CategorySaveService } from '../../Domain/Category/Services/CategorySaveService'
+import { CategoryUpdateService } from '../../Domain/Category/Services/CategoryUpdateService'
 import { ProductValidator } from '../../Domain/Product/ProductValidator'
 import { ProductCreateService } from '../../Domain/Product/Services/ProductCreateService'
 import { ProductDeleteUnusedImagesService } from '../../Domain/Product/Services/ProductDeleteUnUsedImagesService'
@@ -103,8 +105,22 @@ export class ServiceFactory {
 
   public buildCategoryCreateService(manager?: EntityManager) {
     return new CategoryCreateService(
+      this.buildCategorySaveService(manager),
+      new CategoryValidator()
+    )
+  }
+
+  public buildCategoryUpdateService(manager?: EntityManager) {
+    return new CategoryUpdateService(
+      this.buildCategorySaveService(manager),
+      this.buildCategoryGetOneByIdService(manager),
+      new CategoryValidator()
+    )
+  }
+
+  public buildCategorySaveService(manager?: EntityManager) {
+    return new CategorySaveService(
       this.repositoryFactory.buildCategoryRepository(manager),
-      new CategoryValidator(),
       this.queueFactory.buildCategoryQueue()
     )
   }

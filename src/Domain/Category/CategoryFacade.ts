@@ -12,6 +12,16 @@ export class CategoryFacade extends FacadeContract {
       })
   }
 
+  public async update(id: string, storeId: string, data: CategoryCreateDto) {
+    return this.serviceFactory
+      .buildTransactionalService()
+      .execute(async manager => {
+        return await this.serviceFactory
+          .buildCategoryUpdateService(manager)
+          .execute(id, storeId, data)
+      })
+  }
+
   public async getTree(ignoreCache?: boolean) {
     return this.serviceFactory
       .buildCategoryGetTreeService()

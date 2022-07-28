@@ -18,16 +18,36 @@ export class Category {
     return this.storeId
   }
 
+  public setLabel(label: string) {
+    this.label = label
+    return this
+  }
+
   public getLabel(): string {
     return this.label
+  }
+
+  public setUrn(urn: string) {
+    this.urn = urn
+    return this
   }
 
   public getUrn(): string {
     return this.urn
   }
 
+  public setDescription(description: string) {
+    this.description = description
+    return this
+  }
+
   public getDescription(): string {
     return this.description
+  }
+
+  public setParent(parent: Category) {
+    this.parent = parent
+    return this
   }
 
   public getParent(): Category {

@@ -14,6 +14,11 @@ export class CategoryRoutes extends AuthRouteContract<CategoryController> {
     return [
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
       new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.PATCH,
+        controller.patch
+      ),
+      new RouteDto(
         this.getFullEndpoint('/tree'),
         MethodEnum.GET,
         controller.getTree

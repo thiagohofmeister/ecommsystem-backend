@@ -1,5 +1,5 @@
 import { IEventPayload } from '../../../Core/Models/Interfaces/IEventPayload'
 
-export interface CategoryCreatedEventDto extends IEventPayload {
+export interface CategorySavedEventDto extends IEventPayload {
   categoryId: string
 }
