@@ -3,6 +3,7 @@ import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDat
 import { BrandRepository } from '../../Brand/Repositories/BrandRepository'
 import { CategoryRepository } from '../../Category/Repositories/CategoryRepository'
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
+import { ProductSaveDto } from '../Dto/ProductSaveDto'
 import { Image } from '../Models/Image'
 import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
@@ -22,7 +23,7 @@ export class ProductSaveService {
 
   public async execute(
     storeId: string,
-    data: ProductCreateDto,
+    data: ProductSaveDto,
     product?: Product
   ): Promise<Product> {
     const productToSave = await this.getProductToSaved(product, storeId, data)
@@ -39,7 +40,7 @@ export class ProductSaveService {
   private async getProductToSaved(
     product: Product,
     storeId: string,
-    data: ProductCreateDto
+    data: ProductSaveDto
   ) {
     if (!product) {
       return new Product(storeId, data.title, data.description, true, data.id)
