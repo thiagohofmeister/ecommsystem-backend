@@ -15,6 +15,11 @@ export class BrandRoutes extends AuthRouteContract<BrandController> {
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
       new RouteDto(
         this.getFullEndpoint('/:id'),
+        MethodEnum.PATCH,
+        controller.patch
+      ),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
         MethodEnum.GET,
         controller.getOneById
       ),
@@ -24,7 +29,6 @@ export class BrandRoutes extends AuthRouteContract<BrandController> {
         MethodEnum.GET,
         controller.getOneById
       )
-      // TODO: PATCH
       // TODO: DELETE
     ]
   }

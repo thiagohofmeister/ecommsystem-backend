@@ -13,6 +13,16 @@ export class BrandFacade extends FacadeContract {
       })
   }
 
+  public async update(id: string, storeId: string, data: BrandCreateDto) {
+    return this.serviceFactory
+      .buildTransactionalService()
+      .execute(async manager => {
+        return await this.serviceFactory
+          .buildBrandUpdateService(manager)
+          .execute(id, storeId, data)
+      })
+  }
+
   public async list(data: BrandGetListFilterDto) {
     return await this.serviceFactory.buildBrandGetListService().execute(data)
   }

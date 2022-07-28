@@ -2,9 +2,11 @@ import { Schema } from 'joi'
 import * as Joi from 'joi'
 import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
 import { BrandCreateDto } from './Dto/BrandCreateDto'
+import { BrandUpdateDto } from './Dto/BrandUpdateDto'
 
 export class BrandValidator extends JoiSchemaValidatorContract {
   private brandCreateSchema: Schema
+  private brandUpdateSchema: Schema
 
   constructor() {
     super()
@@ -14,12 +16,25 @@ export class BrandValidator extends JoiSchemaValidatorContract {
       urn: Joi.string().optional(),
       description: Joi.string().required()
     })
+
+    this.brandUpdateSchema = Joi.object({
+      label: Joi.string().optional(),
+      urn: Joi.string().optional(),
+      description: Joi.string().optional()
+    })
   }
 
   public async brandCreatePayloadValidate(payload: BrandCreateDto) {
     return this.validateBySchema<BrandCreateDto>(
       payload,
       this.brandCreateSchema
+    )
+  }
+
+  public async brandUpdatePayloadValidate(payload: BrandUpdateDto) {
+    return this.validateBySchema<BrandUpdateDto>(
+      payload,
+      this.brandUpdateSchema
     )
   }
 }

@@ -10,6 +10,7 @@ export class BrandController extends BaseController {
   constructor() {
     super()
     this.post = this.post.bind(this)
+    this.patch = this.patch.bind(this)
     this.get = this.get.bind(this)
     this.getOneById = this.getOneById.bind(this)
   }
@@ -20,6 +21,19 @@ export class BrandController extends BaseController {
       next,
       this.defaultFacade(req).create(req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
+    )
+  }
+
+  public async patch(req: CatalogRequest, res: Response, next: NextFunction) {
+    await this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).update(
+        req.params.id,
+        req.context.storeId,
+        req.body
+      ),
+      ResponseTypeEnum.OK
     )
   }
 

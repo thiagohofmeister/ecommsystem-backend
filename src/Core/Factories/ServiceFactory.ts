@@ -5,6 +5,8 @@ import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 import { BrandCreateService } from '../../Domain/Brand/Services/BrandCreateService'
 import { BrandGetListService } from '../../Domain/Brand/Services/BrandGetListService'
 import { BrandGetOneByIdService } from '../../Domain/Brand/Services/BrandGetOneByIdService'
+import { BrandSaveService } from '../../Domain/Brand/Services/BrandSaveService'
+import { BrandUpdateService } from '../../Domain/Brand/Services/BrandUpdateService'
 import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
 import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
 import { CategoryGetOneByIdService } from '../../Domain/Category/Services/CategoryGetOneByIdService'
@@ -68,8 +70,22 @@ export class ServiceFactory {
 
   public buildBrandCreateService(manager?: EntityManager) {
     return new BrandCreateService(
-      this.repositoryFactory.buildBrandRepository(manager),
+      this.buildBrandSaveService(manager),
       new BrandValidator()
+    )
+  }
+
+  public buildBrandUpdateService(manager?: EntityManager) {
+    return new BrandUpdateService(
+      this.buildBrandSaveService(manager),
+      this.buildBrandGetOneByIdService(manager),
+      new BrandValidator()
+    )
+  }
+
+  public buildBrandSaveService(manager?: EntityManager) {
+    return new BrandSaveService(
+      this.repositoryFactory.buildBrandRepository(manager)
     )
   }
 
