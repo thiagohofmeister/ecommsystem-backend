@@ -3,9 +3,12 @@ import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDat
 import { BrandRepository } from '../../Brand/Repositories/BrandRepository'
 import { CategoryRepository } from '../../Category/Repositories/CategoryRepository'
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
+import { Image } from '../Models/Image'
 import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
+import { ProductDeleteUnusedImagesService } from './ProductDeleteUnUsedImagesService'
 import { ProductDeleteVariationService } from './ProductDeleteVariationService'
+import { ProductSaveImageService } from './ProductSaveImageService'
 import { ProductSaveVariationService } from './ProductSaveVariationService'
 
 export class ProductSaveService {
@@ -14,7 +17,9 @@ export class ProductSaveService {
     private readonly brandRepository: BrandRepository,
     private readonly productRepository: ProductRepository,
     private readonly productSaveVariationService: ProductSaveVariationService,
-    private readonly productDeleteVariationService: ProductDeleteVariationService
+    private readonly productDeleteVariationService: ProductDeleteVariationService,
+    private readonly productSaveImageService: ProductSaveImageService,
+    private readonly productDeleteUnUsedImagesService: ProductDeleteUnusedImagesService
   ) {}
 
   public async execute(
@@ -23,6 +28,8 @@ export class ProductSaveService {
     product?: Product
   ): Promise<Product> {
     const productToSave = await this.getProductToSaved(product, storeId, data)
+
+    await this.fillImages(productToSave, data.images)
 
     const productSaved = !!product
       ? await this.productRepository.save(productToSave)
@@ -65,6 +72,81 @@ export class ProductSaveService {
     }
 
     return product
+  }
+
+  private async fillImages(
+    product: Product,
+    images: ProductCreateDto['images']
+  ) {
+    if (!!images) {
+      console.log(images.filter(i => !!i.id).map(i => i.id))
+      product.removeImages(images.filter(i => !!i.id).map(i => i.id))
+
+      images.forEach((imageDto, position) => {
+        if (!!imageDto.id) {
+          const image = product.getImageById(imageDto.id).setPosition(position)
+
+          if (imageDto.hasOwnProperty('url')) {
+            image.setUrl(imageDto.url)
+          }
+
+          if (imageDto.hasOwnProperty('value')) {
+            image.setValue(imageDto.value)
+          }
+          return
+        }
+
+        const image = new Image(
+          imageDto.url,
+          position,
+          imageDto.value,
+          product.getStoreId()
+        )
+
+        product.addImage(image)
+      })
+
+      await this.productDeleteUnUsedImagesService.execute(
+        product.getId(),
+        product.getStoreId(),
+        product.getImagesIds()
+      )
+    }
+  }
+
+  private async saveImages(
+    product: Product,
+    images: ProductCreateDto['images'],
+    isUpdate: boolean
+  ) {
+    if (!!images) {
+      const idsToRemove = product.getImagesIds().filter(
+        id =>
+          !images
+            .filter(i => !!i.id)
+            .map(i => i.id)
+            .includes(id)
+      )
+
+      await Promise.all(
+        images.map(async (image, position) =>
+          this.productSaveImageService.execute(
+            product,
+            position,
+            image,
+            isUpdate && !!image.id
+              ? product.getImages()?.find(v => v.getId() === image.id)
+              : null
+          )
+        )
+      )
+
+      await this.productDeleteUnUsedImagesService.execute(
+        product.getId(),
+        product.getStoreId(),
+        idsToRemove
+      )
+    }
   }
 
   private async saveVariations(

@@ -24,6 +24,11 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
         urn: entity.getBrand().getUrn(),
         label: entity.getBrand().getLabel()
       },
+      images: entity.getImages().map(image => ({
+        id: image.getId(),
+        url: image.getUrl(),
+        value: image.getValue()
+      })),
       variations: entity.getVariations().map(variation => ({
         sku: variation.getSku(),
         width: variation.getWidth(),
@@ -56,6 +61,11 @@ export interface ProductResponse {
     urn: string
     label: string
   }
+  images: {
+    id: string
+    url: string
+    value: string
+  }[]
   variations: {
     sku: string
     width: number

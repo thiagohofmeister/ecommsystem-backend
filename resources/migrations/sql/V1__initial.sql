@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS `category` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_category_category1_idx` ON `category` (`parent_id` ASC);
+CREATE INDEX `fk_category_category1_idx` ON `category` (`parent_id` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `category_urn_store_id_UNIQUE` ON `category` (`urn` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `category_urn_store_id_UNIQUE` ON `category` (`urn` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `brand` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `brand_urn_store_id_UNIQUE` ON `brand` (`urn` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `brand_urn_store_id_UNIQUE` ON `brand` (`urn` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `product` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_product_category1_idx` ON `product` (`category_id` ASC);
+CREATE INDEX `fk_product_category1_idx` ON `product` (`category_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_product_brand1_idx` ON `product` (`brand_id` ASC);
+CREATE INDEX `fk_product_brand1_idx` ON `product` (`brand_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `variation` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_variation_product1_idx` ON `variation` (`product_id` ASC, `store_id` ASC);
+CREATE INDEX `fk_variation_product1_idx` ON `variation` (`product_id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `catalog` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `catalog_id_store_id_UNIQUE` ON `catalog` (`id` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `catalog_id_store_id_UNIQUE` ON `catalog` (`id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `specification` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `attribute_id_store_id_UNIQUE` ON `specification` (`id` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `attribute_id_store_id_UNIQUE` ON `specification` (`id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `image` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_image_product1_idx` ON `image` (`product_id` ASC, `store_id` ASC);
+CREATE INDEX `fk_image_product1_idx` ON `image` (`product_id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -169,9 +169,9 @@ CREATE TABLE IF NOT EXISTS `product_specification` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_attributes_has_product_attributes1_idx` ON `product_specification` (`specification_id` ASC);
+CREATE INDEX `fk_attributes_has_product_attributes1_idx` ON `product_specification` (`specification_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_product_attribute_product1_idx` ON `product_specification` (`product_id` ASC, `store_id` ASC);
+CREATE INDEX `fk_product_attribute_product1_idx` ON `product_specification` (`product_id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -195,9 +195,9 @@ CREATE TABLE IF NOT EXISTS `variation_specification` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_attributes_has_variation_attributes1_idx` ON `variation_specification` (`specification_id` ASC);
+CREATE INDEX `fk_attributes_has_variation_attributes1_idx` ON `variation_specification` (`specification_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_variation_attribute_variation1_idx` ON `variation_specification` (`variation_sku` ASC, `store_id` ASC);
+CREATE INDEX `fk_variation_attribute_variation1_idx` ON `variation_specification` (`variation_sku` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -220,9 +220,9 @@ CREATE TABLE IF NOT EXISTS `catalog_product` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_catalog_has_product_catalog1_idx` ON `catalog_product` (`catalog_id` ASC);
+CREATE INDEX `fk_catalog_has_product_catalog1_idx` ON `catalog_product` (`catalog_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_catalog_product_product1_idx` ON `catalog_product` (`product_id` ASC, `store_id` ASC);
+CREATE INDEX `fk_catalog_product_product1_idx` ON `catalog_product` (`product_id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `campaign` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `campaign_id_store_id_UNIQUE` ON `campaign` (`id` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `campaign_id_store_id_UNIQUE` ON `campaign` (`id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -263,11 +263,11 @@ CREATE TABLE IF NOT EXISTS `price` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_price_campaign1_idx` ON `price` (`campaign_id` ASC);
+CREATE INDEX `fk_price_campaign1_idx` ON `price` (`campaign_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_price_variation1_idx` ON `price` (`variation_sku` ASC, `store_id` ASC);
+CREATE INDEX `fk_price_variation1_idx` ON `price` (`variation_sku` ASC, `store_id` ASC) VISIBLE;
 
-CREATE UNIQUE INDEX `price_campaign_id_variation_sku_store_id_UNIQUE` ON `price` (`campaign_id` ASC, `variation_sku` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `price_campaign_id_variation_sku_store_id_UNIQUE` ON `price` (`campaign_id` ASC, `variation_sku` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `warehouse` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `warehouse_id_store_id_UNIQUE` ON `warehouse` (`id` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `warehouse_id_store_id_UNIQUE` ON `warehouse` (`id` ASC, `store_id` ASC) VISIBLE;
 
 
 -- -----------------------------------------------------
@@ -311,6 +311,6 @@ CREATE TABLE IF NOT EXISTS `stock` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_variation_has_warehouse_warehouse1_idx` ON `stock` (`warehouse_id` ASC);
+CREATE INDEX `fk_variation_has_warehouse_warehouse1_idx` ON `stock` (`warehouse_id` ASC) VISIBLE;
 
-CREATE INDEX `fk_stock_variation1_idx` ON `stock` (`variation_sku` ASC, `store_id` ASC);
+CREATE INDEX `fk_stock_variation1_idx` ON `stock` (`variation_sku` ASC, `store_id` ASC) VISIBLE;

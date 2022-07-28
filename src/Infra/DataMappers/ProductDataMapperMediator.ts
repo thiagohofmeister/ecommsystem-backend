@@ -3,6 +3,7 @@ import { Product } from '../../Domain/Product/Models/Product'
 import { ProductDao } from '../Models/ProductDao'
 import { BrandDataMapper } from './BrandDataMapper'
 import { CategoryDataMapper } from './CategoryDataMapper'
+import { ImageDataMapper } from './ImageDataMapper'
 import { ProductDataMapper } from './ProductDataMapper'
 import { VariationDataMapper } from './VariationDataMapper'
 
@@ -14,7 +15,8 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
     private readonly productDataMapper: ProductDataMapper,
     private readonly categoryDataMapper: CategoryDataMapper,
     private readonly brandDataMapper: BrandDataMapper,
-    private readonly variationDataMapper: VariationDataMapper
+    private readonly variationDataMapper: VariationDataMapper,
+    private readonly imageDataMapper: ImageDataMapper
   ) {
     super()
   }
@@ -38,6 +40,13 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
       )
     }
 
+    if (entity.images) {
+      product.removeImages([])
+      entity.images.forEach(image =>
+        product.addImage(this.imageDataMapper.toDomainEntity(image))
+      )
+    }
+
     return product
   }
 
@@ -52,6 +61,10 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
 
     if (domain.getBrand()) {
       product.brand = this.brandDataMapper.toDaoEntity(domain.getBrand())
+    }
+
+    if (domain.getImages()) {
+      product.images = this.imageDataMapper.toDaoEntityMany(domain.getImages())
     }
 
     return product

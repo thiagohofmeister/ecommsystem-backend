@@ -1,3 +1,4 @@
+import { ProductSaveImageDto } from './ProductSaveImageDto'
 import { ProductSaveVariationDto } from './ProductSaveVariationDto'
 
 export interface ProductCreateDto {
@@ -11,5 +12,6 @@ export interface ProductCreateDto {
     id: string
   }
   id: string
+  images: ProductSaveImageDto[]
   variations: ({ sku: string } & ProductSaveVariationDto)[]
 }

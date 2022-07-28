@@ -6,8 +6,10 @@ import {
   OneToMany,
   PrimaryColumn
 } from 'typeorm'
+
 import { BrandDao } from './BrandDao'
 import { CategoryDao } from './CategoryDao'
+import { ImageDao } from './ImageDao'
 import { VariationDao } from './VariationDao'
 
 @Entity('product')
@@ -54,6 +56,19 @@ export class ProductDao {
     }
   ])
   variations?: VariationDao[]
+
+  @OneToMany(() => ImageDao, image => image.product, {
+    cascade: true
+  })
+  @JoinColumn([
+    {
+      name: 'product_id'
+    },
+    {
+      name: 'store_id'
+    }
+  ])
+  images?: ImageDao[]
 
   @Column({
     name: 'created_at'

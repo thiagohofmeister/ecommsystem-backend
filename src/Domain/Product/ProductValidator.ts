@@ -48,6 +48,14 @@ export class ProductValidator extends JoiSchemaValidatorContract {
         id: Joi.string().required()
       }).required(),
       id: Joi.string().required(),
+      images: Joi.array()
+        .items(
+          Joi.object({
+            url: Joi.string().required(),
+            value: Joi.string().allow(null).required()
+          })
+        )
+        .optional(),
       variations: Joi.array()
         .items(
           this.productSaveVariationSchema.concat(
@@ -69,6 +77,23 @@ export class ProductValidator extends JoiSchemaValidatorContract {
       category: Joi.object({
         id: Joi.string().required()
       }),
+      images: Joi.array()
+        .items(
+          Joi.object({
+            id: Joi.string(),
+            url: Joi.when('id', {
+              is: Joi.exist(),
+              then: Joi.string(),
+              otherwise: Joi.string().required()
+            }),
+            value: Joi.when('id', {
+              is: Joi.exist(),
+              then: Joi.string().allow(null),
+              otherwise: Joi.string().allow(null).required()
+            })
+          })
+        )
+        .optional(),
       variations: Joi.array()
         .items(
           this.productUpdateVariationSchema.concat(

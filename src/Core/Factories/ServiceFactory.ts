@@ -1,24 +1,26 @@
 import { EntityManager } from 'typeorm'
-import { BrandCreateService } from '../../Domain/Brand/Services/BrandCreateService'
-import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 
-import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
-import { CategoryGetTreeService } from '../../Domain/Category/Services/CategoryGetTreeService'
-import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
 import { TransactionalService } from '../../Core/Services/TransactionalService'
-import { ProductCreateService } from '../../Domain/Product/Services/ProductCreateService'
-import { ProductDeleteVariationService } from '../../Domain/Product/Services/ProductDeleteVariationService'
-import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
-import { ProductSaveVariationService } from '../../Domain/Product/Services/ProductSaveVariationService'
-import { ProductValidator } from '../../Domain/Product/ProductValidator'
-import { QueueFactory } from './QueueFactory,'
-import { RepositoryFactory } from './RepositoryFactory'
+import { BrandValidator } from '../../Domain/Brand/BrandValidator'
+import { BrandCreateService } from '../../Domain/Brand/Services/BrandCreateService'
 import { BrandGetListService } from '../../Domain/Brand/Services/BrandGetListService'
 import { BrandGetOneByIdService } from '../../Domain/Brand/Services/BrandGetOneByIdService'
-import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductGetOneByIdService'
-import { ProductGetListService } from '../../Domain/Product/Services/ProductGetListService'
-import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
+import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
+import { CategoryCreateService } from '../../Domain/Category/Services/CategoryCreateService'
 import { CategoryGetOneByIdService } from '../../Domain/Category/Services/CategoryGetOneByIdService'
+import { CategoryGetTreeService } from '../../Domain/Category/Services/CategoryGetTreeService'
+import { ProductValidator } from '../../Domain/Product/ProductValidator'
+import { ProductCreateService } from '../../Domain/Product/Services/ProductCreateService'
+import { ProductDeleteUnusedImagesService } from '../../Domain/Product/Services/ProductDeleteUnUsedImagesService'
+import { ProductDeleteVariationService } from '../../Domain/Product/Services/ProductDeleteVariationService'
+import { ProductGetListService } from '../../Domain/Product/Services/ProductGetListService'
+import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductGetOneByIdService'
+import { ProductSaveImageService } from '../../Domain/Product/Services/ProductSaveImageService'
+import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
+import { ProductSaveVariationService } from '../../Domain/Product/Services/ProductSaveVariationService'
+import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
+import { QueueFactory } from './QueueFactory,'
+import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
   constructor(
@@ -44,7 +46,9 @@ export class ServiceFactory {
       this.repositoryFactory.buildBrandRepository(manager),
       this.repositoryFactory.buildProductRepository(manager),
       this.buildProductSaveVariationService(manager),
-      this.buildProductDeleteVariationService(manager)
+      this.buildProductDeleteVariationService(manager),
+      this.buildProductSaveImageService(manager),
+      this.buildProductDeleteUnUsedImagesService(manager)
     )
   }
 
@@ -109,6 +113,18 @@ export class ServiceFactory {
   public buildProductSaveVariationService(manager?: EntityManager) {
     return new ProductSaveVariationService(
       this.repositoryFactory.buildVariationRepository(manager)
+    )
+  }
+
+  public buildProductSaveImageService(manager?: EntityManager) {
+    return new ProductSaveImageService(
+      this.repositoryFactory.buildImageRepository(manager)
+    )
+  }
+
+  public buildProductDeleteUnUsedImagesService(manager?: EntityManager) {
+    return new ProductDeleteUnusedImagesService(
+      this.repositoryFactory.buildImageRepository(manager)
     )
   }
 

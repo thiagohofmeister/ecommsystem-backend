@@ -1,12 +1,15 @@
 import { randomUUID } from 'crypto'
+
 import { Brand } from '../../Brand/Models/Brand'
 import { Category } from '../../Category/Models/Category'
+import { Image } from '../Models/Image'
 import { Variation } from './Variation'
 
 export class Product {
   private category: Category
   private brand: Brand
   private variations: Variation[]
+  private images: Image[]
 
   constructor(
     private storeId: string,
@@ -92,7 +95,32 @@ export class Product {
     return this
   }
 
+  public getImages() {
+    return this.images.sort((a, b) => a.getPosition() - b.getPosition())
+  }
+
+  public removeImages(idsToKeep: string[]) {
+    if (!this.images) this.images = []
+    this.images = this.images.filter(image => idsToKeep.includes(image.getId()))
+    return this
+  }
+
+  public addImage(image: Image) {
+    if (!this.images) this.images = []
+
+    this.images.push(image)
+    return this
+  }
+
   public getVariationSkus(): string[] {
     return this.variations?.map(variation => variation.getSku()) || []
+  }
+
+  public getImageById(id: string): Image {
+    return this.images?.find(image => image.getId() === id)
+  }
+
+  public getImagesIds(): string[] {
+    return this.images?.map(image => image.getId()) || []
   }
 }

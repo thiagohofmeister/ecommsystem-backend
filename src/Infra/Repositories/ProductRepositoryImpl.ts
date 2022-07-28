@@ -16,6 +16,7 @@ export class ProductRepositoryImpl
       .leftJoinAndSelect('ProductDao.category', 'category')
       .leftJoinAndSelect('ProductDao.variations', 'variations')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
+      .leftJoinAndSelect('ProductDao.images', 'images')
   }
 
   protected customToFindAll(
@@ -26,5 +27,6 @@ export class ProductRepositoryImpl
       .leftJoinAndSelect('ProductDao.category', 'category')
       .leftJoinAndSelect('ProductDao.variations', 'variations')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
+      .leftJoinAndSelect('ProductDao.images', 'images')
   }
 }
