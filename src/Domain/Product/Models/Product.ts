@@ -96,7 +96,7 @@ export class Product {
   }
 
   public getImages() {
-    return this.images.sort((a, b) => a.getPosition() - b.getPosition())
+    return this.images?.sort((a, b) => a.getPosition() - b.getPosition()) || []
   }
 
   public removeImages(idsToKeep: string[]) {

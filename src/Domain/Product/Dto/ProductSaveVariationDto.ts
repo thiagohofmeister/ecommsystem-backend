@@ -8,4 +8,8 @@ export interface ProductSaveVariationDto {
   weight: number
   measuresUnit: MeasureUnitEnum
   weightUnit: WeightUnitEnum
+  attributes: {
+    id: string
+    value: string
+  }[]
 }

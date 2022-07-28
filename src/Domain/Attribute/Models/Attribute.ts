@@ -1,6 +1,9 @@
 import { randomUUID } from 'crypto'
+import { VariationAttribute } from '../../Product/Models/VariationAttribute'
 
 export class Attribute {
+  private variationAttributes: VariationAttribute[]
+
   constructor(
     private storeId: string,
     private label: string,
@@ -34,5 +37,26 @@ export class Attribute {
 
   public getId(): string {
     return this.id
+  }
+
+  public removeAttributes(keepVariationSkus: string[]) {
+    if (!this.variationAttributes) this.variationAttributes = []
+
+    this.variationAttributes = this.variationAttributes.filter(attr =>
+      keepVariationSkus.includes(attr.getVariation().getSku())
+    )
+
+    return this
+  }
+
+  public addAttribute(attribute: VariationAttribute) {
+    if (!this.variationAttributes) this.variationAttributes = []
+
+    this.variationAttributes.push(attribute)
+    return this
+  }
+
+  public getAttributes() {
+    return this.variationAttributes
   }
 }

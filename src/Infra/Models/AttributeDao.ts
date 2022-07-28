@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn
+} from 'typeorm'
+
+import { VariationAttributeDao } from './VariationAttributeDao'
 
 @Entity('attribute')
 export class AttributeDao {
@@ -16,6 +25,9 @@ export class AttributeDao {
 
   @Column('json')
   values: string
+
+  @OneToMany(() => VariationAttributeDao, attribute => attribute.attribute)
+  variationAttributes: VariationAttributeDao[]
 
   constructor(id: string, storeId: string, label: string, values: string) {
     this.id = id

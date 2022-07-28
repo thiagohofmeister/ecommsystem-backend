@@ -1,10 +1,15 @@
+import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
 import { ProductSaveVariationDto } from '../Dto/ProductSaveVariationDto'
 import { Product } from '../Models/Product'
 import { Variation } from '../Models/Variation'
+import { VariationAttribute } from '../Models/VariationAttribute'
 import { VariationRepository } from '../Repositories/VariationRepository'
 
 export class ProductSaveVariationService {
-  constructor(private readonly variationRepository: VariationRepository) {}
+  constructor(
+    private readonly variationRepository: VariationRepository,
+    private readonly attributeRepository: AttributeRepository
+  ) {}
 
   async execute(
     product: Product | string,
@@ -25,11 +30,31 @@ export class ProductSaveVariationService {
       data
     )
 
-    if (!!variation) {
-      return await this.variationRepository.save(variationToSave)
-    }
+    await this.fillAttributes(variationToSave, data.attributes)
 
-    return await this.variationRepository.create(variationToSave)
+    const variationSaved = await this.variationRepository.save(variationToSave)
+
+    return variationSaved
+  }
+
+  private async fillAttributes(
+    variationSaved: Variation,
+    attributes: ProductSaveVariationDto['attributes']
+  ) {
+    await Promise.all(
+      attributes.map(async attr => {
+        // TODO: Validate if value used exists on attribute
+
+        const variationAttribute = new VariationAttribute(
+          variationSaved.getStoreId(),
+          attr.value,
+          variationSaved,
+          await this.attributeRepository.findOneByPrimaryColumn(attr.id)
+        )
+
+        variationSaved.addAttribute(variationAttribute)
+      })
+    )
   }
 
   private async getVariation(

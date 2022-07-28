@@ -181,7 +181,8 @@ export class ServiceFactory {
 
   public buildProductSaveVariationService(manager?: EntityManager) {
     return new ProductSaveVariationService(
-      this.repositoryFactory.buildVariationRepository(manager)
+      this.repositoryFactory.buildVariationRepository(manager),
+      this.repositoryFactory.buildAttributeRepository(manager)
     )
   }
 

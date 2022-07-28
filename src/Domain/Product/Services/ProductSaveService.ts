@@ -107,8 +107,6 @@ export class ProductSaveService {
 
         product.addImage(image)
       })
-
-      console.log(product.getImagesIds())
     }
   }
 

@@ -12,9 +12,19 @@ export class ProductValidator extends JoiSchemaValidatorContract {
   private productUpdateSchema: Schema
   private productSaveVariationSchema: Schema
   private productUpdateVariationSchema: Schema
+  private variationAttributesSchema: Schema
 
   constructor() {
     super()
+
+    this.variationAttributesSchema = Joi.array()
+      .items(
+        Joi.object({
+          id: Joi.string().required(),
+          value: Joi.string().required()
+        })
+      )
+      .optional()
 
     this.productSaveVariationSchema = Joi.object({
       width: Joi.number().required(),
@@ -26,7 +36,8 @@ export class ProductValidator extends JoiSchemaValidatorContract {
         .required(),
       weightUnit: Joi.string()
         .valid(...Object.keys(WeightUnitEnum))
-        .required()
+        .required(),
+      attributes: this.variationAttributesSchema
     })
 
     this.productUpdateVariationSchema = Joi.object({
@@ -35,7 +46,8 @@ export class ProductValidator extends JoiSchemaValidatorContract {
       height: Joi.number(),
       weight: Joi.number(),
       measuresUnit: Joi.string().valid(...Object.keys(MeasureUnitEnum)),
-      weightUnit: Joi.string().valid(...Object.keys(WeightUnitEnum))
+      weightUnit: Joi.string().valid(...Object.keys(WeightUnitEnum)),
+      attributes: this.variationAttributesSchema
     })
 
     this.productCreateSchema = Joi.object({

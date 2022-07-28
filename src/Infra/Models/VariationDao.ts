@@ -1,7 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn
+} from 'typeorm'
+
 import { MeasureUnitEnum } from '../../Domain/Product/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../../Domain/Product/Enums/WeightUnitEnum'
 import { ProductDao } from './ProductDao'
+import { VariationAttributeDao } from './VariationAttributeDao'
 
 @Entity('variation')
 export class VariationDao {
@@ -60,6 +69,11 @@ export class VariationDao {
     }
   ])
   product: ProductDao
+
+  @OneToMany(() => VariationAttributeDao, attribute => attribute.variation, {
+    cascade: true
+  })
+  variationAttributes: VariationAttributeDao[]
 
   constructor(
     sku: string,

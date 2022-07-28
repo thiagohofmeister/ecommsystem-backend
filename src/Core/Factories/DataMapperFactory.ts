@@ -5,6 +5,8 @@ import { CategoryTreeCacheDataMapper } from '../../Infra/DataMappers/CategoryTre
 import { ImageDataMapper } from '../../Infra/DataMappers/ImageDataMapper'
 import { ProductDataMapper } from '../../Infra/DataMappers/ProductDataMapper'
 import { ProductDataMapperMediator } from '../../Infra/DataMappers/ProductDataMapperMediator'
+import { VariationAttributeDataMapper } from '../../Infra/DataMappers/VariationAttributeDataMapper'
+import { VariationAttributeDataMapperMediator } from '../../Infra/DataMappers/VariationAttributeDataMapperMediator'
 import { VariationDataMapper } from '../../Infra/DataMappers/VariationDataMapper'
 import { VariationDataMapperMediator } from '../../Infra/DataMappers/VariationDataMapperMediator'
 
@@ -47,10 +49,23 @@ export class DataMapperFactory {
     return new ImageDataMapper()
   }
 
+  public buildVariationAttributeDataMapper() {
+    return new VariationAttributeDataMapper()
+  }
+
+  public buildVariationAttributeDataMapperMediator() {
+    return new VariationAttributeDataMapperMediator(
+      this.buildVariationAttributeDataMapper(),
+      this.buildAttributeDataMapper(),
+      this.buildVariationDataMapper()
+    )
+  }
+
   public buildVariationDataMapperMediator() {
     return new VariationDataMapperMediator(
       this.buildVariationDataMapper(),
-      this.buildProductDataMapper()
+      this.buildProductDataMapper(),
+      this.buildVariationAttributeDataMapperMediator()
     )
   }
 }

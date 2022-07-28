@@ -1,8 +1,11 @@
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
 import { Product } from './Product'
+import { VariationAttribute } from './VariationAttribute'
 
 export class Variation {
+  private variationAttributes: VariationAttribute[]
+
   constructor(
     private sku: string,
     private storeId: string,
@@ -94,5 +97,26 @@ export class Variation {
 
   public getProduct(): Product {
     return this.product
+  }
+
+  public removeAttributes(keepVariationSkus: string[]) {
+    if (!this.variationAttributes) this.variationAttributes = []
+
+    this.variationAttributes = this.variationAttributes.filter(attr =>
+      keepVariationSkus.includes(attr.getVariation().getSku())
+    )
+
+    return this
+  }
+
+  public addAttribute(attribute: VariationAttribute) {
+    if (!this.variationAttributes) this.variationAttributes = []
+
+    this.variationAttributes.push(attribute)
+    return this
+  }
+
+  public getAttributes() {
+    return this.variationAttributes
   }
 }
