@@ -157,19 +157,19 @@ CREATE TABLE IF NOT EXISTS `product_specification` (
   `store_id` CHAR(36) NOT NULL,
   `value` VARCHAR(250) NOT NULL,
   PRIMARY KEY (`specification_id`, `product_id`, `store_id`),
-  CONSTRAINT `fk_attributes_has_product_attributes1`
+  CONSTRAINT `fk_specification_product_specification1`
     FOREIGN KEY (`specification_id`)
     REFERENCES `specification` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_product_attribute_product1`
+  CONSTRAINT `fk_product_specification_product1`
     FOREIGN KEY (`product_id` , `store_id`)
     REFERENCES `product` (`id` , `store_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_specification_product_attributes1_idx` ON `product_specification` (`specification_id` ASC);
+CREATE INDEX `fk_specification_product_specification1_idx` ON `product_specification` (`specification_id` ASC);
 
 CREATE INDEX `fk_product_specification_product1_idx` ON `product_specification` (`product_id` ASC, `store_id` ASC);
 
@@ -183,21 +183,21 @@ CREATE TABLE IF NOT EXISTS `variation_specification` (
   `store_id` CHAR(36) NOT NULL,
   `value` VARCHAR(250) NOT NULL,
   PRIMARY KEY (`specification_id`, `variation_sku`, `store_id`),
-  CONSTRAINT `fk_attributes_has_variation_attributes1`
+  CONSTRAINT `fk_specification_has_variation_specification1`
     FOREIGN KEY (`specification_id`)
     REFERENCES `specification` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_variation_attribute_variation1`
+  CONSTRAINT `fk_variation_specification_variation1`
     FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_attributes_variation_attributes1_idx` ON `variation_specification` (`specification_id` ASC);
+CREATE INDEX `fk_specification_variation_specification1_idx` ON `variation_specification` (`specification_id` ASC);
 
-CREATE INDEX `fk_variation_attribute_variation1_idx` ON `variation_specification` (`variation_sku` ASC, `store_id` ASC);
+CREATE INDEX `fk_variation_specification_variation1_idx` ON `variation_specification` (`variation_sku` ASC, `store_id` ASC);
 
 
 -- -----------------------------------------------------
@@ -322,8 +322,7 @@ CREATE INDEX `fk_stock_variation1_idx` ON `stock` (`variation_sku` ASC, `store_i
 CREATE TABLE IF NOT EXISTS `attribute` (
   `id` CHAR(36) NOT NULL,
   `label` VARCHAR(45) NULL,
-  `type` VARCHAR(45) NULL,
-  `values` JSON NULL,
+  `values` JSON NOT NULL,
   `store_id` CHAR(36) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -336,11 +335,12 @@ CREATE UNIQUE INDEX `attribute_id_store_id_UNIQUE` ON `attribute` (`id` ASC, `st
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `variation_attribute` (
   `variation_sku` VARCHAR(80) NOT NULL,
-  `variation_store_id` CHAR(36) NOT NULL,
+  `store_id` CHAR(36) NOT NULL,
   `attribute_id` CHAR(36) NOT NULL,
-  PRIMARY KEY (`variation_sku`, `variation_store_id`, `attribute_id`),
+  `value` VARCHAR(250) NOT NULL,
+  PRIMARY KEY (`variation_sku`, `store_id`, `attribute_id`),
   CONSTRAINT `fk_variation_has_attribute_variation1`
-    FOREIGN KEY (`variation_sku` , `variation_store_id`)
+    FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -353,4 +353,4 @@ ENGINE = InnoDB;
 
 CREATE INDEX `fk_variation_attribute_attribute1_idx` ON `variation_attribute` (`attribute_id` ASC);
 
-CREATE INDEX `fk_variation_attribute_variation1_idx` ON `variation_attribute` (`variation_sku` ASC, `variation_store_id` ASC);
+CREATE INDEX `fk_variation_attribute_variation1_idx` ON `variation_attribute` (`variation_sku` ASC, `store_id` ASC);

@@ -1,6 +1,12 @@
 import { EntityManager } from 'typeorm'
 
 import { TransactionalService } from '../../Core/Services/TransactionalService'
+import { AttributeValidator } from '../../Domain/Attribute/AttributeValidator'
+import { AttributeCreateService } from '../../Domain/Attribute/Services/AttributeCreateService'
+import { AttributeGetListService } from '../../Domain/Attribute/Services/AttributeGetListService'
+import { AttributeGetOneByIdService } from '../../Domain/Attribute/Services/AttributeGetOneByIdService'
+import { AttributeSaveService } from '../../Domain/Attribute/Services/AttributeSaveService'
+import { AttributeUpdateService } from '../../Domain/Attribute/Services/AttributeUpdateService'
 import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 import { BrandCreateService } from '../../Domain/Brand/Services/BrandCreateService'
 import { BrandGetListService } from '../../Domain/Brand/Services/BrandGetListService'
@@ -100,6 +106,39 @@ export class ServiceFactory {
   public buildBrandGetOneByIdService(manager?: EntityManager) {
     return new BrandGetOneByIdService(
       this.repositoryFactory.buildBrandRepository(manager)
+    )
+  }
+
+  public buildAttributeCreateService(manager?: EntityManager) {
+    return new AttributeCreateService(
+      this.buildAttributeSaveService(manager),
+      new AttributeValidator()
+    )
+  }
+
+  public buildAttributeUpdateService(manager?: EntityManager) {
+    return new AttributeUpdateService(
+      this.buildAttributeSaveService(manager),
+      this.buildAttributeGetOneByIdService(manager),
+      new AttributeValidator()
+    )
+  }
+
+  public buildAttributeSaveService(manager?: EntityManager) {
+    return new AttributeSaveService(
+      this.repositoryFactory.buildAttributeRepository(manager)
+    )
+  }
+
+  public buildAttributeGetListService(manager?: EntityManager) {
+    return new AttributeGetListService(
+      this.repositoryFactory.buildAttributeRepository(manager)
+    )
+  }
+
+  public buildAttributeGetOneByIdService(manager?: EntityManager) {
+    return new AttributeGetOneByIdService(
+      this.repositoryFactory.buildAttributeRepository(manager)
     )
   }
 

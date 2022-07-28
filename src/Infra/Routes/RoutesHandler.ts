@@ -1,10 +1,13 @@
 import { Router } from 'express'
+
 import { CreateContext } from '../../Core/Middlewares/CreateContext'
+import { AttributeController } from '../../Domain/Attribute/AttributeController'
 import { BrandController } from '../../Domain/Brand/BrandController'
 import { CategoryController } from '../../Domain/Category/CategoryController'
 import { ProductController } from '../../Domain/Product/ProductController'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
 import { RouteContract } from './Contracts/RouteContract'
+import { AttributeRoutes } from './WithAuth/AttributeRoutes'
 import { BrandRoutes } from './WithAuth/BrandRoutes'
 import { CategoryRoutes } from './WithAuth/CategoryRoutes'
 import { ProductRoutes } from './WithAuth/ProductRoutes'
@@ -29,7 +32,8 @@ export class RoutesHandler {
     const routes = [
       new CategoryRoutes(new CategoryController()),
       new ProductRoutes(new ProductController()),
-      new BrandRoutes(new BrandController())
+      new BrandRoutes(new BrandController()),
+      new AttributeRoutes(new AttributeController())
     ]
 
     routes.forEach(route => {

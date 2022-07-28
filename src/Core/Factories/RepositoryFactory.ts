@@ -1,5 +1,7 @@
 import { RedisClientType } from 'redis'
 import { DataSource, EntityManager } from 'typeorm'
+import { AttributeDataNotFound } from '../../Domain/Attribute/Exceptions/AttributeDataNotFound'
+import { AttributeRepository } from '../../Domain/Attribute/Repositories/AttributeRepository'
 
 import { BrandDataNotFound } from '../../Domain/Brand/Exceptions/BrandDataNotFound'
 import { BrandRepository } from '../../Domain/Brand/Repositories/BrandRepository'
@@ -12,11 +14,13 @@ import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductData
 import { VariationDataNotFound } from '../../Domain/Product/Exceptions/VariationDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
 import { VariationRepository } from '../../Domain/Product/Repositories/VariationRepository'
+import { AttributeDao } from '../../Infra/Models/AttributeDao'
 import { BrandDao } from '../../Infra/Models/BrandDao'
 import { CategoryDao } from '../../Infra/Models/CategoryDao'
 import { ImageDao } from '../../Infra/Models/ImageDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
 import { VariationDao } from '../../Infra/Models/VariationDao'
+import { AttributeRepositoryImpl } from '../../Infra/Repositories/AttributeRepositoryImpl'
 import { BrandRepositoryImpl } from '../../Infra/Repositories/BrandRepositoryImpl'
 import { CategoryRepositoryImpl } from '../../Infra/Repositories/CategoryRepositoryImpl'
 import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/CategoryTreeCacheRepositoryImpl'
@@ -34,13 +38,22 @@ export class RepositoryFactory {
   ) {}
 
   public buildCategoryRepository(manager?: EntityManager): CategoryRepository {
-    if (!manager) manager = this.dataSource.manager
-
     return new CategoryRepositoryImpl(
       this.getManager(manager).getRepository(CategoryDao),
       this.dataMapperFactory.buildCategoryDataMapper(),
       this.storeId,
       new CategoryDataNotFound()
+    )
+  }
+
+  public buildAttributeRepository(
+    manager?: EntityManager
+  ): AttributeRepository {
+    return new AttributeRepositoryImpl(
+      this.getManager(manager).getRepository(AttributeDao),
+      this.dataMapperFactory.buildAttributeDataMapper(),
+      this.storeId,
+      new AttributeDataNotFound()
     )
   }
 
