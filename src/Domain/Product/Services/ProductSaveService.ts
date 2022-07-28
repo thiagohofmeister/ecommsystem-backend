@@ -29,9 +29,7 @@ export class ProductSaveService {
 
     await this.fillImages(productToSave, data.images)
 
-    const productSaved = !!product
-      ? await this.productRepository.save(productToSave)
-      : await this.productRepository.create(productToSave)
+    const productSaved = await this.productRepository.save(productToSave)
 
     await this.saveVariations(productSaved, data.variations, !!product)
 
@@ -77,8 +75,13 @@ export class ProductSaveService {
     images: ProductCreateDto['images']
   ) {
     if (!!images) {
-      console.log(images.filter(i => !!i.id).map(i => i.id))
       product.removeImages(images.filter(i => !!i.id).map(i => i.id))
+
+      await this.productDeleteUnUsedImagesService.execute(
+        product.getId(),
+        product.getStoreId(),
+        product.getImagesIds()
+      )
 
       images.forEach((imageDto, position) => {
         if (!!imageDto.id) {
@@ -104,11 +107,7 @@ export class ProductSaveService {
         product.addImage(image)
       })
 
-      await this.productDeleteUnUsedImagesService.execute(
-        product.getId(),
-        product.getStoreId(),
-        product.getImagesIds()
-      )
+      console.log(product.getImagesIds())
     }
   }
 
