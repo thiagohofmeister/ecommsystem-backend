@@ -41,16 +41,21 @@ export class BrandSaveService {
     }
 
     return brand.setUrn(
-      await this.generateUrn(data.urn || data.label || brand.getLabel())
+      await this.generateUrn(data.urn || data.label || brand.getLabel(), brand)
     )
   }
 
-  private async generateUrn(str: string, count: number = 0) {
+  private async generateUrn(str: string, brand?: Brand, count: number = 0) {
     const slug = `${kebabCase(str)}${count ? `-${count}` : ''}`
 
     try {
-      await this.brandRepository.findOneByUrn(slug)
-      return this.generateUrn(str, ++count)
+      const brandFound = await this.brandRepository.findOneByUrn(slug)
+
+      if (brandFound.getId() === brand?.getId()) {
+        return slug
+      }
+
+      return this.generateUrn(str, brand, ++count)
     } catch (e) {
       if (!(e instanceof DataNotFoundException)) throw e
     }
