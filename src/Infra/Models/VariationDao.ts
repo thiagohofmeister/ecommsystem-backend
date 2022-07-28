@@ -9,7 +9,8 @@ export class VariationDao {
   sku: string
 
   @Column({
-    name: 'store_id'
+    name: 'store_id',
+    update: false
   })
   storeId: string
 

@@ -24,12 +24,27 @@ export class Product {
     return this.storeId
   }
 
+  public setTitle(title: string) {
+    this.title = title
+    return this
+  }
+
   public getTitle(): string {
     return this.title
   }
 
+  public setDescription(description: string) {
+    this.description = description
+    return this
+  }
+
   public getDescription(): string {
     return this.description
+  }
+
+  public setActive(active: boolean) {
+    this.active = active
+    return this
   }
 
   public isActive(): boolean {

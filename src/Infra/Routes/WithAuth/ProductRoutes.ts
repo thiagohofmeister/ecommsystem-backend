@@ -3,29 +3,28 @@ import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
-export class ProductRoutes extends AuthRouteContract {
-  private static productController: ProductController
-
-  constructor() {
-    super('product')
-  }
-
-  public static getProductController() {
-    if (!this.productController)
-      this.productController = new ProductController()
-
-    return this.productController
+export class ProductRoutes extends AuthRouteContract<ProductController> {
+  constructor(controller: ProductController) {
+    super('product', controller)
   }
 
   public getRoutes(): RouteDto[] {
-    const controller = ProductRoutes.getProductController()
+    const controller = this.getController()
 
     return [
-      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post)
-      // TODO: PATCH
+      new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.GET,
+        controller.getOneById
+      ),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.PATCH,
+        controller.update
+      ),
+      new RouteDto(this.getFullEndpoint(), MethodEnum.GET, controller.getList)
       // TODO: DELETE
-      // TODO: GET ONE
-      // TODO: PUT
     ]
   }
 }

@@ -16,7 +16,7 @@ export abstract class AmqpQueueContract<T extends IEventPayload> {
   public async consume(action: (msg: ConsumeMessage | null) => void) {
     const channel = await this.connect()
     await this.createQueue(channel, this.queue)
-    console.log('Listening for messages')
+    console.info('Listening for messages')
     channel.consume(
       this.queue,
       msg => {

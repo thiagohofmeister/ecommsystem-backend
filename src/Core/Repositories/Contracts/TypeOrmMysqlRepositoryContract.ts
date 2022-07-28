@@ -28,28 +28,17 @@ export abstract class TypeOrmMysqlRepositoryContract<
       this.dataMapper.toDaoEntity(entity)
     )
 
-    const primaryColumnValue =
-      result.identifiers[0][
-        this.repository.metadata.primaryColumns[0].propertyAliasName
-      ]
-
-    return this.findOneByPrimaryColumn(primaryColumnValue)
+    return this.findOneByPrimaryColumn(
+      result.identifiers[0][this.getPrimaryColumnName()]
+    )
   }
 
   public async save(entity: TDomainEntity): Promise<TDomainEntity> {
-    const result = await this.repository.save(
-      this.dataMapper.toDaoEntity(entity)
-    )
+    try {
+      await this.repository.save(this.dataMapper.toDaoEntity(entity))
+    } catch {}
 
-    const primaryColumnName =
-      this.repository.metadata.primaryColumns[0].propertyAliasName
-        .split('')
-        .map((v, i) => (i === 0 ? v.toUpperCase() : v))
-        .join('')
-
-    const primaryColumnValue = result[`get${primaryColumnName}`]
-
-    return this.findOneByPrimaryColumn(primaryColumnValue)
+    return this.findOneByPrimaryColumn(entity[this.getPrimaryColumnName()])
   }
 
   public async delete(
@@ -183,5 +172,9 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   protected getTableName(): string {
     return this.repository.metadata.targetName
+  }
+
+  protected getPrimaryColumnName(): string {
+    return this.repository.metadata.primaryColumns[0].propertyAliasName
   }
 }

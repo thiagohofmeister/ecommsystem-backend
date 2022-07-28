@@ -9,7 +9,7 @@ export class Redis {
     })
 
     Redis.client.on('ready', () => console.info('Database Redis initialized.'))
-    Redis.client.on('error', () => console.log('Redis Client Error'))
+    Redis.client.on('error', () => console.error('Redis Client Error'))
 
     await Redis.client.connect()
   }

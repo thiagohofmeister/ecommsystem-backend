@@ -12,6 +12,7 @@ export class CategoryController extends BaseController {
     super()
     this.post = this.post.bind(this)
     this.getTree = this.getTree.bind(this)
+    this.getOneById = this.getOneById.bind(this)
   }
 
   public async post(
@@ -38,6 +39,19 @@ export class CategoryController extends BaseController {
       this.defaultFacade(req).getTree(),
       ResponseTypeEnum.OK,
       new CategoryTreeView()
+    )
+  }
+
+  public async getOneById(
+    req: CatalogRequest,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    return this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).getOneById(req.params.id),
+      ResponseTypeEnum.OK
     )
   }
 

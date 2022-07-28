@@ -3,21 +3,13 @@ import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
-export class BrandRoutes extends AuthRouteContract {
-  private static brandController: BrandController
-
-  constructor() {
-    super('brand')
-  }
-
-  public static getBrandController() {
-    if (!this.brandController) this.brandController = new BrandController()
-
-    return this.brandController
+export class BrandRoutes extends AuthRouteContract<BrandController> {
+  constructor(controller: BrandController) {
+    super('brand', controller)
   }
 
   public getRoutes(): RouteDto[] {
-    const controller = BrandRoutes.getBrandController()
+    const controller = this.getController()
 
     return [
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
@@ -26,10 +18,14 @@ export class BrandRoutes extends AuthRouteContract {
         MethodEnum.GET,
         controller.getOneById
       ),
-      new RouteDto(this.getFullEndpoint(), MethodEnum.GET, controller.get)
+      new RouteDto(this.getFullEndpoint(), MethodEnum.GET, controller.get),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.GET,
+        controller.getOneById
+      )
       // TODO: PATCH
       // TODO: DELETE
-      // TODO: GET ONE
     ]
   }
 }

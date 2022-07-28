@@ -25,24 +25,54 @@ export class Variation {
     return this.sku
   }
 
+  public setWidth(width: number) {
+    this.width = width
+    return this
+  }
+
   public getWidth(): number {
     return this.width
+  }
+
+  public setLength(length: number) {
+    this.length = length
+    return this
   }
 
   public getLength(): number {
     return this.length
   }
 
+  public setHeight(height: number) {
+    this.height = height
+    return this
+  }
+
   public getHeight(): number {
     return this.height
+  }
+
+  public setMeasuresUnit(measuresUnit: MeasureUnitEnum) {
+    this.measuresUnit = measuresUnit
+    return this
   }
 
   public getMeasuresUnit(): MeasureUnitEnum {
     return this.measuresUnit
   }
 
+  public setWeight(weight: number) {
+    this.weight = weight
+    return this
+  }
+
   public getWeight(): number {
     return this.weight
+  }
+
+  public setWeightUnit(weightUnit: WeightUnitEnum) {
+    this.weightUnit = weightUnit
+    return this
   }
 
   public getWeightUnit(): WeightUnitEnum {

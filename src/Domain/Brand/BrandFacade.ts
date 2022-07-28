@@ -7,23 +7,17 @@ export class BrandFacade extends FacadeContract {
     return this.serviceFactory
       .buildTransactionalService()
       .execute(async manager => {
-        const brandCreateService =
-          this.serviceFactory.buildBrandCreateService(manager)
-
-        return await brandCreateService.execute(storeId, data)
+        return await this.serviceFactory
+          .buildBrandCreateService(manager)
+          .execute(storeId, data)
       })
   }
 
   public async list(data: BrandGetListFilterDto) {
-    const brandGetListService = this.serviceFactory.buildBrandGetListService()
-
-    return await brandGetListService.execute(data)
+    return await this.serviceFactory.buildBrandGetListService().execute(data)
   }
 
   public async getOneById(id: string) {
-    const brandGetOneByIdService =
-      this.serviceFactory.buildBrandGetOneByIdService()
-
-    return await brandGetOneByIdService.execute(id)
+    return await this.serviceFactory.buildBrandGetOneByIdService().execute(id)
   }
 }

@@ -19,7 +19,10 @@ export class MySQL {
         path.join(__dirname, '..', '..', 'Infra', 'Models', '*.ts'),
         path.join(__dirname, '..', '..', 'Infra', 'Models', '*.js')
       ],
-      logging: true
+      logging: true,
+      bigNumberStrings: false,
+      supportBigNumbers: true,
+      timezone: 'America/Sao_Paulo'
     })
 
     try {

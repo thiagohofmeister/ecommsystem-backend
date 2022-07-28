@@ -15,12 +15,28 @@ import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
 import { BrandGetListService } from '../../Domain/Brand/Services/BrandGetListService'
 import { BrandGetOneByIdService } from '../../Domain/Brand/Services/BrandGetOneByIdService'
+import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductGetOneByIdService'
+import { ProductGetListService } from '../../Domain/Product/Services/ProductGetListService'
+import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
+import { CategoryGetOneByIdService } from '../../Domain/Category/Services/CategoryGetOneByIdService'
 
 export class ServiceFactory {
   constructor(
     private readonly repositoryFactory: RepositoryFactory,
     private readonly queueFactory: QueueFactory
   ) {}
+
+  public buildProductGetListService(manager?: EntityManager) {
+    return new ProductGetListService(
+      this.repositoryFactory.buildProductRepository(manager)
+    )
+  }
+
+  public buildProductGetOneByIdService(manager?: EntityManager) {
+    return new ProductGetOneByIdService(
+      this.repositoryFactory.buildProductRepository(manager)
+    )
+  }
 
   public buildProductSaveService(manager?: EntityManager) {
     return new ProductSaveService(
@@ -29,6 +45,14 @@ export class ServiceFactory {
       this.repositoryFactory.buildProductRepository(manager),
       this.buildProductSaveVariationService(manager),
       this.buildProductDeleteVariationService(manager)
+    )
+  }
+
+  public buildProductUpdateService(manager?: EntityManager) {
+    return new ProductUpdateService(
+      this.buildProductGetOneByIdService(manager),
+      new ProductValidator(),
+      this.buildProductSaveService(manager)
     )
   }
 
@@ -73,6 +97,12 @@ export class ServiceFactory {
       this.repositoryFactory.buildCategoryTreeCacheRepository(
         this.repositoryFactory.getRedisClient()
       )
+    )
+  }
+
+  public buildCategoryGetOneByIdService(manager?: EntityManager) {
+    return new CategoryGetOneByIdService(
+      this.repositoryFactory.buildCategoryRepository(manager)
     )
   }
 

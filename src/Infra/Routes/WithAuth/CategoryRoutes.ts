@@ -3,22 +3,13 @@ import { RouteDto } from '../../Dto/RouteDto'
 import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
-export class CategoryRoutes extends AuthRouteContract {
-  private static categoryController: CategoryController
-
-  constructor() {
-    super('category')
-  }
-
-  public static getCategoryController() {
-    if (!this.categoryController)
-      this.categoryController = new CategoryController()
-
-    return this.categoryController
+export class CategoryRoutes extends AuthRouteContract<CategoryController> {
+  constructor(controller: CategoryController) {
+    super('category', controller)
   }
 
   public getRoutes(): RouteDto[] {
-    const controller = CategoryRoutes.getCategoryController()
+    const controller = this.getController()
 
     return [
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
@@ -26,10 +17,14 @@ export class CategoryRoutes extends AuthRouteContract {
         this.getFullEndpoint('/tree'),
         MethodEnum.GET,
         controller.getTree
+      ),
+      new RouteDto(
+        this.getFullEndpoint('/:id'),
+        MethodEnum.GET,
+        controller.getOneById
       )
       // TODO: PATCH
       // TODO: DELETE
-      // TODO: GET ONE
     ]
   }
 }

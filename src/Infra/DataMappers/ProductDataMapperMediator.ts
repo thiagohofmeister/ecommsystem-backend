@@ -32,8 +32,6 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
       product.setBrand(this.brandDataMapper.toDomainEntity(entity.brand))
     }
 
-    console.log(entity.variations)
-
     if (entity.variations) {
       entity.variations.forEach(variation =>
         product.addVariation(this.variationDataMapper.toDomainEntity(variation))

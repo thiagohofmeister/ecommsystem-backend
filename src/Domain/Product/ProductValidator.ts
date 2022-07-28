@@ -5,10 +5,13 @@ import { ProductCreateDto } from './Dto/ProductCreateDto'
 import { ProductSaveVariationDto } from './Dto/ProductSaveVariationDto'
 import { MeasureUnitEnum } from './Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from './Enums/WeightUnitEnum'
+import { ProductUpdateDto } from './Dto/ProductUpdateDto'
 
 export class ProductValidator extends JoiSchemaValidatorContract {
   private productCreateSchema: Schema
+  private productUpdateSchema: Schema
   private productSaveVariationSchema: Schema
+  private productUpdateVariationSchema: Schema
 
   constructor() {
     super()
@@ -18,6 +21,19 @@ export class ProductValidator extends JoiSchemaValidatorContract {
       length: Joi.number().required(),
       height: Joi.number().required(),
       weight: Joi.number().required(),
+      measuresUnit: Joi.string()
+        .valid(...Object.keys(MeasureUnitEnum))
+        .required(),
+      weightUnit: Joi.string()
+        .valid(...Object.keys(WeightUnitEnum))
+        .required()
+    })
+
+    this.productUpdateVariationSchema = Joi.object({
+      width: Joi.number(),
+      length: Joi.number(),
+      height: Joi.number(),
+      weight: Joi.number(),
       measuresUnit: Joi.string().valid(...Object.keys(MeasureUnitEnum)),
       weightUnit: Joi.string().valid(...Object.keys(WeightUnitEnum))
     })
@@ -42,12 +58,40 @@ export class ProductValidator extends JoiSchemaValidatorContract {
         )
         .optional()
     })
+
+    this.productUpdateSchema = Joi.object({
+      title: Joi.string(),
+      description: Joi.string(),
+      active: Joi.boolean(),
+      brand: Joi.object({
+        id: Joi.string().required()
+      }),
+      category: Joi.object({
+        id: Joi.string().required()
+      }),
+      variations: Joi.array()
+        .items(
+          this.productUpdateVariationSchema.concat(
+            Joi.object({
+              sku: Joi.string().required()
+            })
+          )
+        )
+        .optional()
+    })
   }
 
   public async productCreatePayloadValidate(payload: ProductCreateDto) {
     return this.validateBySchema<ProductCreateDto>(
       payload,
       this.productCreateSchema
+    )
+  }
+
+  public async productUpdatePayloadValidate(payload: ProductUpdateDto) {
+    return this.validateBySchema<ProductUpdateDto>(
+      payload,
+      this.productUpdateSchema
     )
   }
 

@@ -6,17 +6,19 @@ export class CategoryFacade extends FacadeContract {
     return this.serviceFactory
       .buildTransactionalService()
       .execute(async manager => {
-        const categoryCreateService =
-          this.serviceFactory.buildCategoryCreateService(manager)
-
-        return await categoryCreateService.execute(storeId, data)
+        return await this.serviceFactory
+          .buildCategoryCreateService(manager)
+          .execute(storeId, data)
       })
   }
 
   public async getTree(ignoreCache?: boolean) {
-    const categoryCreateService =
-      this.serviceFactory.buildCategoryGetTreeService()
+    return this.serviceFactory
+      .buildCategoryGetTreeService()
+      .execute(ignoreCache)
+  }
 
-    return categoryCreateService.execute(ignoreCache)
+  public async getOneById(id: string) {
+    return this.serviceFactory.buildCategoryGetOneByIdService().execute(id)
   }
 }

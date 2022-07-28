@@ -21,7 +21,7 @@ export class ProductCreateService {
 
     await this.productValidator.productCreatePayloadValidate(data)
 
-    return this.productSaveService.execute(storeId, data, false)
+    return this.productSaveService.execute(storeId, data)
   }
 
   private async validateProductAlreadyExists(id: string) {
