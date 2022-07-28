@@ -15,7 +15,6 @@ import { ProductDeleteUnusedImagesService } from '../../Domain/Product/Services/
 import { ProductDeleteVariationService } from '../../Domain/Product/Services/ProductDeleteVariationService'
 import { ProductGetListService } from '../../Domain/Product/Services/ProductGetListService'
 import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductGetOneByIdService'
-import { ProductSaveImageService } from '../../Domain/Product/Services/ProductSaveImageService'
 import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
 import { ProductSaveVariationService } from '../../Domain/Product/Services/ProductSaveVariationService'
 import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
@@ -47,7 +46,6 @@ export class ServiceFactory {
       this.repositoryFactory.buildProductRepository(manager),
       this.buildProductSaveVariationService(manager),
       this.buildProductDeleteVariationService(manager),
-      this.buildProductSaveImageService(manager),
       this.buildProductDeleteUnUsedImagesService(manager)
     )
   }
@@ -113,12 +111,6 @@ export class ServiceFactory {
   public buildProductSaveVariationService(manager?: EntityManager) {
     return new ProductSaveVariationService(
       this.repositoryFactory.buildVariationRepository(manager)
-    )
-  }
-
-  public buildProductSaveImageService(manager?: EntityManager) {
-    return new ProductSaveImageService(
-      this.repositoryFactory.buildImageRepository(manager)
     )
   }
 

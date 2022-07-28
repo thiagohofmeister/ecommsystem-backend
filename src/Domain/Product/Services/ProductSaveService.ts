@@ -8,7 +8,6 @@ import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
 import { ProductDeleteUnusedImagesService } from './ProductDeleteUnUsedImagesService'
 import { ProductDeleteVariationService } from './ProductDeleteVariationService'
-import { ProductSaveImageService } from './ProductSaveImageService'
 import { ProductSaveVariationService } from './ProductSaveVariationService'
 
 export class ProductSaveService {
@@ -18,7 +17,6 @@ export class ProductSaveService {
     private readonly productRepository: ProductRepository,
     private readonly productSaveVariationService: ProductSaveVariationService,
     private readonly productDeleteVariationService: ProductDeleteVariationService,
-    private readonly productSaveImageService: ProductSaveImageService,
     private readonly productDeleteUnUsedImagesService: ProductDeleteUnusedImagesService
   ) {}
 
@@ -110,41 +108,6 @@ export class ProductSaveService {
         product.getId(),
         product.getStoreId(),
         product.getImagesIds()
-      )
-    }
-  }
-
-  private async saveImages(
-    product: Product,
-    images: ProductCreateDto['images'],
-    isUpdate: boolean
-  ) {
-    if (!!images) {
-      const idsToRemove = product.getImagesIds().filter(
-        id =>
-          !images
-            .filter(i => !!i.id)
-            .map(i => i.id)
-            .includes(id)
-      )
-
-      await Promise.all(
-        images.map(async (image, position) =>
-          this.productSaveImageService.execute(
-            product,
-            position,
-            image,
-            isUpdate && !!image.id
-              ? product.getImages()?.find(v => v.getId() === image.id)
-              : null
-          )
-        )
-      )
-
-      await this.productDeleteUnUsedImagesService.execute(
-        product.getId(),
-        product.getStoreId(),
-        idsToRemove
       )
     }
   }
