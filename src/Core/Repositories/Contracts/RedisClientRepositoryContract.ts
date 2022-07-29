@@ -33,6 +33,7 @@ export abstract class RedisClientRepositoryContract<
   async findOneByPrimaryColumn(
     id: string
   ): Promise<RedisCollection<TDomainValue>> {
+    await this.repository.flushAll()
     const value = await this.repository.get(this.getFullKey(id))
 
     if (!value) throw this.dataNotFoundException

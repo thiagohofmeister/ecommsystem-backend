@@ -44,7 +44,7 @@ export class ProductSaveVariationService {
     attributesDto: ProductSaveVariationDto['attributes'],
     variationIndex?: number
   ) {
-    const attrIdsDto = attributesDto.map(attr => attr.attribute.id)
+    const attrIdsDto = attributesDto?.map(attr => attr.attribute.id) || []
 
     variation.removeAttributes(attrIdsDto)
 
@@ -54,7 +54,7 @@ export class ProductSaveVariationService {
       attrIdsDto
     )
 
-    if (!attributesDto.length) {
+    if (!attrIdsDto.length) {
       return
     }
 

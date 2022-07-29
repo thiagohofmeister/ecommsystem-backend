@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryColumn
 } from 'typeorm'
+import { ProductVariationTemplate } from '../../Domain/Product/Interfaces/ProductVariationTemplate'
 
 import { BrandDao } from './BrandDao'
 import { CategoryDao } from './CategoryDao'
@@ -28,6 +29,12 @@ export class ProductDao {
 
   @Column()
   description: string
+
+  @Column({
+    name: 'variation_template',
+    type: 'json'
+  })
+  variationTemplate: ProductVariationTemplate
 
   @Column()
   active: boolean
@@ -85,6 +92,7 @@ export class ProductDao {
     storeId: string,
     title: string,
     description: string,
+    variationTemplate: ProductVariationTemplate,
     active: boolean,
     createdAt: Date
   ) {
@@ -92,6 +100,7 @@ export class ProductDao {
     this.storeId = storeId
     this.title = title
     this.description = description
+    this.variationTemplate = variationTemplate
     this.active = active
     this.createdAt = createdAt
   }

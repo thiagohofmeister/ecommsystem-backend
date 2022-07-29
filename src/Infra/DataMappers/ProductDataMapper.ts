@@ -11,6 +11,7 @@ export class ProductDataMapper extends EntityDataMapperContract<
       entity.storeId,
       entity.title,
       entity.description,
+      entity.variationTemplate,
       entity.active,
       entity.id,
       entity.createdAt,
@@ -24,6 +25,7 @@ export class ProductDataMapper extends EntityDataMapperContract<
       domain.getStoreId(),
       domain.getTitle(),
       domain.getDescription(),
+      domain.getVariationTemplate(),
       domain.isActive(),
       domain.getCreatedAt()
     )

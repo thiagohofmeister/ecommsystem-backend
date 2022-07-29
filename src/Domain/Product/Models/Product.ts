@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 
 import { Brand } from '../../Brand/Models/Brand'
 import { Category } from '../../Category/Models/Category'
+import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Image } from '../Models/Image'
 import { Variation } from './Variation'
 
@@ -15,6 +16,7 @@ export class Product {
     private storeId: string,
     private title: string,
     private description: string,
+    private variationTemplate: ProductVariationTemplate,
     private active: boolean,
     private id?: string,
     private createdAt?: Date,
@@ -43,6 +45,15 @@ export class Product {
 
   public getDescription(): string {
     return this.description
+  }
+
+  public setVariationTemplate(variationTemplate: ProductVariationTemplate) {
+    this.variationTemplate = variationTemplate
+    return this
+  }
+
+  public getVariationTemplate(): ProductVariationTemplate {
+    return this.variationTemplate
   }
 
   public setActive(active: boolean) {

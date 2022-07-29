@@ -1,9 +1,11 @@
 import { DataNotFoundException } from '../../../Core/Models/Exceptions/DataNotFoundException'
 import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDataException'
+import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
 import { BrandRepository } from '../../Brand/Repositories/BrandRepository'
 import { CategoryRepository } from '../../Category/Repositories/CategoryRepository'
 import { ProductCreateDto } from '../Dto/ProductCreateDto'
 import { ProductSaveDto } from '../Dto/ProductSaveDto'
+import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Image } from '../Models/Image'
 import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
@@ -13,6 +15,7 @@ import { ProductSaveVariationService } from './ProductSaveVariationService'
 
 export class ProductSaveService {
   constructor(
+    private readonly attributeRepository: AttributeRepository,
     private readonly categoryRepository: CategoryRepository,
     private readonly brandRepository: BrandRepository,
     private readonly productRepository: ProductRepository,
@@ -28,7 +31,14 @@ export class ProductSaveService {
   ): Promise<Product> {
     const productToSave = await this.getProductToSaved(product, storeId, data)
 
-    await this.fillImages(productToSave, data.images)
+    await this.validateVariationTemplate(productToSave.getVariationTemplate())
+
+    const combinations = await this.getVariationCombinations(
+      productToSave.getVariationTemplate(),
+      data.variations
+    )
+
+    await this.fillImages(productToSave, data.images, combinations['images'])
 
     const productSaved = await this.productRepository.save(productToSave)
 
@@ -37,13 +47,111 @@ export class ProductSaveService {
     return this.productRepository.findOneByPrimaryColumn(productSaved.getId())
   }
 
+  private async getVariationCombinations(
+    variationTemplate: ProductVariationTemplate,
+    variationsDto: ProductSaveDto['variations']
+  ) {
+    if (!variationTemplate) {
+      return []
+    }
+
+    const combinationIds = {}
+
+    Object.keys(variationTemplate)
+      .filter(k => k !== 'attributes' && !!variationTemplate[k])
+      .forEach(k => {
+        combinationIds[k] = []
+
+        for (const attr of variationTemplate.attributes) {
+          combinationIds[k].push(attr.id)
+
+          if (attr.id === variationTemplate[k]) break
+        }
+      })
+
+    const combinations = {}
+
+    Object.keys(combinationIds).forEach(key => {
+      combinations[key] = []
+
+      variationsDto.forEach(varDto => {
+        const combination = combinationIds[key]
+          .map(combinationId => {
+            const attribute = varDto.attributes.find(
+              varAttr => varAttr.attribute.id === combinationId
+            )
+
+            return attribute.value
+          })
+          .join('+')
+
+        combinations[key].push(combination)
+      })
+    })
+
+    return combinations
+  }
+
+  private async validateVariationTemplate(
+    variationTemplate: ProductVariationTemplate
+  ) {
+    if (!variationTemplate) {
+      return
+    }
+
+    const attributes = await this.attributeRepository.findAllByIds(
+      variationTemplate.attributes.map(attr => attr.id)
+    )
+
+    const invalidDataException = new InvalidDataException('Invalid data.')
+
+    variationTemplate.attributes.forEach((attrDto, index) => {
+      if (!!attributes.find(attr => attr.getId() === attrDto.id)) {
+        return
+      }
+
+      invalidDataException.addReason({
+        id: `variationTemplate.attributes.${index}.id.${attrDto.id}.notFound`,
+        message: `Field variationTemplate.attributes.${index}.id.${attrDto.id} not found.`
+      })
+    })
+
+    Object.keys(variationTemplate)
+      .filter(k => k !== 'attributes')
+      .forEach(key => {
+        if (
+          !!variationTemplate.attributes.find(
+            attr => attr.id === variationTemplate[key]
+          )
+        ) {
+          return
+        }
+
+        invalidDataException.addReason({
+          id: `variationTemplate.${key}.${variationTemplate[key]}.notAllowed`,
+          message: `Field variationTemplate.${key}.${variationTemplate[key]} not allowed.`
+        })
+      })
+
+    if (!!invalidDataException.getReasons().length) {
+      throw invalidDataException
+    }
+  }
+
   private async getProductToSaved(
     product: Product,
     storeId: string,
     data: ProductSaveDto
   ) {
     if (!product) {
-      return new Product(storeId, data.title, data.description, true, data.id)
+      return new Product(
+        storeId,
+        data.title,
+        data.description,
+        data.variationTemplate,
+        true,
+        data.id
+      )
         .setCategory(await this.getCategory(data.category.id))
         .setBrand(await this.getBrand(data.brand.id))
     }
@@ -73,40 +181,67 @@ export class ProductSaveService {
 
   private async fillImages(
     product: Product,
-    images: ProductCreateDto['images']
+    images: ProductCreateDto['images'],
+    combinations: string[]
   ) {
-    if (!!images) {
-      product.removeImages(images.filter(i => !!i.id).map(i => i.id))
+    if (!images) {
+      return
+    }
 
-      await this.productDeleteUnUsedImagesService.execute(
-        product.getId(),
-        product.getStoreId(),
-        product.getImagesIds()
-      )
+    product.removeImages(images.filter(i => !!i.id).map(i => i.id))
 
-      images.forEach((imageDto, position) => {
-        if (!!imageDto.id) {
-          const image = product.getImageById(imageDto.id).setPosition(position)
+    await this.productDeleteUnUsedImagesService.execute(
+      product.getId(),
+      product.getStoreId(),
+      product.getImagesIds()
+    )
 
-          if (imageDto.hasOwnProperty('url')) {
-            image.setUrl(imageDto.url)
-          }
+    const invalidDataException = new InvalidDataException('Invalid data.')
 
-          if (imageDto.hasOwnProperty('value')) {
-            image.setValue(imageDto.value)
-          }
+    images.forEach((imageDto, position) => {
+      if (!!imageDto.value && !combinations.includes(imageDto.value)) {
+        invalidDataException.addReason({
+          id: `images.${position}.value.${imageDto.value}.notAllowed`,
+          message: `Field images.${position}.value.${imageDto.value} not allowed.`
+        })
+        return
+      }
+
+      if (!!imageDto.id) {
+        const image = product.getImageById(imageDto.id)
+
+        if (!image) {
+          invalidDataException.addReason({
+            id: `images.${position}.id.${imageDto.id}.notFound`,
+            message: `Field images.${position}.id.${imageDto.id} not found.`
+          })
           return
         }
 
-        const image = new Image(
-          imageDto.url,
-          position,
-          imageDto.value,
-          product.getStoreId()
-        )
+        image.setPosition(position)
 
-        product.addImage(image)
-      })
+        if (imageDto.hasOwnProperty('url')) {
+          image.setUrl(imageDto.url)
+        }
+
+        if (imageDto.hasOwnProperty('value')) {
+          image.setValue(imageDto.value)
+        }
+        return
+      }
+
+      const image = new Image(
+        imageDto.url,
+        position,
+        imageDto.value,
+        product.getStoreId()
+      )
+
+      product.addImage(image)
+    })
+
+    if (!!invalidDataException.getReasons().length) {
+      throw invalidDataException
     }
   }
 

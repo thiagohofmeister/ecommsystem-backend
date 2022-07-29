@@ -75,10 +75,12 @@ export class ProductValidator extends JoiSchemaValidatorContract {
       description: Joi.string().required(),
       variationTemplate: this.variationTemplateSchema,
       brand: Joi.object({
-        id: Joi.string().required()
+        id: Joi.string().required(),
+        urn: Joi.string().optional()
       }).required(),
       category: Joi.object({
-        id: Joi.string().required()
+        id: Joi.string().required(),
+        urn: Joi.string().optional()
       }).required(),
       id: Joi.string().required(),
       images: Joi.array()
@@ -121,10 +123,12 @@ export class ProductValidator extends JoiSchemaValidatorContract {
       variationTemplate: this.variationTemplateSchema,
       active: Joi.boolean(),
       brand: Joi.object({
-        id: Joi.string().required()
+        id: Joi.string().required(),
+        urn: Joi.string().optional()
       }),
       category: Joi.object({
-        id: Joi.string().required()
+        id: Joi.string().required(),
+        urn: Joi.string().optional()
       }),
       images: Joi.array()
         .items(

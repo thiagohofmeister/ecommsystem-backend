@@ -1,6 +1,7 @@
 import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
+import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Product } from '../Models/Product'
 
 export class ProductView extends ViewContract<Product, ProductResponse> {
@@ -13,6 +14,7 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
       id: entity.getId(),
       title: entity.getTitle(),
       description: entity.getDescription(),
+      variationTemplate: entity.getVariationTemplate(),
       active: entity.isActive(),
       category: {
         id: entity.getCategory().getId(),
@@ -56,6 +58,7 @@ export interface ProductResponse {
   id: string
   title: string
   description: string
+  variationTemplate: ProductVariationTemplate
   active: boolean
   category: {
     id: string

@@ -52,6 +52,7 @@ export class ServiceFactory {
 
   public buildProductSaveService(manager?: EntityManager) {
     return new ProductSaveService(
+      this.repositoryFactory.buildAttributeRepository(manager),
       this.repositoryFactory.buildCategoryRepository(manager),
       this.repositoryFactory.buildBrandRepository(manager),
       this.repositoryFactory.buildProductRepository(manager),
