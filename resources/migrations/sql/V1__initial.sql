@@ -232,6 +232,8 @@ CREATE TABLE IF NOT EXISTS `campaign` (
   `id` CHAR(36) NOT NULL,
   `title` VARCHAR(45) NOT NULL,
   `store_id` CHAR(36) NOT NULL,
+  `date_from` DATETIME NULL,
+  `date_to` DATETIME NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -247,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `price` (
   `sale` BIGINT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `campaign_id` CHAR(36) NULL,
+  `campaign_id` CHAR(36) NULL DEFAULT NULL,
   `variation_sku` VARCHAR(80) NOT NULL,
   `store_id` CHAR(36) NOT NULL,
   PRIMARY KEY (`id`),
