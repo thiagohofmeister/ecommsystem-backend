@@ -14,7 +14,7 @@ import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductData
 import { VariationAttributeDataNotFound } from '../../Domain/Product/Exceptions/VariationAttributeDataNotFound'
 import { VariationDataNotFound } from '../../Domain/Product/Exceptions/VariationDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
-import { VariationAttributeRepository } from '../../Domain/Product/Repositories/VariationAttributeRepository'
+import { VariationAttributeRepository } from '../../Domain/Variation/Repositories/VariationAttributeRepository'
 import { VariationRepository } from '../../Domain/Product/Repositories/VariationRepository'
 import { AttributeDao } from '../../Infra/Models/AttributeDao'
 import { BrandDao } from '../../Infra/Models/BrandDao'

@@ -1,7 +1,8 @@
 import { In } from 'typeorm'
+
 import { VariationRepository } from '../Repositories/VariationRepository'
 
-export class ProductDeleteVariationService {
+export class VariationDeleteService {
   constructor(private readonly variationRepository: VariationRepository) {}
 
   public async execute(

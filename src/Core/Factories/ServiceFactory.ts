@@ -21,13 +21,13 @@ import { CategorySaveService } from '../../Domain/Category/Services/CategorySave
 import { CategoryUpdateService } from '../../Domain/Category/Services/CategoryUpdateService'
 import { ProductValidator } from '../../Domain/Product/ProductValidator'
 import { ProductCreateService } from '../../Domain/Product/Services/ProductCreateService'
-import { ProductDeleteUnusedImagesService } from '../../Domain/Product/Services/ProductDeleteUnUsedImagesService'
-import { ProductDeleteUnUsedVariationAttributesService } from '../../Domain/Product/Services/ProductDeleteUnUsedVariationAttributesService'
-import { ProductDeleteVariationService } from '../../Domain/Product/Services/ProductDeleteVariationService'
+import { ProductDeleteUnusedImagesService } from '../../Domain/Product/Services/ProductDeleteUnusedImagesService'
+import { VariationDeleteUnusedAttributesService } from '../../Domain/Variation/Services/VariationDeleteUnusedAttributesService'
+import { VariationDeleteService } from '../../Domain/Variation/Services/VariationDeleteService'
 import { ProductGetListService } from '../../Domain/Product/Services/ProductGetListService'
 import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductGetOneByIdService'
 import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
-import { ProductSaveVariationService } from '../../Domain/Product/Services/ProductSaveVariationService'
+import { VariationSaveService } from '../../Domain/Variation/Services/VariationSaveService'
 import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
 import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
@@ -56,8 +56,8 @@ export class ServiceFactory {
       this.repositoryFactory.buildCategoryRepository(manager),
       this.repositoryFactory.buildBrandRepository(manager),
       this.repositoryFactory.buildProductRepository(manager),
-      this.buildProductSaveVariationService(manager),
-      this.buildProductDeleteVariationService(manager),
+      this.buildVariationSaveService(manager),
+      this.buildVariationDeleteService(manager),
       this.buildProductDeleteUnUsedImagesService(manager)
     )
   }
@@ -181,11 +181,11 @@ export class ServiceFactory {
     )
   }
 
-  public buildProductSaveVariationService(manager?: EntityManager) {
-    return new ProductSaveVariationService(
+  public buildVariationSaveService(manager?: EntityManager) {
+    return new VariationSaveService(
       this.repositoryFactory.buildVariationRepository(manager),
       this.repositoryFactory.buildAttributeRepository(manager),
-      this.buildProductDeleteUnUsedVariationAttributesService(manager)
+      this.buildVariationDeleteUnusedAttributesService(manager)
     )
   }
 
@@ -195,16 +195,14 @@ export class ServiceFactory {
     )
   }
 
-  public buildProductDeleteUnUsedVariationAttributesService(
-    manager?: EntityManager
-  ) {
-    return new ProductDeleteUnUsedVariationAttributesService(
+  public buildVariationDeleteUnusedAttributesService(manager?: EntityManager) {
+    return new VariationDeleteUnusedAttributesService(
       this.repositoryFactory.buildVariationAttributeRepository(manager)
     )
   }
 
-  public buildProductDeleteVariationService(manager?: EntityManager) {
-    return new ProductDeleteVariationService(
+  public buildVariationDeleteService(manager?: EntityManager) {
+    return new VariationDeleteService(
       this.repositoryFactory.buildVariationRepository(manager)
     )
   }

@@ -2,7 +2,7 @@ import { In, Not } from 'typeorm'
 
 import { VariationAttributeRepository } from '../Repositories/VariationAttributeRepository'
 
-export class ProductDeleteUnUsedVariationAttributesService {
+export class VariationDeleteUnusedAttributesService {
   constructor(
     private readonly variationAttributeRepository: VariationAttributeRepository
   ) {}

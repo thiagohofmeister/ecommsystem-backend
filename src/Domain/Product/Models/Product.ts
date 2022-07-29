@@ -4,7 +4,7 @@ import { Brand } from '../../Brand/Models/Brand'
 import { Category } from '../../Category/Models/Category'
 import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Image } from '../Models/Image'
-import { Variation } from './Variation'
+import { Variation } from '../../Variation/Models/Variation'
 
 export class Product {
   private category: Category

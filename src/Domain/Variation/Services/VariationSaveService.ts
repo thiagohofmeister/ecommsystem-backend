@@ -1,23 +1,23 @@
 import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDataException'
 import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
-import { ProductSaveVariationDto } from '../Dto/ProductSaveVariationDto'
-import { Product } from '../Models/Product'
+import { Product } from '../../Product/Models/Product'
+import { VariationSaveDto } from '../Dto/VariationSaveDto'
 import { Variation } from '../Models/Variation'
 import { VariationAttribute } from '../Models/VariationAttribute'
 import { VariationRepository } from '../Repositories/VariationRepository'
-import { ProductDeleteUnUsedVariationAttributesService } from './ProductDeleteUnUsedVariationAttributesService'
+import { VariationDeleteUnusedAttributesService } from './VariationDeleteUnusedAttributesService'
 
-export class ProductSaveVariationService {
+export class VariationSaveService {
   constructor(
     private readonly variationRepository: VariationRepository,
     private readonly attributeRepository: AttributeRepository,
-    private readonly productDeleteUnUsedVariationAttributesService: ProductDeleteUnUsedVariationAttributesService
+    private readonly productDeleteUnUsedVariationAttributesService: VariationDeleteUnusedAttributesService
   ) {}
 
   async execute(
     product: Product | string,
     sku: string,
-    data: ProductSaveVariationDto,
+    data: VariationSaveDto,
     variation?: Variation,
     variationIndex: number = 0
   ) {
@@ -41,7 +41,7 @@ export class ProductSaveVariationService {
 
   private async fillAttributes(
     variation: Variation,
-    attributesDto: ProductSaveVariationDto['attributes'],
+    attributesDto: VariationSaveDto['attributes'],
     variationIndex?: number
   ) {
     const attrIdsDto = attributesDto?.map(attr => attr.attribute.id) || []
@@ -103,7 +103,7 @@ export class ProductSaveVariationService {
     variation: Variation,
     product: Product,
     sku: string,
-    data: ProductSaveVariationDto
+    data: VariationSaveDto
   ) {
     if (!variation) {
       return new Variation(

@@ -1,7 +1,7 @@
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
 
-export interface ProductSaveVariationDto {
+export interface VariationSaveDto {
   width: number
   length: number
   height: number

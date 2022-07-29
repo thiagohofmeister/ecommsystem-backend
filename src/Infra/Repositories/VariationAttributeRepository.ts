@@ -1,5 +1,5 @@
-import { VariationAttribute } from '../../Domain/Product/Models/VariationAttribute'
-import { VariationAttributeRepository } from '../../Domain/Product/Repositories/VariationAttributeRepository'
+import { VariationAttribute } from '../../Domain/Variation/Models/VariationAttribute'
+import { VariationAttributeRepository } from '../../Domain/Variation/Repositories/VariationAttributeRepository'
 import { TypeOrmMysqlRepositoryContract } from '../../Core/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { VariationAttributeDao } from '../Models/VariationAttributeDao'
 

@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { VariationAttribute } from '../../Product/Models/VariationAttribute'
+import { VariationAttribute } from '../../Variation/Models/VariationAttribute'
 
 export class Attribute {
   private variationAttributes: VariationAttribute[]

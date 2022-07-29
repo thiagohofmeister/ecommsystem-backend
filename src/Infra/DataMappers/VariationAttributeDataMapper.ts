@@ -1,5 +1,5 @@
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
-import { VariationAttribute } from '../../Domain/Product/Models/VariationAttribute'
+import { VariationAttribute } from '../../Domain/Variation/Models/VariationAttribute'
 import { VariationAttributeDao } from '../Models/VariationAttributeDao'
 
 export class VariationAttributeDataMapper extends EntityDataMapperContract<

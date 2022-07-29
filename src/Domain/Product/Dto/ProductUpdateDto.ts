@@ -1,6 +1,6 @@
 import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { ProductSaveImageDto } from './ProductSaveImageDto'
-import { ProductSaveVariationDto } from './ProductSaveVariationDto'
+import { VariationSaveDto } from '../../Variation/Dto/VariationSaveDto'
 
 export interface ProductUpdateDto {
   title: string
@@ -14,5 +14,5 @@ export interface ProductUpdateDto {
     id: string
   }
   images: ProductSaveImageDto[]
-  variations: ({ sku: string } & ProductSaveVariationDto)[]
+  variations: ({ sku: string } & VariationSaveDto)[]
 }

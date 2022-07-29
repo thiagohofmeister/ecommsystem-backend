@@ -1,6 +1,6 @@
 import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
-import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
-import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
+import { MeasureUnitEnum } from '../../Variation/Enums/MeasureUnitEnum'
+import { WeightUnitEnum } from '../../Variation/Enums/WeightUnitEnum'
 import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Product } from '../Models/Product'
 

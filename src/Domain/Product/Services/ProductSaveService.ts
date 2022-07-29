@@ -9,9 +9,9 @@ import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate
 import { Image } from '../Models/Image'
 import { Product } from '../Models/Product'
 import { ProductRepository } from '../Repositories/ProductRepository'
-import { ProductDeleteUnusedImagesService } from './ProductDeleteUnUsedImagesService'
-import { ProductDeleteVariationService } from './ProductDeleteVariationService'
-import { ProductSaveVariationService } from './ProductSaveVariationService'
+import { ProductDeleteUnusedImagesService } from './ProductDeleteUnusedImagesService'
+import { VariationDeleteService } from '../../Variation/Services/VariationDeleteService'
+import { VariationSaveService } from '../../Variation/Services/VariationSaveService'
 
 export class ProductSaveService {
   constructor(
@@ -19,8 +19,8 @@ export class ProductSaveService {
     private readonly categoryRepository: CategoryRepository,
     private readonly brandRepository: BrandRepository,
     private readonly productRepository: ProductRepository,
-    private readonly productSaveVariationService: ProductSaveVariationService,
-    private readonly productDeleteVariationService: ProductDeleteVariationService,
+    private readonly variationSaveService: VariationSaveService,
+    private readonly variationDeleteService: VariationDeleteService,
     private readonly productDeleteUnUsedImagesService: ProductDeleteUnusedImagesService
   ) {}
 
@@ -257,7 +257,7 @@ export class ProductSaveService {
 
       await Promise.all(
         variations.map(async (variation, index) =>
-          this.productSaveVariationService.execute(
+          this.variationSaveService.execute(
             product,
             variation.sku,
             variation,
@@ -269,7 +269,7 @@ export class ProductSaveService {
         )
       )
 
-      await this.productDeleteVariationService.execute(
+      await this.variationDeleteService.execute(
         product.getId(),
         product.getStoreId(),
         skusToRemove

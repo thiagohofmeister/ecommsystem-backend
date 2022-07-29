@@ -1,6 +1,6 @@
+import { Product } from '../../Product/Models/Product'
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
-import { Product } from './Product'
 import { VariationAttribute } from './VariationAttribute'
 
 export class Variation {

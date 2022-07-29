@@ -3,10 +3,10 @@ import * as Joi from 'joi'
 
 import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
 import { ProductCreateDto } from './Dto/ProductCreateDto'
-import { ProductSaveVariationDto } from './Dto/ProductSaveVariationDto'
+import { VariationSaveDto } from '../Variation/Dto/VariationSaveDto'
 import { ProductUpdateDto } from './Dto/ProductUpdateDto'
-import { MeasureUnitEnum } from './Enums/MeasureUnitEnum'
-import { WeightUnitEnum } from './Enums/WeightUnitEnum'
+import { MeasureUnitEnum } from '../Variation/Enums/MeasureUnitEnum'
+import { WeightUnitEnum } from '../Variation/Enums/WeightUnitEnum'
 
 export class ProductValidator extends JoiSchemaValidatorContract {
   private productCreateSchema: Schema
@@ -188,10 +188,8 @@ export class ProductValidator extends JoiSchemaValidatorContract {
     )
   }
 
-  public async productSaveVariationPayloadValidate(
-    payload: ProductSaveVariationDto
-  ) {
-    return this.validateBySchema<ProductSaveVariationDto>(
+  public async productSaveVariationPayloadValidate(payload: VariationSaveDto) {
+    return this.validateBySchema<VariationSaveDto>(
       payload,
       this.productSaveVariationSchema
     )

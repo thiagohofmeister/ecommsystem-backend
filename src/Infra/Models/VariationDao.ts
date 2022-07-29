@@ -7,8 +7,8 @@ import {
   PrimaryColumn
 } from 'typeorm'
 
-import { MeasureUnitEnum } from '../../Domain/Product/Enums/MeasureUnitEnum'
-import { WeightUnitEnum } from '../../Domain/Product/Enums/WeightUnitEnum'
+import { MeasureUnitEnum } from '../../Domain/Variation/Enums/MeasureUnitEnum'
+import { WeightUnitEnum } from '../../Domain/Variation/Enums/WeightUnitEnum'
 import { ProductDao } from './ProductDao'
 import { VariationAttributeDao } from './VariationAttributeDao'
 
