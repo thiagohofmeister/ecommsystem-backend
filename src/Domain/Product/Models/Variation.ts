@@ -99,11 +99,11 @@ export class Variation {
     return this.product
   }
 
-  public removeAttributes(keepVariationSkus: string[]) {
+  public removeAttributes(keepAttributeIds: string[]) {
     if (!this.variationAttributes) this.variationAttributes = []
 
     this.variationAttributes = this.variationAttributes.filter(attr =>
-      keepVariationSkus.includes(attr.getVariation().getSku())
+      keepAttributeIds.includes(attr.getAttribute().getId())
     )
 
     return this

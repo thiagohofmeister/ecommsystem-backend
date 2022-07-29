@@ -5,7 +5,7 @@ import { BrandDataMapper } from './BrandDataMapper'
 import { CategoryDataMapper } from './CategoryDataMapper'
 import { ImageDataMapper } from './ImageDataMapper'
 import { ProductDataMapper } from './ProductDataMapper'
-import { VariationDataMapper } from './VariationDataMapper'
+import { VariationDataMapperMediator } from './VariationDataMapperMediator'
 
 export class ProductDataMapperMediator extends EntityDataMapperContract<
   Product,
@@ -15,7 +15,7 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
     private readonly productDataMapper: ProductDataMapper,
     private readonly categoryDataMapper: CategoryDataMapper,
     private readonly brandDataMapper: BrandDataMapper,
-    private readonly variationDataMapper: VariationDataMapper,
+    private readonly variationDataMapperMediator: VariationDataMapperMediator,
     private readonly imageDataMapper: ImageDataMapper
   ) {
     super()
@@ -36,7 +36,9 @@ export class ProductDataMapperMediator extends EntityDataMapperContract<
 
     if (entity.variations) {
       entity.variations.forEach(variation =>
-        product.addVariation(this.variationDataMapper.toDomainEntity(variation))
+        product.addVariation(
+          this.variationDataMapperMediator.toDomainEntity(variation)
+        )
       )
     }
 

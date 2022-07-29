@@ -121,14 +121,15 @@ export class ProductSaveService {
         .filter(sku => !variations.map(v => v.sku).includes(sku))
 
       await Promise.all(
-        variations.map(async variation =>
+        variations.map(async (variation, index) =>
           this.productSaveVariationService.execute(
             product,
             variation.sku,
             variation,
             isUpdate
               ? product.getVariations()?.find(v => v.getSku() === variation.sku)
-              : null
+              : null,
+            index
           )
         )
       )

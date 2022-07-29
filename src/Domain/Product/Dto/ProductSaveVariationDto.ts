@@ -9,7 +9,9 @@ export interface ProductSaveVariationDto {
   measuresUnit: MeasureUnitEnum
   weightUnit: WeightUnitEnum
   attributes: {
-    id: string
+    attribute: {
+      id: string
+    }
     value: string
   }[]
 }

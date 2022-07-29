@@ -17,6 +17,12 @@ export class ProductRepositoryImpl
       .leftJoinAndSelect('ProductDao.variations', 'variations')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
       .leftJoinAndSelect('ProductDao.images', 'images')
+      .leftJoinAndSelect(
+        'variations.variationAttributes',
+        'variationAttributes'
+      )
+      .leftJoinAndSelect('variationAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('variationAttributes.variation', 'variation')
   }
 
   protected customToFindAll(
@@ -28,5 +34,11 @@ export class ProductRepositoryImpl
       .leftJoinAndSelect('ProductDao.variations', 'variations')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
       .leftJoinAndSelect('ProductDao.images', 'images')
+      .leftJoinAndSelect(
+        'variations.variationAttributes',
+        'variationAttributes'
+      )
+      .leftJoinAndSelect('variationAttributes.attribute', 'attribute')
+      .leftJoinAndSelect('variationAttributes.variation', 'variation')
   }
 }

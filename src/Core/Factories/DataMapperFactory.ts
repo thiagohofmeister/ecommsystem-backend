@@ -32,7 +32,7 @@ export class DataMapperFactory {
       this.buildProductDataMapper(),
       this.buildCategoryDataMapper(),
       this.buildBrandDataMapper(),
-      this.buildVariationDataMapper(),
+      this.buildVariationDataMapperMediator(),
       this.buildImageDataMapper()
     )
   }

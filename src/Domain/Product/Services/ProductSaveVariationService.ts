@@ -1,21 +1,25 @@
+import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDataException'
 import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
 import { ProductSaveVariationDto } from '../Dto/ProductSaveVariationDto'
 import { Product } from '../Models/Product'
 import { Variation } from '../Models/Variation'
 import { VariationAttribute } from '../Models/VariationAttribute'
 import { VariationRepository } from '../Repositories/VariationRepository'
+import { ProductDeleteUnUsedVariationAttributesService } from './ProductDeleteUnUsedVariationAttributesService'
 
 export class ProductSaveVariationService {
   constructor(
     private readonly variationRepository: VariationRepository,
-    private readonly attributeRepository: AttributeRepository
+    private readonly attributeRepository: AttributeRepository,
+    private readonly productDeleteUnUsedVariationAttributesService: ProductDeleteUnUsedVariationAttributesService
   ) {}
 
   async execute(
     product: Product | string,
     sku: string,
     data: ProductSaveVariationDto,
-    variation?: Variation
+    variation?: Variation,
+    variationIndex: number = 0
   ) {
     // If variable product is string, then it's the product id.
     // So, we need to find the product with this id
@@ -30,7 +34,7 @@ export class ProductSaveVariationService {
       data
     )
 
-    await this.fillAttributes(variationToSave, data.attributes)
+    await this.fillAttributes(variationToSave, data.attributes, variationIndex)
 
     const variationSaved = await this.variationRepository.save(variationToSave)
 
@@ -38,23 +42,63 @@ export class ProductSaveVariationService {
   }
 
   private async fillAttributes(
-    variationSaved: Variation,
-    attributes: ProductSaveVariationDto['attributes']
+    variation: Variation,
+    attributesDto: ProductSaveVariationDto['attributes'],
+    variationIndex?: number
   ) {
-    await Promise.all(
-      attributes.map(async attr => {
-        // TODO: Validate if value used exists on attribute
+    const attrIdsDto = attributesDto.map(attr => attr.attribute.id)
 
-        const variationAttribute = new VariationAttribute(
-          variationSaved.getStoreId(),
-          attr.value,
-          variationSaved,
-          await this.attributeRepository.findOneByPrimaryColumn(attr.id)
-        )
+    variation.removeAttributes(attrIdsDto)
 
-        variationSaved.addAttribute(variationAttribute)
-      })
+    await this.productDeleteUnUsedVariationAttributesService.execute(
+      variation.getSku(),
+      variation.getStoreId(),
+      attrIdsDto
     )
+
+    if (!attributesDto.length) {
+      return
+    }
+
+    const attributes = await this.attributeRepository.findAllByIds(attrIdsDto)
+
+    const invalidDataException = new InvalidDataException('Invalid data.')
+
+    attributesDto.forEach((attrDto, index) => {
+      const attr = attributes.find(
+        attr => attr.getId() === attrDto.attribute.id
+      )
+
+      if (!attr.getValues().includes(attrDto.value)) {
+        invalidDataException.addReason({
+          id: `variations.${variationIndex}.attributes.${index}.value.${attrDto.value}.notFound`,
+          message: `Field variations.${variationIndex}.attributes.${index}.value.${attrDto.value} not found.`
+        })
+        return
+      }
+
+      const varAttr = variation
+        .getAttributes()
+        ?.find(attr => attr.getAttribute().getId() === attrDto.attribute.id)
+
+      if (!!varAttr) {
+        varAttr.setValue(attrDto.value)
+        return
+      }
+
+      variation.addAttribute(
+        new VariationAttribute(
+          variation.getStoreId(),
+          attrDto.value,
+          variation,
+          attr
+        )
+      )
+    })
+
+    if (!!invalidDataException.getReasons().length) {
+      throw invalidDataException
+    }
   }
 
   private async getVariation(

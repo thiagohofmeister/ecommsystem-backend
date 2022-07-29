@@ -5,4 +5,14 @@ import { AttributeDao } from '../Models/AttributeDao'
 
 export class AttributeRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Attribute, AttributeDao>
-  implements AttributeRepository {}
+  implements AttributeRepository
+{
+  async findAllByIds(ids: string[]): Promise<Attribute[]> {
+    const attributes = await this.repository
+      .createQueryBuilder()
+      .where('id IN (:ids)', { ids })
+      .getMany()
+
+    return this.dataMapper.toDomainMany(attributes)
+  }
+}

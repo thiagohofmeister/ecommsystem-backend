@@ -11,14 +11,17 @@ import { CategoryRepository } from '../../Domain/Category/Repositories/CategoryR
 import { CategoryTreeCacheRepository } from '../../Domain/Category/Repositories/CategoryTreeCacheRepository'
 import { ImageDataNotFound } from '../../Domain/Product/Exceptions/ImageDataNotFound'
 import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductDataNotFound'
+import { VariationAttributeDataNotFound } from '../../Domain/Product/Exceptions/VariationAttributeDataNotFound'
 import { VariationDataNotFound } from '../../Domain/Product/Exceptions/VariationDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
+import { VariationAttributeRepository } from '../../Domain/Product/Repositories/VariationAttributeRepository'
 import { VariationRepository } from '../../Domain/Product/Repositories/VariationRepository'
 import { AttributeDao } from '../../Infra/Models/AttributeDao'
 import { BrandDao } from '../../Infra/Models/BrandDao'
 import { CategoryDao } from '../../Infra/Models/CategoryDao'
 import { ImageDao } from '../../Infra/Models/ImageDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
+import { VariationAttributeDao } from '../../Infra/Models/VariationAttributeDao'
 import { VariationDao } from '../../Infra/Models/VariationDao'
 import { AttributeRepositoryImpl } from '../../Infra/Repositories/AttributeRepositoryImpl'
 import { BrandRepositoryImpl } from '../../Infra/Repositories/BrandRepositoryImpl'
@@ -26,6 +29,7 @@ import { CategoryRepositoryImpl } from '../../Infra/Repositories/CategoryReposit
 import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/CategoryTreeCacheRepositoryImpl'
 import { ImageRepositoryImpl } from '../../Infra/Repositories/ImageRepository'
 import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositoryImpl'
+import { VariationAttributeRepositoryImpl } from '../../Infra/Repositories/VariationAttributeRepository'
 import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
 import { DataMapperFactory } from './DataMapperFactory'
 
@@ -81,6 +85,17 @@ export class RepositoryFactory {
       this.dataMapperFactory.buildImageDataMapper(),
       this.storeId,
       new ImageDataNotFound()
+    )
+  }
+
+  public buildVariationAttributeRepository(
+    manager?: EntityManager
+  ): VariationAttributeRepository {
+    return new VariationAttributeRepositoryImpl(
+      this.getManager(manager).getRepository(VariationAttributeDao),
+      this.dataMapperFactory.buildVariationAttributeDataMapperMediator(),
+      this.storeId,
+      new VariationAttributeDataNotFound()
     )
   }
 

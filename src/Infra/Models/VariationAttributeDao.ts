@@ -6,18 +6,20 @@ import { VariationDao } from './VariationDao'
 @Entity('variation_attribute')
 export class VariationAttributeDao {
   @PrimaryColumn({
-    name: 'variation_sku'
+    name: 'variation_sku',
+    update: false
   })
   variationSku: string
 
   @PrimaryColumn({
-    name: 'attribute_id'
+    name: 'attribute_id',
+    update: false
   })
   attributeId: string
 
   @Column({
     name: 'store_id',
-    update: true
+    update: false
   })
   storeId: string
 

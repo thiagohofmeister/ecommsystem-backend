@@ -20,7 +20,9 @@ export class ProductValidator extends JoiSchemaValidatorContract {
     this.variationAttributesSchema = Joi.array()
       .items(
         Joi.object({
-          id: Joi.string().required(),
+          attribute: Joi.object({
+            id: Joi.string().required()
+          }).required(),
           value: Joi.string().required()
         })
       )
