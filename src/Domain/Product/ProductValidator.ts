@@ -7,6 +7,8 @@ import { VariationSaveDto } from '../Variation/Dto/VariationSaveDto'
 import { ProductUpdateDto } from './Dto/ProductUpdateDto'
 import { MeasureUnitEnum } from '../Variation/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Variation/Enums/WeightUnitEnum'
+import { ProductSavePriceDto } from './Dto/ProductSavePriceDto'
+import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
 
 export class ProductValidator extends JoiSchemaValidatorContract {
   private productCreateSchema: Schema
@@ -15,9 +17,25 @@ export class ProductValidator extends JoiSchemaValidatorContract {
   private productUpdateVariationSchema: Schema
   private variationAttributesSchema: Schema
   private variationTemplateSchema: Schema
+  private productSavePricesSchema: Schema
 
   constructor() {
     super()
+
+    this.productSavePricesSchema = Joi.array()
+      .items(
+        Joi.object({
+          sku: Joi.string().allow(null).required(),
+          campaign: Joi.object({
+            id: Joi.string().required()
+          })
+            .allow(null)
+            .optional(),
+          list: Joi.number().required(),
+          sale: Joi.number().allow(null).required()
+        })
+      )
+      .min(1)
 
     this.variationTemplateSchema = Joi.object({
       images: Joi.string(),
@@ -192,6 +210,21 @@ export class ProductValidator extends JoiSchemaValidatorContract {
     return this.validateBySchema<VariationSaveDto>(
       payload,
       this.productSaveVariationSchema
+    )
+  }
+
+  public async productSavePricesPayloadValidate(
+    payload: ProductSavePriceDto[]
+  ) {
+    if (payload.length > 1 && !payload.every(item => !!item.sku)) {
+      throw new InvalidDataException(
+        'When more than one item is sent, they all need to have a SKU.'
+      )
+    }
+
+    return this.validateBySchema<ProductSavePriceDto[]>(
+      payload,
+      this.productSavePricesSchema
     )
   }
 }

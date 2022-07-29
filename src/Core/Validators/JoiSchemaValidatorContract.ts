@@ -6,6 +6,7 @@ export class JoiSchemaValidatorContract {
     try {
       await schema.validateAsync(body, { abortEarly: false })
     } catch (e) {
+      console.log({ e })
       throw new InvalidDataException(
         'Invalid data.',
         e.details.map(detail => ({

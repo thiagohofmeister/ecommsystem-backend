@@ -9,6 +9,7 @@ import {
 
 import { MeasureUnitEnum } from '../../Domain/Variation/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../../Domain/Variation/Enums/WeightUnitEnum'
+import { PriceDao } from './PriceDao'
 import { ProductDao } from './ProductDao'
 import { VariationAttributeDao } from './VariationAttributeDao'
 
@@ -74,6 +75,9 @@ export class VariationDao {
     cascade: true
   })
   variationAttributes: VariationAttributeDao[]
+
+  @OneToMany(() => PriceDao, price => price.variation)
+  prices: PriceDao[]
 
   constructor(
     sku: string,

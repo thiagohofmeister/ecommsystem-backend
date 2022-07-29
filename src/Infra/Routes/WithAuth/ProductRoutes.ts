@@ -21,7 +21,12 @@ export class ProductRoutes extends AuthRouteContract<ProductController> {
       new RouteDto(
         this.getFullEndpoint('/:id'),
         MethodEnum.PATCH,
-        controller.update
+        controller.patch
+      ),
+      new RouteDto(
+        this.getFullEndpoint('/:id/prices'),
+        MethodEnum.PUT,
+        controller.putPrices
       ),
       new RouteDto(this.getFullEndpoint(), MethodEnum.GET, controller.getList)
       // TODO: DELETE

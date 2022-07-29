@@ -99,6 +99,10 @@ export class Product {
     return this.variations
   }
 
+  public getVariationBySku(sku: string) {
+    return this.variations?.find(variation => variation.getSku() === sku)
+  }
+
   public addVariation(variation: Variation) {
     if (!this.variations) this.variations = []
 

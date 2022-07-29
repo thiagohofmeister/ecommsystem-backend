@@ -51,6 +51,10 @@ export abstract class BaseController {
     responseType: ResponseTypeEnum,
     body: any
   ): SuccessContract {
+    if (!body) {
+      return new NoContentResponse()
+    }
+
     switch (responseType) {
       case ResponseTypeEnum.OK:
         return new OkResponse(body)

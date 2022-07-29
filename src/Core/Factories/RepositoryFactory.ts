@@ -11,11 +11,11 @@ import { CategoryRepository } from '../../Domain/Category/Repositories/CategoryR
 import { CategoryTreeCacheRepository } from '../../Domain/Category/Repositories/CategoryTreeCacheRepository'
 import { ImageDataNotFound } from '../../Domain/Product/Exceptions/ImageDataNotFound'
 import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductDataNotFound'
-import { VariationAttributeDataNotFound } from '../../Domain/Product/Exceptions/VariationAttributeDataNotFound'
-import { VariationDataNotFound } from '../../Domain/Product/Exceptions/VariationDataNotFound'
+import { VariationAttributeDataNotFound } from '../../Domain/Variation/Exceptions/VariationAttributeDataNotFound'
+import { VariationDataNotFound } from '../../Domain/Variation/Exceptions/VariationDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
 import { VariationAttributeRepository } from '../../Domain/Variation/Repositories/VariationAttributeRepository'
-import { VariationRepository } from '../../Domain/Product/Repositories/VariationRepository'
+import { VariationRepository } from '../../Domain/Variation/Repositories/VariationRepository'
 import { AttributeDao } from '../../Infra/Models/AttributeDao'
 import { BrandDao } from '../../Infra/Models/BrandDao'
 import { CategoryDao } from '../../Infra/Models/CategoryDao'
@@ -32,6 +32,10 @@ import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositor
 import { VariationAttributeRepositoryImpl } from '../../Infra/Repositories/VariationAttributeRepository'
 import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
 import { DataMapperFactory } from './DataMapperFactory'
+import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
+import { PriceRepositoryImpl } from '../../Infra/Repositories/PriceRepository'
+import { PriceDao } from '../../Infra/Models/PriceDao'
+import { PriceDataNotFound } from '../../Domain/Product/Exceptions/PriceDataNotFound'
 
 export class RepositoryFactory {
   constructor(
@@ -85,6 +89,15 @@ export class RepositoryFactory {
       this.dataMapperFactory.buildImageDataMapper(),
       this.storeId,
       new ImageDataNotFound()
+    )
+  }
+
+  public buildPriceRepository(manager?: EntityManager): PriceRepository {
+    return new PriceRepositoryImpl(
+      this.getManager(manager).getRepository(PriceDao),
+      this.dataMapperFactory.buildPriceDataMapperMediator(),
+      this.storeId,
+      new PriceDataNotFound()
     )
   }
 

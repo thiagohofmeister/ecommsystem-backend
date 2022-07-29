@@ -31,6 +31,7 @@ import { VariationSaveService } from '../../Domain/Variation/Services/VariationS
 import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
 import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
+import { ProductSavePricesService } from '../../Domain/Product/Services/ProductSavePricesService'
 
 export class ServiceFactory {
   constructor(
@@ -58,7 +59,7 @@ export class ServiceFactory {
       this.repositoryFactory.buildProductRepository(manager),
       this.buildVariationSaveService(manager),
       this.buildVariationDeleteService(manager),
-      this.buildProductDeleteUnUsedImagesService(manager)
+      this.buildProductDeleteUnusedImagesService(manager)
     )
   }
 
@@ -189,9 +190,17 @@ export class ServiceFactory {
     )
   }
 
-  public buildProductDeleteUnUsedImagesService(manager?: EntityManager) {
+  public buildProductDeleteUnusedImagesService(manager?: EntityManager) {
     return new ProductDeleteUnusedImagesService(
       this.repositoryFactory.buildImageRepository(manager)
+    )
+  }
+
+  public buildProductSavePricesService(manager?: EntityManager) {
+    return new ProductSavePricesService(
+      this.repositoryFactory.buildPriceRepository(manager),
+      this.repositoryFactory.buildProductRepository(manager),
+      new ProductValidator()
     )
   }
 

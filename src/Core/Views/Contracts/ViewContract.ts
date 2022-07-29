@@ -4,11 +4,15 @@ export abstract class ViewContract<TDomainModel = any, TViewResponse = any> {
   public render(
     body: TDomainModel | TDomainModel[] | IItemListModel<TDomainModel>
   ): TViewResponse | TViewResponse[] | IItemListModel<TViewResponse> {
+    if (!body) {
+      return undefined
+    }
+
     if (Array.isArray(body)) {
       return this.renderMany(body as TDomainModel[])
     }
 
-    if (!!body['items'] && !!body['total']) {
+    if (!!body && !!body['items'] && !!body['total']) {
       return this.renderList(body as IItemListModel<TDomainModel>)
     }
 
