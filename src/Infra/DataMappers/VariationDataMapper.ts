@@ -15,7 +15,10 @@ export class VariationDataMapper extends EntityDataMapperContract<
       entity.height,
       entity.weight,
       entity.measuresUnit,
-      entity.weightUnit
+      entity.weightUnit,
+      null,
+      entity.createdAt,
+      entity.updatedAt
     )
   }
 

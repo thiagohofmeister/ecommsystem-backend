@@ -35,10 +35,10 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   public async save(entity: TDomainEntity): Promise<TDomainEntity> {
     try {
-      await this.repository.save(this.dataMapper.toDaoEntity(entity))
-    } catch (e) {
-      console.error(e)
-    }
+      await this.repository.save(
+        this.repository.create(this.dataMapper.toDaoEntity(entity))
+      )
+    } catch (e) {}
 
     return this.findOneByPrimaryColumn(entity[this.getPrimaryColumnName()])
   }

@@ -37,6 +37,12 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
         weight: variation.getWeight(),
         measuresUnit: variation.getMeasuresUnit(),
         weightUnit: variation.getWeightUnit(),
+        attributes: variation.getAttributes().map(attr => ({
+          attribute: {
+            id: attr.getAttribute().getId()
+          },
+          value: attr.getValue()
+        })),
         createdAt: variation.getCreatedAt(),
         updatedAt: variation.getUpdatedAt()
       })),
@@ -74,9 +80,14 @@ export interface ProductResponse {
     weight: number
     measuresUnit: MeasureUnitEnum
     weightUnit: WeightUnitEnum
-    product?: Product
-    createdAt?: Date
-    updatedAt?: Date
+    attributes: {
+      attribute: {
+        id: string
+      }
+      value: string
+    }[]
+    createdAt: Date
+    updatedAt: Date
   }[]
   createdAt: Date
   updatedAt: Date

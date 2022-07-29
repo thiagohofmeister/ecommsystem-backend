@@ -36,9 +36,7 @@ export class ProductSaveVariationService {
 
     await this.fillAttributes(variationToSave, data.attributes, variationIndex)
 
-    const variationSaved = await this.variationRepository.save(variationToSave)
-
-    return variationSaved
+    return this.variationRepository.save(variationToSave)
   }
 
   private async fillAttributes(
