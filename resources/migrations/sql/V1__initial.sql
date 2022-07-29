@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `variation` (
   CONSTRAINT `fk_variation_product1`
     FOREIGN KEY (`product_id` , `store_id`)
     REFERENCES `product` (`id` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `image` (
   CONSTRAINT `fk_image_product1`
     FOREIGN KEY (`product_id` , `store_id`)
     REFERENCES `product` (`id` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `product_specification` (
   CONSTRAINT `fk_product_specification_product1`
     FOREIGN KEY (`product_id` , `store_id`)
     REFERENCES `product` (`id` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `variation_specification` (
   CONSTRAINT `fk_variation_specification_variation1`
     FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -211,12 +211,12 @@ CREATE TABLE IF NOT EXISTS `catalog_product` (
   CONSTRAINT `fk_catalog_has_product_catalog1`
     FOREIGN KEY (`catalog_id`)
     REFERENCES `catalog` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_catalog_product_product1`
     FOREIGN KEY (`product_id` , `store_id`)
     REFERENCES `product` (`id` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `price` (
   CONSTRAINT `fk_price_variation1`
     FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `stock` (
   CONSTRAINT `fk_stock_variation1`
     FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `variation_attribute` (
   CONSTRAINT `fk_variation_has_attribute_variation1`
     FOREIGN KEY (`variation_sku` , `store_id`)
     REFERENCES `variation` (`sku` , `store_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_variation_has_attribute_attribute1`
     FOREIGN KEY (`attribute_id`)
