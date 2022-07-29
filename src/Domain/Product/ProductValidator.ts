@@ -28,6 +28,7 @@ export class ProductValidator extends JoiSchemaValidatorContract {
             label: Joi.string()
           })
         )
+        .unique()
         .min(1)
         .required()
     })
