@@ -32,7 +32,7 @@ export class ProductValidator extends JoiSchemaValidatorContract {
             .allow(null)
             .optional(),
           list: Joi.number().required(),
-          sale: Joi.number().allow(null).required()
+          sale: Joi.number().allow(null).less(Joi.ref('list')).required()
         })
       )
       .min(1)
