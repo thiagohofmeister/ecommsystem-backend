@@ -32,6 +32,12 @@ import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdat
 import { QueueFactory } from './QueueFactory,'
 import { RepositoryFactory } from './RepositoryFactory'
 import { ProductSavePricesService } from '../../Domain/Product/Services/ProductSavePricesService'
+import { WarehouseValidator } from '../../Domain/Warehouse/WarehouseValidator'
+import { WarehouseCreateService } from '../../Domain/Warehouse/Services/WarehouseCreateService'
+import { WarehouseUpdateService } from '../../Domain/Warehouse/Services/WarehouseUpdateService'
+import { WarehouseSaveService } from '../../Domain/Warehouse/Services/WarehouseSaveService'
+import { WarehouseGetListService } from '../../Domain/Warehouse/Services/WarehouseGetListService'
+import { WarehouseGetOneByIdService } from '../../Domain/Warehouse/Services/WarehouseGetOneByIdService'
 
 export class ServiceFactory {
   constructor(
@@ -109,6 +115,39 @@ export class ServiceFactory {
   public buildBrandGetOneByIdService(manager?: EntityManager) {
     return new BrandGetOneByIdService(
       this.repositoryFactory.buildBrandRepository(manager)
+    )
+  }
+
+  public buildWarehouseCreateService(manager?: EntityManager) {
+    return new WarehouseCreateService(
+      this.buildWarehouseSaveService(manager),
+      new WarehouseValidator()
+    )
+  }
+
+  public buildWarehouseUpdateService(manager?: EntityManager) {
+    return new WarehouseUpdateService(
+      this.buildWarehouseSaveService(manager),
+      this.buildWarehouseGetOneByIdService(manager),
+      new WarehouseValidator()
+    )
+  }
+
+  public buildWarehouseSaveService(manager?: EntityManager) {
+    return new WarehouseSaveService(
+      this.repositoryFactory.buildWarehouseRepository(manager)
+    )
+  }
+
+  public buildWarehouseGetListService(manager?: EntityManager) {
+    return new WarehouseGetListService(
+      this.repositoryFactory.buildWarehouseRepository(manager)
+    )
+  }
+
+  public buildWarehouseGetOneByIdService(manager?: EntityManager) {
+    return new WarehouseGetOneByIdService(
+      this.repositoryFactory.buildWarehouseRepository(manager)
     )
   }
 

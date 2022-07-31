@@ -1,16 +1,10 @@
 import { Router } from 'express'
+import * as fs from 'fs'
+import * as path from 'path'
 
 import { CreateContext } from '../../Core/Middlewares/CreateContext'
-import { AttributeController } from '../../Domain/Attribute/AttributeController'
-import { BrandController } from '../../Domain/Brand/BrandController'
-import { CategoryController } from '../../Domain/Category/CategoryController'
-import { ProductController } from '../../Domain/Product/ProductController'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
 import { RouteContract } from './Contracts/RouteContract'
-import { AttributeRoutes } from './WithAuth/AttributeRoutes'
-import { BrandRoutes } from './WithAuth/BrandRoutes'
-import { CategoryRoutes } from './WithAuth/CategoryRoutes'
-import { ProductRoutes } from './WithAuth/ProductRoutes'
 
 export class RoutesHandler {
   private authRoutes: AuthRouteContract<any>[]
@@ -29,14 +23,26 @@ export class RoutesHandler {
   }
 
   private initializeRoutes() {
-    const routes = [
-      new CategoryRoutes(new CategoryController()),
-      new ProductRoutes(new ProductController()),
-      new BrandRoutes(new BrandController()),
-      new AttributeRoutes(new AttributeController())
-    ]
+    const routesDir = path.join(__dirname, 'Domains')
 
-    routes.forEach(route => {
+    const routesPath = fs.readdirSync(routesDir)
+
+    routesPath.forEach(routePath => {
+      const domainName = routePath.replace(/Routes\.\w+/, '')
+      const Route = require(path.join(routesDir, routePath))[
+        `${domainName}Routes`
+      ]
+      const Controller = require(path.join(
+        __dirname,
+        '..',
+        '..',
+        'Domain',
+        domainName,
+        `${domainName}Controller${routePath.replace(/\w+\./, '.')}`
+      ))[`${domainName}Controller`]
+
+      const route = new Route(new Controller())
+
       if (route instanceof AuthRouteContract) {
         this.authRoutes.push(route)
         return

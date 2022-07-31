@@ -275,7 +275,7 @@ CREATE UNIQUE INDEX `price_campaign_id_variation_sku_store_id_UNIQUE` ON `price`
 -- -----------------------------------------------------
 -- Table `warehouse`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `warehouse` (
+CREATE TABLE IF NOT EXISTS `product_catalog`.`warehouse` (
   `id` CHAR(36) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `address_zip_code` VARCHAR(8) NULL,
@@ -286,6 +286,8 @@ CREATE TABLE IF NOT EXISTS `warehouse` (
   `address_number` VARCHAR(45) NULL,
   `address_complement` VARCHAR(200) NULL,
   `store_id` CHAR(36) NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

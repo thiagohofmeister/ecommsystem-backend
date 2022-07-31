@@ -1,8 +1,8 @@
 import { RedisClientType } from 'redis'
 import { DataSource, EntityManager } from 'typeorm'
+
 import { AttributeDataNotFound } from '../../Domain/Attribute/Exceptions/AttributeDataNotFound'
 import { AttributeRepository } from '../../Domain/Attribute/Repositories/AttributeRepository'
-
 import { BrandDataNotFound } from '../../Domain/Brand/Exceptions/BrandDataNotFound'
 import { BrandRepository } from '../../Domain/Brand/Repositories/BrandRepository'
 import { CategoryDataNotFound } from '../../Domain/Category/Exceptions/CategoryDataNotFound'
@@ -10,32 +10,36 @@ import { CategoryTreeCacheDataNotFound } from '../../Domain/Category/Exceptions/
 import { CategoryRepository } from '../../Domain/Category/Repositories/CategoryRepository'
 import { CategoryTreeCacheRepository } from '../../Domain/Category/Repositories/CategoryTreeCacheRepository'
 import { ImageDataNotFound } from '../../Domain/Product/Exceptions/ImageDataNotFound'
+import { PriceDataNotFound } from '../../Domain/Product/Exceptions/PriceDataNotFound'
 import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductDataNotFound'
+import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
+import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
 import { VariationAttributeDataNotFound } from '../../Domain/Variation/Exceptions/VariationAttributeDataNotFound'
 import { VariationDataNotFound } from '../../Domain/Variation/Exceptions/VariationDataNotFound'
-import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
 import { VariationAttributeRepository } from '../../Domain/Variation/Repositories/VariationAttributeRepository'
 import { VariationRepository } from '../../Domain/Variation/Repositories/VariationRepository'
+import { WarehouseDataNotFound } from '../../Domain/Warehouse/Exceptions/WarehouseDataNotFound'
+import { WarehouseRepository } from '../../Domain/Warehouse/Repositories/WarehouseRepository'
 import { AttributeDao } from '../../Infra/Models/AttributeDao'
 import { BrandDao } from '../../Infra/Models/BrandDao'
 import { CategoryDao } from '../../Infra/Models/CategoryDao'
 import { ImageDao } from '../../Infra/Models/ImageDao'
+import { PriceDao } from '../../Infra/Models/PriceDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
 import { VariationAttributeDao } from '../../Infra/Models/VariationAttributeDao'
 import { VariationDao } from '../../Infra/Models/VariationDao'
+import { WarehouseDao } from '../../Infra/Models/WarehouseDao'
 import { AttributeRepositoryImpl } from '../../Infra/Repositories/AttributeRepositoryImpl'
 import { BrandRepositoryImpl } from '../../Infra/Repositories/BrandRepositoryImpl'
 import { CategoryRepositoryImpl } from '../../Infra/Repositories/CategoryRepositoryImpl'
 import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/CategoryTreeCacheRepositoryImpl'
 import { ImageRepositoryImpl } from '../../Infra/Repositories/ImageRepository'
+import { PriceRepositoryImpl } from '../../Infra/Repositories/PriceRepository'
 import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositoryImpl'
 import { VariationAttributeRepositoryImpl } from '../../Infra/Repositories/VariationAttributeRepository'
 import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
+import { WarehouseRepositoryImpl } from '../../Infra/Repositories/WarehouseRepositoryImpl'
 import { DataMapperFactory } from './DataMapperFactory'
-import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
-import { PriceRepositoryImpl } from '../../Infra/Repositories/PriceRepository'
-import { PriceDao } from '../../Infra/Models/PriceDao'
-import { PriceDataNotFound } from '../../Domain/Product/Exceptions/PriceDataNotFound'
 
 export class RepositoryFactory {
   constructor(
@@ -80,6 +84,17 @@ export class RepositoryFactory {
       this.dataMapperFactory.buildBrandDataMapper(),
       this.storeId,
       new BrandDataNotFound()
+    )
+  }
+
+  public buildWarehouseRepository(
+    manager?: EntityManager
+  ): WarehouseRepository {
+    return new WarehouseRepositoryImpl(
+      this.getManager(manager).getRepository(WarehouseDao),
+      this.dataMapperFactory.buildWarehouseDataMapper(),
+      this.storeId,
+      new WarehouseDataNotFound()
     )
   }
 

@@ -11,6 +11,7 @@ import { VariationAttributeDataMapper } from '../../Infra/DataMappers/VariationA
 import { VariationAttributeDataMapperMediator } from '../../Infra/DataMappers/VariationAttributeDataMapperMediator'
 import { VariationDataMapper } from '../../Infra/DataMappers/VariationDataMapper'
 import { VariationDataMapperMediator } from '../../Infra/DataMappers/VariationDataMapperMediator'
+import { WarehouseDataMapper } from '../../Infra/DataMappers/WarehouseDataMapper'
 
 export class DataMapperFactory {
   public buildProductDataMapper() {
@@ -23,6 +24,10 @@ export class DataMapperFactory {
 
   public buildBrandDataMapper() {
     return new BrandDataMapper()
+  }
+
+  public buildWarehouseDataMapper() {
+    return new WarehouseDataMapper()
   }
 
   public buildAttributeDataMapper() {
