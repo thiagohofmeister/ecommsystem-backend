@@ -6,9 +6,16 @@ export class WarehouseView extends ViewContract<Warehouse> {
   protected renderOne(entity: Warehouse): WarehouseResponse {
     return {
       id: entity.getId(),
-      label: entity.getLabel(),
-      urn: entity.getUrn(),
-      description: entity.getDescription(),
+      name: entity.getName(),
+      address: {
+        zipCode: entity.getAddressZipCode(),
+        state: entity.getAddressState(),
+        city: entity.getAddressCity(),
+        district: entity.getAddressDistrict(),
+        street: entity.getAddressStreet(),
+        number: entity.getAddressNumber(),
+        complement: entity.getAddressComplement()
+      },
       createdAt: entity.getCreatedAt(),
       updatedAt: entity.getUpdatedAt() || null
     }
@@ -17,9 +24,16 @@ export class WarehouseView extends ViewContract<Warehouse> {
 
 export interface WarehouseResponse extends IViewResponse {
   id: string
-  label: string
-  urn: string
-  description: string
+  name: string
+  address: {
+    zipCode: string
+    state: string
+    city: string
+    district: string
+    street: string
+    number: string
+    complement: string
+  }
   createdAt: Date
   updatedAt: Date
 }

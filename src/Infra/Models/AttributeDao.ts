@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn
-} from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 
 import { VariationAttributeDao } from './VariationAttributeDao'
 

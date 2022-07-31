@@ -5,4 +5,25 @@ import { WarehouseDao } from '../Models/WarehouseDao'
 
 export class WarehouseRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Warehouse, WarehouseDao>
-  implements WarehouseRepository {}
+  implements WarehouseRepository
+{
+  async findByZipCodeAndNumber(
+    addressZipCode: string,
+    addressNumber: string
+  ): Promise<Warehouse> {
+    const warehouse = await this.repository
+      .createQueryBuilder()
+      .where({
+        storeId: this.storeId,
+        addressZipCode,
+        addressNumber
+      })
+      .getOne()
+
+    if (!warehouse) {
+      throw this.dataNotFoundException
+    }
+
+    return this.dataMapper.toDomainEntity(warehouse)
+  }
+}

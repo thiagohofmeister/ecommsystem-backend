@@ -291,7 +291,7 @@ CREATE TABLE IF NOT EXISTS `product_catalog`.`warehouse` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `warehouse_id_store_id_UNIQUE` ON `warehouse` (`id` ASC, `store_id` ASC);
+CREATE UNIQUE INDEX `warehouse_id_store_id_address_zip_code_address_number_UNIQUE` ON `product_catalog`.`warehouse` (`store_id` ASC, `address_zip_code` ASC, `address_number` ASC);
 
 
 -- -----------------------------------------------------

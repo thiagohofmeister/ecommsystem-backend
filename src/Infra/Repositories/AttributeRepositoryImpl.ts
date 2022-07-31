@@ -10,6 +10,7 @@ export class AttributeRepositoryImpl
   async findAllByIds(ids: string[]): Promise<Attribute[]> {
     const attributes = await this.repository
       .createQueryBuilder()
+      .where({ storeId: this.storeId })
       .where('id IN (:ids)', { ids })
       .getMany()
 

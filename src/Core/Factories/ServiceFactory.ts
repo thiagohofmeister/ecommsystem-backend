@@ -120,6 +120,7 @@ export class ServiceFactory {
 
   public buildWarehouseCreateService(manager?: EntityManager) {
     return new WarehouseCreateService(
+      this.repositoryFactory.buildWarehouseRepository(),
       this.buildWarehouseSaveService(manager),
       new WarehouseValidator()
     )
