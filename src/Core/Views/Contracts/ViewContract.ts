@@ -12,7 +12,11 @@ export abstract class ViewContract<TDomainModel = any, TViewResponse = any> {
       return this.renderMany(body as TDomainModel[])
     }
 
-    if (!!body && !!body['items'] && !!body['total']) {
+    if (
+      !!body &&
+      body.hasOwnProperty('items') &&
+      body.hasOwnProperty('total')
+    ) {
       return this.renderList(body as IItemListModel<TDomainModel>)
     }
 
