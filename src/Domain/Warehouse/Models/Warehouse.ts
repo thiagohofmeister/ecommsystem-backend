@@ -11,6 +11,7 @@ export class Warehouse {
     private addressStreet: string,
     private addressNumber: string,
     private addressComplement: string,
+    private priority: number,
     private id?: string,
     private createdAt?: Date,
     private updatedAt?: Date
@@ -92,6 +93,14 @@ export class Warehouse {
 
   public getStoreId(): string {
     return this.storeId
+  }
+
+  public getPriority(): number {
+    return this.priority
+  }
+
+  public setPriority(priority: number): void {
+    this.priority = priority
   }
 
   public getId(): string {

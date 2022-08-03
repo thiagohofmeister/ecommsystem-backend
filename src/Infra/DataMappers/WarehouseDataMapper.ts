@@ -17,6 +17,7 @@ export class WarehouseDataMapper extends EntityDataMapperContract<
       entity.addressStreet,
       entity.addressNumber,
       entity.addressComplement,
+      entity.priority,
       entity.id,
       entity.createdAt,
       entity.updatedAt
@@ -35,6 +36,7 @@ export class WarehouseDataMapper extends EntityDataMapperContract<
       domain.getAddressStreet(),
       domain.getAddressNumber(),
       domain.getAddressComplement(),
+      domain.getPriority(),
       domain.getCreatedAt(),
       domain.getUpdatedAt()
     )

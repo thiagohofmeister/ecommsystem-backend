@@ -16,7 +16,7 @@ export class WarehouseSaveService {
       warehouse
     )
 
-    return this.warehouseRepository.save(warehouseToSave)
+    return await this.warehouseRepository.save(warehouseToSave)
   }
 
   private async getWarehouseToSave(
@@ -25,6 +25,8 @@ export class WarehouseSaveService {
     warehouse?: Warehouse
   ): Promise<Warehouse> {
     if (!warehouse) {
+      const priority = await this.getPriority()
+      console.log({ priority })
       return new Warehouse(
         storeId,
         data.name,
@@ -34,7 +36,8 @@ export class WarehouseSaveService {
         data.address.district,
         data.address.street,
         data.address.number,
-        data.address.complement
+        data.address.complement,
+        priority
       )
     }
 
@@ -73,5 +76,9 @@ export class WarehouseSaveService {
     }
 
     return warehouse
+  }
+
+  private async getPriority() {
+    return this.warehouseRepository.getNextPriority()
   }
 }

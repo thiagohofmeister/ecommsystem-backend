@@ -50,6 +50,9 @@ export class WarehouseDao {
   })
   addressComplement: string
 
+  @Column()
+  priority: number
+
   @Column({
     name: 'created_at'
   })
@@ -75,6 +78,7 @@ export class WarehouseDao {
     addressStreet: string,
     addressNumber: string,
     addressComplement: string,
+    priority: number,
     createdAt?: Date,
     updatedAt?: Date
   ) {
@@ -88,6 +92,7 @@ export class WarehouseDao {
     this.addressStreet = addressStreet
     this.addressNumber = addressNumber
     this.addressComplement = addressComplement
+    this.priority = priority
     this.createdAt = createdAt
     this.updatedAt = updatedAt
   }

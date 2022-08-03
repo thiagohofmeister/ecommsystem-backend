@@ -7,6 +7,21 @@ export class WarehouseRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Warehouse, WarehouseDao>
   implements WarehouseRepository
 {
+  async getNextPriority(): Promise<number> {
+    const last = (
+      await this.repository.find({
+        order: { priority: 'desc' },
+        take: 1
+      })
+    )[0]
+
+    if (!last) {
+      return 0
+    }
+
+    return last.priority + 1
+  }
+
   async findByZipCodeAndNumber(
     addressZipCode: string,
     addressNumber: string
