@@ -67,6 +67,14 @@ export class VariationSaveService {
         attr => attr.getId() === attrDto.attribute.id
       )
 
+      if (!attr) {
+        invalidDataException.addReason({
+          id: `variations.${variationIndex}.attributes.${index}.id.${attrDto.attribute.id}.notFound`,
+          message: `Field variations.${variationIndex}.attributes.${index}.id.${attrDto.attribute.id} not found.`
+        })
+        return
+      }
+
       if (!attr.getValues().includes(attrDto.value)) {
         invalidDataException.addReason({
           id: `variations.${variationIndex}.attributes.${index}.value.${attrDto.value}.notFound`,

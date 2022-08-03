@@ -14,6 +14,6 @@ export class AttributeRepositoryImpl
       .where('id IN (:ids)', { ids })
       .getMany()
 
-    return this.dataMapper.toDomainMany(attributes)
+    return this.dataMapper.toDomainEntityMany(attributes)
   }
 }

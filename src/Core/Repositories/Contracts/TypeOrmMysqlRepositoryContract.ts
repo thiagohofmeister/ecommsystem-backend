@@ -33,12 +33,19 @@ export abstract class TypeOrmMysqlRepositoryContract<
     )
   }
 
-  public async save(entity: TDomainEntity): Promise<TDomainEntity> {
+  public async save(
+    entity: TDomainEntity,
+    withFindBeforeReturn: boolean = true
+  ): Promise<TDomainEntity> {
     await this.repository.save(
       this.repository.create(this.dataMapper.toDaoEntity(entity))
     )
 
-    return this.findOneByPrimaryColumn(entity[this.getPrimaryColumnName()])
+    if (!withFindBeforeReturn) return entity
+
+    return this.findOneByPrimaryColumn(
+      this.getPrimaryColumnValueByEntity(entity)
+    )
   }
 
   public async delete(
@@ -75,7 +82,7 @@ export abstract class TypeOrmMysqlRepositoryContract<
       })
 
     return {
-      items: this.dataMapper.toDomainMany(await query.getMany()),
+      items: this.dataMapper.toDomainEntityMany(await query.getMany()),
       total: await query.getCount()
     }
   }
@@ -86,13 +93,13 @@ export abstract class TypeOrmMysqlRepositoryContract<
   ): Promise<TDomainEntity> {
     const hasStoreIdColumn = this.hasColumn('storeId')
 
-    const primaryColumn =
-      this.repository.metadata.primaryColumns[0].databaseName
-
     const query = this.customToFindOneByPrimaryColumn(
       this.repository
         .createQueryBuilder()
-        .where(`${this.getTableName()}.${primaryColumn} = :value`, { value })
+        .where(
+          `${this.getTableName()}.${this.getPrimaryColumnName()} = :value`,
+          { value }
+        )
     )
 
     if (hasStoreIdColumn && !bypassStoreId)
@@ -176,5 +183,9 @@ export abstract class TypeOrmMysqlRepositoryContract<
 
   protected getPrimaryColumnName(): string {
     return this.repository.metadata.primaryColumns[0].propertyAliasName
+  }
+
+  protected getPrimaryColumnValueByEntity(entity: TDomainEntity): string {
+    return entity[this.getPrimaryColumnName()]
   }
 }

@@ -22,7 +22,10 @@ export abstract class RepositoryContract<TDomainEntity, TDaoEntity>
       | FindOptionsWhere<TDaoEntity>
   ): Promise<boolean>
 
-  abstract save(entity: TDomainEntity): Promise<TDomainEntity>
+  abstract save(
+    entity: TDomainEntity,
+    withFindBeforeReturn: boolean
+  ): Promise<TDomainEntity>
 
   abstract create(entity: TDomainEntity): Promise<TDomainEntity>
 

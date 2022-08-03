@@ -52,7 +52,9 @@ export class ProductSaveService {
     variationsDto: ProductSaveDto['variations']
   ) {
     if (!variationTemplate) {
-      return []
+      return {
+        images: []
+      }
     }
 
     const combinationIds = {}

@@ -39,6 +39,8 @@ import { WarehouseSaveService } from '../../Domain/Warehouse/Services/WarehouseS
 import { WarehouseGetListService } from '../../Domain/Warehouse/Services/WarehouseGetListService'
 import { WarehouseGetOneByIdService } from '../../Domain/Warehouse/Services/WarehouseGetOneByIdService'
 import { WarehouseSavePriorityService } from '../../Domain/Warehouse/Services/WarehouseSavePriorityService'
+import { VariationSaveStocksService } from '../../Domain/Variation/Services/VariationSaveStocksService'
+import { VariationValidator } from '../../Domain/Variation/VariationValidator'
 
 export class ServiceFactory {
   constructor(
@@ -237,6 +239,15 @@ export class ServiceFactory {
       this.repositoryFactory.buildVariationRepository(manager),
       this.repositoryFactory.buildAttributeRepository(manager),
       this.buildVariationDeleteUnusedAttributesService(manager)
+    )
+  }
+
+  public buildVariationSaveStocksService(manager?: EntityManager) {
+    return new VariationSaveStocksService(
+      this.repositoryFactory.buildVariationRepository(manager),
+      this.repositoryFactory.buildWarehouseRepository(manager),
+      this.repositoryFactory.buildStockRepository(manager),
+      new VariationValidator()
     )
   }
 

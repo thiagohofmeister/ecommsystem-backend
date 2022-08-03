@@ -7,6 +7,8 @@ import { PriceDataMapper } from '../../Infra/DataMappers/PriceDataMapper'
 import { PriceDataMapperMediator } from '../../Infra/DataMappers/PriceDataMapperMediator'
 import { ProductDataMapper } from '../../Infra/DataMappers/ProductDataMapper'
 import { ProductDataMapperMediator } from '../../Infra/DataMappers/ProductDataMapperMediator'
+import { StockDataMapper } from '../../Infra/DataMappers/StockDataMapper'
+import { StockDataMapperMediator } from '../../Infra/DataMappers/StockDataMapperMediator'
 import { VariationAttributeDataMapper } from '../../Infra/DataMappers/VariationAttributeDataMapper'
 import { VariationAttributeDataMapperMediator } from '../../Infra/DataMappers/VariationAttributeDataMapperMediator'
 import { VariationDataMapper } from '../../Infra/DataMappers/VariationDataMapper'
@@ -75,6 +77,18 @@ export class DataMapperFactory {
     return new VariationAttributeDataMapperMediator(
       this.buildVariationAttributeDataMapper(),
       this.buildAttributeDataMapper(),
+      this.buildVariationDataMapper()
+    )
+  }
+
+  public buildStockDataMapper() {
+    return new StockDataMapper()
+  }
+
+  public buildStockDataMapperMediator() {
+    return new StockDataMapperMediator(
+      this.buildStockDataMapper(),
+      this.buildWarehouseDataMapper(),
       this.buildVariationDataMapper()
     )
   }

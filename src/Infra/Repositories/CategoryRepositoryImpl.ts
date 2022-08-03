@@ -14,7 +14,7 @@ export class CategoryRepositoryImpl
       .where({ storeId: this.storeId, parent: { id: parentId || IsNull() } })
       .getMany()
 
-    return this.dataMapper.toDomainMany(categories)
+    return this.dataMapper.toDomainEntityMany(categories)
   }
 
   async findOneByUrn(urn: string): Promise<Category> {

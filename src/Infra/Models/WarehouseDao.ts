@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm'
 import { ProductDao } from './ProductDao'
+import { StockDao } from './StockDao'
 
 @Entity('warehouse')
 export class WarehouseDao {
@@ -66,6 +67,9 @@ export class WarehouseDao {
   @OneToMany(() => ProductDao, product => product.brand)
   @JoinColumn()
   products: ProductDao[]
+
+  @OneToMany(() => StockDao, stock => stock.warehouse)
+  stocks: StockDao[]
 
   constructor(
     id: string,

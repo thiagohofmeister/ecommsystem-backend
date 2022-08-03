@@ -2,13 +2,25 @@ import { Warehouse } from '../../Domain/Warehouse/Models/Warehouse'
 import { WarehouseRepository } from '../../Domain/Warehouse/Repositories/WarehouseRepository'
 import { TypeOrmMysqlRepositoryContract } from '../../Core/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { WarehouseDao } from '../Models/WarehouseDao'
-import { SelectQueryBuilder } from 'typeorm'
+import { In, SelectQueryBuilder } from 'typeorm'
 import { IFilterDefault } from '../../Core/Models/Interfaces/IFilterDefault'
 
 export class WarehouseRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Warehouse, WarehouseDao>
   implements WarehouseRepository
 {
+  async findByIds(ids: string[]): Promise<Warehouse[]> {
+    const warehouses = await this.repository
+      .createQueryBuilder()
+      .where({
+        storeId: this.storeId,
+        id: In(ids)
+      })
+      .getMany()
+
+    return this.dataMapper.toDomainEntityMany(warehouses)
+  }
+
   async getNextPriority(): Promise<number> {
     const last = (
       await this.repository.find({

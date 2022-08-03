@@ -14,8 +14,10 @@ import { PriceDataNotFound } from '../../Domain/Product/Exceptions/PriceDataNotF
 import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
 import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
+import { StockDataNotFound } from '../../Domain/Variation/Exceptions/StockDataNotFound'
 import { VariationAttributeDataNotFound } from '../../Domain/Variation/Exceptions/VariationAttributeDataNotFound'
 import { VariationDataNotFound } from '../../Domain/Variation/Exceptions/VariationDataNotFound'
+import { StockRepository } from '../../Domain/Variation/Repositories/StockRepository'
 import { VariationAttributeRepository } from '../../Domain/Variation/Repositories/VariationAttributeRepository'
 import { VariationRepository } from '../../Domain/Variation/Repositories/VariationRepository'
 import { WarehouseDataNotFound } from '../../Domain/Warehouse/Exceptions/WarehouseDataNotFound'
@@ -26,6 +28,7 @@ import { CategoryDao } from '../../Infra/Models/CategoryDao'
 import { ImageDao } from '../../Infra/Models/ImageDao'
 import { PriceDao } from '../../Infra/Models/PriceDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
+import { StockDao } from '../../Infra/Models/StockDao'
 import { VariationAttributeDao } from '../../Infra/Models/VariationAttributeDao'
 import { VariationDao } from '../../Infra/Models/VariationDao'
 import { WarehouseDao } from '../../Infra/Models/WarehouseDao'
@@ -36,6 +39,7 @@ import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/Catego
 import { ImageRepositoryImpl } from '../../Infra/Repositories/ImageRepository'
 import { PriceRepositoryImpl } from '../../Infra/Repositories/PriceRepository'
 import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositoryImpl'
+import { StockRepositoryImpl } from '../../Infra/Repositories/StockRepositoryImpl'
 import { VariationAttributeRepositoryImpl } from '../../Infra/Repositories/VariationAttributeRepository'
 import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
 import { WarehouseRepositoryImpl } from '../../Infra/Repositories/WarehouseRepositoryImpl'
@@ -55,6 +59,15 @@ export class RepositoryFactory {
       this.dataMapperFactory.buildCategoryDataMapper(),
       this.storeId,
       new CategoryDataNotFound()
+    )
+  }
+
+  buildStockRepository(manager: EntityManager): StockRepository {
+    return new StockRepositoryImpl(
+      this.getManager(manager).getRepository(StockDao),
+      this.dataMapperFactory.buildStockDataMapperMediator(),
+      this.storeId,
+      new StockDataNotFound()
     )
   }
 
