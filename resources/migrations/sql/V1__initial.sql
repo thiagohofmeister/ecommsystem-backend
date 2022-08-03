@@ -294,8 +294,6 @@ ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `warehouse_id_store_id_address_zip_code_address_number_UNIQUE` ON `warehouse` (`store_id` ASC, `address_zip_code` ASC, `address_number` ASC);
 
-CREATE UNIQUE INDEX `warehouse_store_id_priority_UNIQUE` ON `warehouse` (`store_id` ASC, `priority` ASC);
-
 
 -- -----------------------------------------------------
 -- Table `stock`

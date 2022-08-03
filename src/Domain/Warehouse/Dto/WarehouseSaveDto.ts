@@ -1,6 +1,7 @@
 export interface WarehouseSaveDto {
-  name: string
-  address: {
+  name?: string
+  priority?: number
+  address?: {
     zipCode: string
     state: string
     city: string

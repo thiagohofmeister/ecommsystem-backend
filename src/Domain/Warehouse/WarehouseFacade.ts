@@ -1,6 +1,7 @@
 import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
 import { WarehouseCreateDto } from './Dto/WarehouseCreateDto'
 import { WarehouseGetListFilterDto } from './Dto/WarehouseGetListFilterDto'
+import { WarehouseSavePriorityDto } from './Dto/WarehouseSavePriorityDto'
 
 export class WarehouseFacade extends FacadeContract {
   public async create(storeId: string, data: WarehouseCreateDto) {
@@ -20,6 +21,19 @@ export class WarehouseFacade extends FacadeContract {
         return await this.serviceFactory
           .buildWarehouseUpdateService(manager)
           .execute(id, storeId, data)
+      })
+  }
+
+  public async updatePriorities(
+    storeId: string,
+    data: WarehouseSavePriorityDto[]
+  ) {
+    return this.serviceFactory
+      .buildTransactionalService()
+      .execute(async manager => {
+        return await this.serviceFactory
+          .buildWarehouseSavePriorityService(manager)
+          .execute(storeId, data)
       })
   }
 

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 import { Consumer } from '../Core/Events/Consumer'
 import { Factory } from '../Core/Factories/Factory'
-import { QueueFactory } from '../Core/Factories/QueueFactory,'
+import { QueueFactory } from '../Core/Factories/QueueFactory'
 import { MySQL } from './Database/MySQL'
 import { Redis } from './Database/Redis'
 

@@ -25,8 +25,6 @@ export class WarehouseSaveService {
     warehouse?: Warehouse
   ): Promise<Warehouse> {
     if (!warehouse) {
-      const priority = await this.getPriority()
-      console.log({ priority })
       return new Warehouse(
         storeId,
         data.name,
@@ -37,7 +35,7 @@ export class WarehouseSaveService {
         data.address.street,
         data.address.number,
         data.address.complement,
-        priority
+        await this.getPriority()
       )
     }
 
@@ -73,6 +71,10 @@ export class WarehouseSaveService {
       if (data.address.hasOwnProperty('complement')) {
         warehouse.setAddressComplement(data.address.complement)
       }
+    }
+
+    if (data.hasOwnProperty('priority')) {
+      warehouse.setPriority(data.priority)
     }
 
     return warehouse

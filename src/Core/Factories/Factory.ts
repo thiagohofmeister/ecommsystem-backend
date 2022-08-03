@@ -3,7 +3,7 @@ import { Redis } from '../../Infra/Database/Redis'
 import { DataMapperFactory } from './DataMapperFactory'
 import { FacadeFactory } from './FacadeFactory'
 import { ProviderFactory } from './ProviderFactory'
-import { QueueFactory } from './QueueFactory,'
+import { QueueFactory } from './QueueFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 import { ServiceFactory } from './ServiceFactory'
 

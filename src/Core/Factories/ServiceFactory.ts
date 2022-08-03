@@ -29,7 +29,7 @@ import { ProductGetOneByIdService } from '../../Domain/Product/Services/ProductG
 import { ProductSaveService } from '../../Domain/Product/Services/ProductSaveService'
 import { VariationSaveService } from '../../Domain/Variation/Services/VariationSaveService'
 import { ProductUpdateService } from '../../Domain/Product/Services/ProductUpdateService'
-import { QueueFactory } from './QueueFactory,'
+import { QueueFactory } from './QueueFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 import { ProductSavePricesService } from '../../Domain/Product/Services/ProductSavePricesService'
 import { WarehouseValidator } from '../../Domain/Warehouse/WarehouseValidator'
@@ -38,6 +38,7 @@ import { WarehouseUpdateService } from '../../Domain/Warehouse/Services/Warehous
 import { WarehouseSaveService } from '../../Domain/Warehouse/Services/WarehouseSaveService'
 import { WarehouseGetListService } from '../../Domain/Warehouse/Services/WarehouseGetListService'
 import { WarehouseGetOneByIdService } from '../../Domain/Warehouse/Services/WarehouseGetOneByIdService'
+import { WarehouseSavePriorityService } from '../../Domain/Warehouse/Services/WarehouseSavePriorityService'
 
 export class ServiceFactory {
   constructor(
@@ -115,6 +116,15 @@ export class ServiceFactory {
   public buildBrandGetOneByIdService(manager?: EntityManager) {
     return new BrandGetOneByIdService(
       this.repositoryFactory.buildBrandRepository(manager)
+    )
+  }
+
+  public buildWarehouseSavePriorityService(manager?: EntityManager) {
+    return new WarehouseSavePriorityService(
+      this.buildWarehouseGetListService(manager),
+      this.buildWarehouseSaveService(manager),
+      this.buildWarehouseGetOneByIdService(manager),
+      new WarehouseValidator()
     )
   }
 

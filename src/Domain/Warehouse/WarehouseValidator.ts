@@ -4,13 +4,21 @@ import * as Joi from 'joi'
 import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
 import { WarehouseCreateDto } from './Dto/WarehouseCreateDto'
 import { WarehouseUpdateDto } from './Dto/WarehouseUpdateDto'
+import { WarehouseSavePriorityDto } from './Dto/WarehouseSavePriorityDto'
 
 export class WarehouseValidator extends JoiSchemaValidatorContract {
   private warehouseCreateSchema: Schema
   private warehouseUpdateSchema: Schema
+  private warehouseSavePrioritySchema: Schema
 
   constructor() {
     super()
+
+    this.warehouseSavePrioritySchema = Joi.array().items(
+      Joi.object({
+        id: Joi.string().required()
+      })
+    )
 
     this.warehouseCreateSchema = Joi.object({
       name: Joi.string().required(),
@@ -50,6 +58,15 @@ export class WarehouseValidator extends JoiSchemaValidatorContract {
     return this.validateBySchema<WarehouseUpdateDto>(
       payload,
       this.warehouseUpdateSchema
+    )
+  }
+
+  public async warehouseSavePriorityPayloadValidate(
+    payload: WarehouseSavePriorityDto[]
+  ) {
+    return this.validateBySchema<WarehouseSavePriorityDto[]>(
+      payload,
+      this.warehouseSavePrioritySchema
     )
   }
 }

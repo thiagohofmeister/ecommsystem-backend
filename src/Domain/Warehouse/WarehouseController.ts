@@ -13,6 +13,7 @@ export class WarehouseController extends BaseController {
     this.patch = this.patch.bind(this)
     this.get = this.get.bind(this)
     this.getOneById = this.getOneById.bind(this)
+    this.putPriorities = this.putPriorities.bind(this)
   }
 
   public async post(req: CatalogRequest, res: Response, next: NextFunction) {
@@ -33,6 +34,19 @@ export class WarehouseController extends BaseController {
         req.context.storeId,
         req.body
       ),
+      ResponseTypeEnum.OK
+    )
+  }
+
+  public async putPriorities(
+    req: CatalogRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    await this.responseHandler(
+      res,
+      next,
+      this.defaultFacade(req).updatePriorities(req.context.storeId, req.body),
       ResponseTypeEnum.OK
     )
   }

@@ -14,6 +14,11 @@ export class WarehouseRoutes extends AuthRouteContract<WarehouseController> {
     return [
       new RouteDto(this.getFullEndpoint(), MethodEnum.POST, controller.post),
       new RouteDto(
+        this.getFullEndpoint('/priorities'),
+        MethodEnum.PUT,
+        controller.putPriorities
+      ),
+      new RouteDto(
         this.getFullEndpoint('/:id'),
         MethodEnum.PATCH,
         controller.patch
