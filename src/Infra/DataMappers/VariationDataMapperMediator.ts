@@ -1,7 +1,9 @@
 import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
 import { Variation } from '../../Domain/Variation/Models/Variation'
 import { VariationDao } from '../Models/VariationDao'
+import { PriceDataMapperMediator } from './PriceDataMapperMediator'
 import { ProductDataMapper } from './ProductDataMapper'
+import { StockDataMapperMediator } from './StockDataMapperMediator'
 import { VariationAttributeDataMapperMediator } from './VariationAttributeDataMapperMediator'
 import { VariationDataMapper } from './VariationDataMapper'
 
@@ -12,7 +14,9 @@ export class VariationDataMapperMediator extends EntityDataMapperContract<
   constructor(
     private readonly variationDataMapper: VariationDataMapper,
     private readonly productDataMapper: ProductDataMapper,
-    private readonly variationAttributeDataMapperMediator: VariationAttributeDataMapperMediator
+    private readonly variationAttributeDataMapperMediator: VariationAttributeDataMapperMediator,
+    private readonly stockDataMapperMediator: StockDataMapperMediator,
+    private readonly priceDataMapperMediator: PriceDataMapperMediator
   ) {
     super()
   }
@@ -35,6 +39,20 @@ export class VariationDataMapperMediator extends EntityDataMapperContract<
       })
     }
 
+    if (entity.stocks) {
+      variation.removeStocks([])
+      entity.stocks.forEach(stock => {
+        variation.addStock(this.stockDataMapperMediator.toDomainEntity(stock))
+      })
+    }
+
+    if (entity.prices) {
+      variation.removePrices([])
+      entity.prices.forEach(price => {
+        variation.addPrice(this.priceDataMapperMediator.toDomainEntity(price))
+      })
+    }
+
     return variation
   }
 
@@ -52,6 +70,18 @@ export class VariationDataMapperMediator extends EntityDataMapperContract<
         this.variationAttributeDataMapperMediator.toDaoEntityMany(
           domain.getAttributes()
         )
+    }
+
+    if (domain.getStocks()) {
+      variation.stocks = this.stockDataMapperMediator.toDaoEntityMany(
+        domain.getStocks()
+      )
+    }
+
+    if (domain.getPrices()) {
+      variation.prices = this.priceDataMapperMediator.toDaoEntityMany(
+        domain.getPrices()
+      )
     }
 
     return variation

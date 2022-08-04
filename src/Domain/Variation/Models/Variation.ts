@@ -1,10 +1,15 @@
+import { Price } from '../../Product/Models/Price'
 import { Product } from '../../Product/Models/Product'
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Enums/WeightUnitEnum'
+import { Stock } from './Stock'
 import { VariationAttribute } from './VariationAttribute'
 
 export class Variation {
   private variationAttributes: VariationAttribute[]
+  private stocks: Stock[]
+  private prices: Price[]
+  private currentPrice: Price
 
   constructor(
     private sku: string,
@@ -118,5 +123,55 @@ export class Variation {
 
   public getAttributes() {
     return this.variationAttributes
+  }
+
+  public removeStocks(keepWarehouseIds: string[]) {
+    if (!this.stocks) this.stocks = []
+
+    this.stocks = this.stocks.filter(stock =>
+      keepWarehouseIds.includes(stock.getWarehouse().getId())
+    )
+
+    return this
+  }
+
+  public addStock(stock: Stock) {
+    if (!this.stocks) this.stocks = []
+
+    this.stocks.push(stock)
+    return this
+  }
+
+  public getStocks() {
+    return this.stocks
+  }
+
+  public removePrices(keepPriceIds: string[]) {
+    if (!this.prices) this.prices = []
+
+    this.prices = this.prices.filter(price =>
+      keepPriceIds.includes(price.getId())
+    )
+
+    return this
+  }
+
+  public addPrice(stock: Price) {
+    if (!this.prices) this.prices = []
+
+    this.prices.push(stock)
+    return this
+  }
+
+  public getPrices() {
+    return this.prices
+  }
+
+  public getCurrentPrice(): Price {
+    if (!this.currentPrice && this.prices?.length === 1) {
+      this.currentPrice = this.prices[0]
+    }
+
+    return this.currentPrice
   }
 }

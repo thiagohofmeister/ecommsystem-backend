@@ -11,6 +11,7 @@ import { MeasureUnitEnum } from '../../Domain/Variation/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../../Domain/Variation/Enums/WeightUnitEnum'
 import { PriceDao } from './PriceDao'
 import { ProductDao } from './ProductDao'
+import { StockDao } from './StockDao'
 import { VariationAttributeDao } from './VariationAttributeDao'
 
 @Entity('variation')
@@ -75,6 +76,9 @@ export class VariationDao {
     cascade: true
   })
   variationAttributes: VariationAttributeDao[]
+
+  @OneToMany(() => StockDao, stock => stock.variation)
+  stocks: StockDao[]
 
   @OneToMany(() => PriceDao, price => price.variation)
   prices: PriceDao[]

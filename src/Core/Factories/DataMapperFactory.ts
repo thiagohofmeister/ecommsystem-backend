@@ -97,7 +97,9 @@ export class DataMapperFactory {
     return new VariationDataMapperMediator(
       this.buildVariationDataMapper(),
       this.buildProductDataMapper(),
-      this.buildVariationAttributeDataMapperMediator()
+      this.buildVariationAttributeDataMapperMediator(),
+      this.buildStockDataMapperMediator(),
+      this.buildPriceDataMapperMediator()
     )
   }
 }

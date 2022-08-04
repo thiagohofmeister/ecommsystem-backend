@@ -26,7 +26,7 @@ export class StockDao {
   @Column()
   quantity: number
 
-  @ManyToOne(() => VariationDao, variation => variation.variationAttributes)
+  @ManyToOne(() => VariationDao, variation => variation.stocks)
   @JoinColumn([
     {
       name: 'variation_sku'

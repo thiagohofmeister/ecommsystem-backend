@@ -15,6 +15,9 @@ export class ProductRepositoryImpl
     return query
       .leftJoinAndSelect('ProductDao.category', 'category')
       .leftJoinAndSelect('ProductDao.variations', 'variations')
+      .leftJoinAndSelect('variations.stocks', 'stocks')
+      .leftJoinAndSelect('variations.prices', 'prices')
+      .leftJoinAndSelect('stocks.warehouse', 'warehouse')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
       .leftJoinAndSelect('ProductDao.images', 'images')
       .leftJoinAndSelect(
@@ -32,6 +35,9 @@ export class ProductRepositoryImpl
     return query
       .leftJoinAndSelect('ProductDao.category', 'category')
       .leftJoinAndSelect('ProductDao.variations', 'variations')
+      .leftJoinAndSelect('variations.stocks', 'stocks')
+      .leftJoinAndSelect('variations.prices', 'prices')
+      .leftJoinAndSelect('stocks.warehouse', 'warehouse')
       .leftJoinAndSelect('ProductDao.brand', 'brand')
       .leftJoinAndSelect('ProductDao.images', 'images')
       .leftJoinAndSelect(

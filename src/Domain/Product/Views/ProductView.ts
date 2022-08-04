@@ -45,6 +45,20 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
           },
           value: attr.getValue()
         })),
+        price: variation.getCurrentPrice()
+          ? {
+              id: variation.getCurrentPrice().getId(),
+              list: variation.getCurrentPrice().getList(),
+              sale: variation.getCurrentPrice().getSale(),
+              campaign: null
+            }
+          : null,
+        stocks: variation.getStocks().map(stock => ({
+          quantity: stock.getQuantity(),
+          warehouse: {
+            id: stock.getWarehouse().getId()
+          }
+        })),
         createdAt: variation.getCreatedAt(),
         updatedAt: variation.getUpdatedAt()
       })),
@@ -88,6 +102,20 @@ export interface ProductResponse {
         id: string
       }
       value: string
+    }[]
+    price: {
+      id: string
+      list: number
+      sale: number
+      campaign?: {
+        id: string
+      }
+    }
+    stocks: {
+      quantity: number
+      warehouse: {
+        id: string
+      }
     }[]
     createdAt: Date
     updatedAt: Date
