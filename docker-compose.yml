@@ -1,41 +1,11 @@
 version: '3.5'
 services:
-  mysql:
-    image: mysql:8.0
-    volumes:
-      - ./docker/mysql/data:/var/lib/mysql
-      - ./docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
-    command: ['--default-authentication-plugin=mysql_native_password']
-    environment:
-      - MYSQL_USER=docker
-      - MYSQL_PASSWORD=docker
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - 3306:3306
-
   flyway:
     image: flyway/flyway
     command: migrate
     volumes:
       - ./resources/migrations/sql:/flyway/sql
       - ./docker/flyway/flyway.conf:/flyway/conf/flyway.conf
-    depends_on:
-      - mysql
-
-  mongodb:
-    image: mongo
-    ports:
-      - 27017:27017
-    command:
-      - 'mongod'
-
-  rabbitmq:
-    image: rabbitmq:3.7.4
-
-  redis:
-    image: redis:5.0.3-alpine
-    ports:
-      - 6379:6379
 
   product-catalog:
     image: node:14
@@ -49,9 +19,7 @@ services:
     ports:
       - 3000:80
     depends_on:
-      - mysql
       - flyway
-      - redis
 
   product-catalog-worker:
     image: node:14
@@ -64,10 +32,6 @@ services:
       - ./:/usr/src/app
     ports:
       - 3002:80
-    depends_on:
-      - rabbitmq
-      - mysql
-      - redis
 networks:
   default:
     external:
