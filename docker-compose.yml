@@ -30,8 +30,6 @@ services:
     command: yarn run dev-worker
     volumes:
       - ./:/usr/src/app
-    ports:
-      - 3002:80
 networks:
   default:
     external:
