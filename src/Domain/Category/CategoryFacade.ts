@@ -7,8 +7,8 @@ export class CategoryFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildCategoryCreateService(manager)
-          .execute(storeId, data)
+          .buildCategoryService(manager)
+          .create(storeId, data)
       })
   }
 
@@ -17,18 +17,16 @@ export class CategoryFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildCategoryUpdateService(manager)
-          .execute(id, storeId, data)
+          .buildCategoryService(manager)
+          .update(id, storeId, data)
       })
   }
 
   public async getTree(ignoreCache?: boolean) {
-    return this.serviceFactory
-      .buildCategoryGetTreeService()
-      .execute(ignoreCache)
+    return this.serviceFactory.buildCategoryService().getTree(ignoreCache)
   }
 
   public async getOneById(id: string) {
-    return this.serviceFactory.buildCategoryGetOneByIdService().execute(id)
+    return this.serviceFactory.buildCategoryService().getOneById(id)
   }
 }

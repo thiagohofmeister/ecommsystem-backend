@@ -9,8 +9,8 @@ export class WarehouseFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildWarehouseCreateService(manager)
-          .execute(storeId, data)
+          .buildWarehouseService(manager)
+          .create(storeId, data)
       })
   }
 
@@ -19,8 +19,8 @@ export class WarehouseFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildWarehouseUpdateService(manager)
-          .execute(id, storeId, data)
+          .buildWarehouseService(manager)
+          .update(id, storeId, data)
       })
   }
 
@@ -32,20 +32,16 @@ export class WarehouseFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildWarehouseSavePriorityService(manager)
-          .execute(storeId, data)
+          .buildWarehouseService(manager)
+          .savePriorities(storeId, data)
       })
   }
 
   public async list(data: WarehouseGetListFilterDto) {
-    return await this.serviceFactory
-      .buildWarehouseGetListService()
-      .execute(data)
+    return await this.serviceFactory.buildWarehouseService().list(data)
   }
 
   public async getOneById(id: string) {
-    return await this.serviceFactory
-      .buildWarehouseGetOneByIdService()
-      .execute(id)
+    return await this.serviceFactory.buildWarehouseService().getOneById(id)
   }
 }

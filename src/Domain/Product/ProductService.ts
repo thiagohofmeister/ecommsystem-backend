@@ -1,30 +1,202 @@
-import { DataNotFoundException } from '../../../Core/Models/Exceptions/DataNotFoundException'
-import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDataException'
-import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
-import { BrandRepository } from '../../Brand/Repositories/BrandRepository'
-import { CategoryRepository } from '../../Category/Repositories/CategoryRepository'
-import { ProductCreateDto } from '../Dto/ProductCreateDto'
-import { ProductSaveDto } from '../Dto/ProductSaveDto'
-import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
-import { Image } from '../Models/Image'
-import { Product } from '../Models/Product'
-import { ProductRepository } from '../Repositories/ProductRepository'
-import { ProductDeleteUnusedImagesService } from './ProductDeleteUnusedImagesService'
-import { VariationDeleteService } from '../../Variation/Services/VariationDeleteService'
-import { VariationSaveService } from '../../Variation/Services/VariationSaveService'
+import { In, Not } from 'typeorm'
 
-export class ProductSaveService {
+import { DataNotFoundException } from '../../Core/Models/Exceptions/DataNotFoundException'
+import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
+import { AttributeRepository } from '../Attribute/Repositories/AttributeRepository'
+import { BrandRepository } from '../Brand/Repositories/BrandRepository'
+import { CategoryRepository } from '../Category/Repositories/CategoryRepository'
+import { Variation } from '../Variation/Models/Variation'
+import { VariationService } from '../Variation/VariationService'
+import { ProductCreateDto } from './Dto/ProductCreateDto'
+import { ProductGetListFilterDto } from './Dto/ProductGetListFilterDto'
+import { ProductSaveDto } from './Dto/ProductSaveDto'
+import { ProductSavePriceDto } from './Dto/ProductSavePriceDto'
+import { ProductUpdateDto } from './Dto/ProductUpdateDto'
+import { ProductConflict } from './Exceptions/ProductConflict'
+import { ProductVariationTemplate } from './Interfaces/ProductVariationTemplate'
+import { Image } from './Models/Image'
+import { Price } from './Models/Price'
+import { Product } from './Models/Product'
+import { ProductValidator } from './ProductValidator'
+import { ImageRepository } from './Repositories/ImageRepository'
+import { PriceRepository } from './Repositories/PriceRepository'
+import { ProductRepository } from './Repositories/ProductRepository'
+
+export class ProductService {
   constructor(
-    private readonly attributeRepository: AttributeRepository,
-    private readonly categoryRepository: CategoryRepository,
-    private readonly brandRepository: BrandRepository,
     private readonly productRepository: ProductRepository,
-    private readonly variationSaveService: VariationSaveService,
-    private readonly variationDeleteService: VariationDeleteService,
-    private readonly productDeleteUnUsedImagesService: ProductDeleteUnusedImagesService
+    private readonly productValidator: ProductValidator,
+    private readonly priceRepository: PriceRepository,
+    private readonly imageRepository: ImageRepository,
+    private readonly attributeRepository: AttributeRepository,
+    private readonly brandRepository: BrandRepository,
+    private readonly categoryRepository: CategoryRepository,
+    private readonly variationService: VariationService
   ) {}
 
-  public async execute(
+  public async create(
+    storeId: string,
+    data: ProductCreateDto
+  ): Promise<Product> {
+    await this.validateProductAlreadyExists(data.id)
+
+    await this.productValidator.productCreatePayloadValidate(data)
+
+    return this.save(storeId, data)
+  }
+
+  public async update(id: string, data: ProductUpdateDto): Promise<Product> {
+    await this.productValidator.productUpdatePayloadValidate(data)
+
+    return this.save(id, data, await this.getOneById(id))
+  }
+
+  public async list(filter: ProductGetListFilterDto) {
+    return this.productRepository.findAll(filter)
+  }
+
+  public async getOneById(id: string) {
+    return this.productRepository.findOneByPrimaryColumn(id)
+  }
+
+  public async savePrices(
+    productId: string,
+    storeId: string,
+    data: ProductSavePriceDto[]
+  ): Promise<Price[]> {
+    await this.productValidator.productSavePricesPayloadValidate(data)
+
+    const product = await this.productRepository.findOneByPrimaryColumn(
+      productId
+    )
+
+    await this.clearPrices(storeId, product, data)
+
+    const prices: Price[] = await this.createPrices(product, storeId, data)
+
+    await Promise.all(prices.map(price => this.priceRepository.save(price)))
+
+    return prices
+  }
+
+  private async clearPrices(
+    storeId: string,
+    product: Product,
+    data: ProductSavePriceDto[]
+  ) {
+    const variationSkusSent =
+      data.length === 1 && !data[0].sku
+        ? product.getVariationSkus()
+        : data.map(priceDto => priceDto.sku)
+
+    const variationSkus = product
+      .getVariationSkus()
+      .filter(sku => !variationSkusSent.includes(sku))
+
+    if (!variationSkus.length) {
+      return
+    }
+
+    await this.priceRepository.delete({
+      storeId,
+      variation: { sku: In(variationSkus) }
+    })
+  }
+
+  private async createPrices(
+    product: Product,
+    storeId: string,
+    data: ProductSavePriceDto[]
+  ) {
+    const invalidDataException = new InvalidDataException('Invalid data.')
+
+    const promises = []
+
+    if (data.length === 1 && !data[0].sku) {
+      const priceDto = data[0]
+      product.getVariations().forEach(variation => {
+        promises.push(
+          this.createPrice(
+            variation,
+            storeId,
+            priceDto.list,
+            priceDto.sale,
+            invalidDataException
+          )
+        )
+      })
+
+      return await Promise.all(promises)
+    }
+
+    data.forEach((priceDto, index) => {
+      const variation = product.getVariationBySku(priceDto.sku)
+
+      if (!variation) {
+        invalidDataException.addReason({
+          id: `${index}.sku.${priceDto.sku}.notFound`,
+          message: `Field ${index}.sku.${priceDto.sku} not found.`
+        })
+        return
+      }
+
+      promises.push(
+        this.createPrice(
+          variation,
+          storeId,
+          priceDto.list,
+          priceDto.sale,
+          invalidDataException
+        )
+      )
+    })
+
+    if (!!invalidDataException.getReasons().length) {
+      throw invalidDataException
+    }
+
+    return await Promise.all(promises)
+  }
+
+  private async createPrice(
+    variation: Variation,
+    storeId: string,
+    list: number,
+    sale: number,
+    invalidDataException: InvalidDataException
+  ): Promise<Price> {
+    try {
+      const price = await this.priceRepository.findBySkuAndCampaignId(
+        variation.getSku(),
+        null
+      )
+
+      price.setList(list).setSale(sale)
+
+      return price
+    } catch (e) {
+      if (!(e instanceof DataNotFoundException)) throw e
+
+      return new Price(storeId, list, sale, null, variation)
+    }
+  }
+
+  private async deleteUnusedImages(
+    productId: string,
+    storeId: string,
+    idsToKeep: string | string[]
+  ) {
+    if (typeof idsToKeep === 'string') {
+      idsToKeep = [idsToKeep]
+    }
+
+    return this.imageRepository.delete({
+      id: Not(In(idsToKeep)),
+      product: { id: productId, storeId }
+    })
+  }
+
+  private async save(
     storeId: string,
     data: ProductSaveDto,
     product?: Product
@@ -32,6 +204,8 @@ export class ProductSaveService {
     const productToSave = await this.getProductToSaved(product, storeId, data)
 
     await this.validateVariationTemplate(productToSave.getVariationTemplate())
+
+    // TODO: Validate if each attribute exists `data.variations.[].attributes`
 
     const combinations = await this.getVariationCombinations(
       productToSave.getVariationTemplate(),
@@ -192,7 +366,7 @@ export class ProductSaveService {
 
     product.removeImages(images.filter(i => !!i.id).map(i => i.id))
 
-    await this.productDeleteUnUsedImagesService.execute(
+    await this.deleteUnusedImages(
       product.getId(),
       product.getStoreId(),
       product.getImagesIds()
@@ -258,20 +432,27 @@ export class ProductSaveService {
         .filter(sku => !variations.map(v => v.sku).includes(sku))
 
       await Promise.all(
-        variations.map(async (variation, index) =>
-          this.variationSaveService.execute(
+        variations.map(async (variation, index) => {
+          if (isUpdate) {
+            return this.variationService.update(
+              product,
+              variation.sku,
+              variation,
+              product.getVariations()?.find(v => v.getSku() === variation.sku),
+              index
+            )
+          }
+
+          return this.variationService.create(
             product,
             variation.sku,
             variation,
-            isUpdate
-              ? product.getVariations()?.find(v => v.getSku() === variation.sku)
-              : null,
             index
           )
-        )
+        })
       )
 
-      await this.variationDeleteService.execute(
+      await this.variationService.delete(
         product.getId(),
         product.getStoreId(),
         skusToRemove
@@ -307,5 +488,18 @@ export class ProductSaveService {
         }
       ])
     }
+  }
+
+  private async validateProductAlreadyExists(id: string) {
+    let exists = false
+
+    try {
+      await this.productRepository.findOneByPrimaryColumn(id)
+      exists = true
+    } catch (e) {
+      if (!(e instanceof DataNotFoundException)) throw e
+    }
+
+    if (exists) throw new ProductConflict()
   }
 }

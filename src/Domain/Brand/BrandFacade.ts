@@ -8,8 +8,8 @@ export class BrandFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildBrandCreateService(manager)
-          .execute(storeId, data)
+          .buildBrandService(manager)
+          .create(storeId, data)
       })
   }
 
@@ -18,16 +18,16 @@ export class BrandFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildBrandUpdateService(manager)
-          .execute(id, storeId, data)
+          .buildBrandService(manager)
+          .update(id, storeId, data)
       })
   }
 
   public async list(data: BrandGetListFilterDto) {
-    return await this.serviceFactory.buildBrandGetListService().execute(data)
+    return await this.serviceFactory.buildBrandService().list(data)
   }
 
   public async getOneById(id: string) {
-    return await this.serviceFactory.buildBrandGetOneByIdService().execute(id)
+    return await this.serviceFactory.buildBrandService().getOneById(id)
   }
 }
