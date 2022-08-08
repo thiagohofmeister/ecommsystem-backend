@@ -8,8 +8,8 @@ export class AttributeFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildAttributeCreateService(manager)
-          .execute(storeId, data)
+          .buildAttributeService(manager)
+          .create(storeId, data)
       })
   }
 
@@ -18,20 +18,16 @@ export class AttributeFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildAttributeUpdateService(manager)
-          .execute(id, storeId, data)
+          .buildAttributeService(manager)
+          .update(id, storeId, data)
       })
   }
 
   public async list(data: AttributeGetListFilterDto) {
-    return await this.serviceFactory
-      .buildAttributeGetListService()
-      .execute(data)
+    return await this.serviceFactory.buildAttributeService().list(data)
   }
 
   public async getOneById(id: string) {
-    return await this.serviceFactory
-      .buildAttributeGetOneByIdService()
-      .execute(id)
+    return await this.serviceFactory.buildAttributeService().getOneById(id)
   }
 }

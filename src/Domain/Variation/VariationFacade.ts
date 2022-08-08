@@ -11,8 +11,8 @@ export class VariationFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildVariationSaveStocksService(manager)
-          .execute(sku, storeId, data)
+          .buildVariationService(manager)
+          .saveStocks(sku, storeId, data)
       })
   }
 }

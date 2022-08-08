@@ -1,20 +1,116 @@
-import { InvalidDataException } from '../../../Core/Models/Exceptions/InvalidDataException'
-import { AttributeRepository } from '../../Attribute/Repositories/AttributeRepository'
-import { Product } from '../../Product/Models/Product'
-import { VariationSaveDto } from '../Dto/VariationSaveDto'
-import { Variation } from '../Models/Variation'
-import { VariationAttribute } from '../Models/VariationAttribute'
-import { VariationRepository } from '../Repositories/VariationRepository'
-import { VariationDeleteUnusedAttributesService } from './VariationDeleteUnusedAttributesService'
+import { In, Not } from 'typeorm'
 
-export class VariationSaveService {
+import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
+import { AttributeRepository } from '../Attribute/Repositories/AttributeRepository'
+import { Product } from '../Product/Models/Product'
+import { WarehouseRepository } from '../Warehouse/Repositories/WarehouseRepository'
+import { VariationSaveDto } from './Dto/VariationSaveDto'
+import { VariationSavePricesDto } from './Dto/VariationSaveStocksDto'
+import { Stock } from './Models/Stock'
+import { Variation } from './Models/Variation'
+import { VariationAttribute } from './Models/VariationAttribute'
+import { StockRepository } from './Repositories/StockRepository'
+import { VariationAttributeRepository } from './Repositories/VariationAttributeRepository'
+import { VariationRepository } from './Repositories/VariationRepository'
+import { VariationValidator } from './VariationValidator'
+
+export class VariationService {
   constructor(
     private readonly variationRepository: VariationRepository,
-    private readonly attributeRepository: AttributeRepository,
-    private readonly productDeleteUnUsedVariationAttributesService: VariationDeleteUnusedAttributesService
+    private readonly variationValidator: VariationValidator,
+    private readonly variationAttributeRepository: VariationAttributeRepository,
+    private readonly warehouseRepository: WarehouseRepository,
+    private readonly stockRepository: StockRepository,
+    private readonly attributeRepository: AttributeRepository
   ) {}
 
-  async execute(
+  public async delete(
+    productId: string,
+    storeId: string,
+    sku: string | string[]
+  ) {
+    if (typeof sku === 'string') {
+      return this.variationRepository.delete({
+        sku,
+        product: { id: productId, storeId }
+      })
+    }
+
+    return this.variationRepository.delete({
+      sku: In(sku),
+      product: { id: productId, storeId }
+    })
+  }
+
+  private async deleteUnusedAttributes(
+    sku: string,
+    storeId: string,
+    idsToKeep: string | string[]
+  ) {
+    if (typeof idsToKeep === 'string') {
+      idsToKeep = [idsToKeep]
+    }
+
+    return this.variationAttributeRepository.delete({
+      attribute: { id: Not(In(idsToKeep)) },
+      variation: { sku },
+      attributeId: Not(In(idsToKeep)),
+      variationSku: sku,
+      storeId
+    })
+  }
+
+  public async saveStocks(
+    sku: string,
+    storeId: string,
+    data: VariationSavePricesDto[]
+  ): Promise<Stock[]> {
+    await this.variationValidator.variationSaveStocksPayloadValidate(data)
+
+    const warehouses = await this.warehouseRepository.findByIds(
+      data.map(stockDto => stockDto.warehouse.id)
+    )
+
+    const variation = await this.variationRepository.findOneByPrimaryColumn(sku)
+
+    const stocks = await Promise.all(
+      data.map(async stockDto => {
+        const stock = new Stock(
+          stockDto.quantity,
+          storeId,
+          variation,
+          warehouses.find(
+            warehouse => warehouse.getId() === stockDto.warehouse.id
+          )
+        )
+
+        return this.stockRepository.save(stock, false)
+      })
+    )
+
+    return stocks
+  }
+
+  public async create(
+    product: Product | string,
+    sku: string,
+    data: VariationSaveDto,
+    variationIndex: number = 0
+  ) {
+    return this.save(product, sku, data, null, variationIndex)
+  }
+
+  public async update(
+    product: Product | string,
+    sku: string,
+    data: VariationSaveDto,
+    variation?: Variation,
+    variationIndex: number = 0
+  ) {
+    return this.save(product, sku, data, variation, variationIndex)
+  }
+
+  private async save(
     product: Product | string,
     sku: string,
     data: VariationSaveDto,
@@ -48,7 +144,7 @@ export class VariationSaveService {
 
     variation.removeAttributes(attrIdsDto)
 
-    await this.productDeleteUnUsedVariationAttributesService.execute(
+    await this.deleteUnusedAttributes(
       variation.getSku(),
       variation.getStoreId(),
       attrIdsDto

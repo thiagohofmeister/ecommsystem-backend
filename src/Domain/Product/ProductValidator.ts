@@ -138,7 +138,7 @@ export class ProductValidator extends JoiSchemaValidatorContract {
     this.productUpdateSchema = Joi.object({
       title: Joi.string(),
       description: Joi.string(),
-      variationTemplate: this.variationTemplateSchema,
+      variationTemplate: this.variationTemplateSchema.optional(),
       active: Joi.boolean(),
       brand: Joi.object({
         id: Joi.string().required(),

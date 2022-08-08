@@ -9,8 +9,8 @@ export class ProductFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildProductCreateService(manager)
-          .execute(storeId, data)
+          .buildProductService(manager)
+          .create(storeId, data)
       })
   }
 
@@ -19,19 +19,17 @@ export class ProductFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildProductUpdateService(manager)
-          .execute(id, data)
+          .buildProductService(manager)
+          .update(id, data)
       })
   }
 
   public async getOneById(id: string) {
-    return await this.serviceFactory.buildProductGetOneByIdService().execute(id)
+    return await this.serviceFactory.buildProductService().getOneById(id)
   }
 
   public async getList(filter: ProductGetListFilterDto) {
-    return await this.serviceFactory
-      .buildProductGetListService()
-      .execute(filter)
+    return await this.serviceFactory.buildProductService().list(filter)
   }
 
   public async updatePrices(
@@ -43,8 +41,8 @@ export class ProductFacade extends FacadeContract {
       .buildTransactionalService()
       .execute(async manager => {
         return await this.serviceFactory
-          .buildProductSavePricesService(manager)
-          .execute(id, storeId, data)
+          .buildProductService(manager)
+          .savePrices(id, storeId, data)
       })
   }
 }

@@ -140,11 +140,9 @@ export class RepositoryFactory {
     )
   }
 
-  public buildCategoryTreeCacheRepository(
-    redisClient: RedisClientType
-  ): CategoryTreeCacheRepository {
+  public buildCategoryTreeCacheRepository(): CategoryTreeCacheRepository {
     return new CategoryTreeCacheRepositoryImpl(
-      redisClient,
+      this.getRedisClient(),
       this.dataMapperFactory.buildCategoryTreeCacheDataMapper(),
       this.storeId,
       new CategoryTreeCacheDataNotFound()
