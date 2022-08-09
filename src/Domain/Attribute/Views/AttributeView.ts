@@ -2,7 +2,7 @@ import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
 import { IViewResponse } from '../../../Core/Views/Interfaces/IViewResponse'
 import { Attribute } from '../Models/Attribute'
 
-export class AttributeView extends ViewContract<Attribute> {
+export class AttributeView extends ViewContract<Attribute, AttributeResponse> {
   protected renderOne(entity: Attribute): AttributeResponse {
     return {
       id: entity.getId(),
