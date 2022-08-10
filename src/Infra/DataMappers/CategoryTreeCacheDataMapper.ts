@@ -22,8 +22,8 @@ export class CategoryTreeCacheDataMapper extends EntityDataMapperContract<
       return {
         id: domain.getId(),
         label: domain.getLabel(),
-        urn: domain.getUrn()
-        // children: this.toDaoEntity(domain.getChildren())
+        urn: domain.getUrn(),
+        children: this.toDaoEntity(domain.getChildren())
       }
     })
   }
