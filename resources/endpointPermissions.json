@@ -1,0 +1,61 @@
+[
+  {
+    "roleType": "MANAGER",
+    "permissions": [
+      {
+        "endpoint": "*",
+        "methods": "*"
+      }
+    ]
+  },
+  {
+    "roleType": "CUSTOMER",
+    "permissions": [
+      {
+        "endpoint": "/product",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/product/$1",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/category/tree",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/brand",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/attribute",
+        "methods": ["GET"]
+      }
+    ]
+  },
+  {
+    "roleType": "GUEST",
+    "permissions": [
+      {
+        "endpoint": "/product",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/product/$1",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/category/tree",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/brand",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/attribute",
+        "methods": ["GET"]
+      }
+    ]
+  }
+]

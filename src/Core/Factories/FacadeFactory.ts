@@ -1,6 +1,7 @@
 import { AttributeFacade } from '../../Domain/Attribute/AttributeFacade'
 import { BrandFacade } from '../../Domain/Brand/BrandFacade'
 import { CategoryFacade } from '../../Domain/Category/CategoryFacade'
+import { EndpointPermissionsFacade } from '../../Domain/EndpointPermissions/EndpointPermissionsFacade'
 import { ProductFacade } from '../../Domain/Product/ProductFacade'
 import { VariationFacade } from '../../Domain/Variation/VariationFacade'
 import { WarehouseFacade } from '../../Domain/Warehouse/WarehouseFacade'
@@ -31,5 +32,9 @@ export class FacadeFactory {
 
   public buildVariationFacade() {
     return new VariationFacade(this.serviceFactory)
+  }
+
+  public buildEndpointPermissionsFacade() {
+    return new EndpointPermissionsFacade(this.serviceFactory)
   }
 }
