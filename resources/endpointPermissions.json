@@ -9,6 +9,10 @@
     ]
   },
   {
+    "roleType": "PUBLIC",
+    "permissions": []
+  },
+  {
     "roleType": "CUSTOMER",
     "permissions": [
       {
