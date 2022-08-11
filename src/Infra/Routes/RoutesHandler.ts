@@ -23,23 +23,28 @@ export class RoutesHandler {
   }
 
   private initializeRoutes() {
-    const routesDir = path.join(__dirname, 'Domains')
+    const routesDomainDir = path.join(__dirname, 'Domains')
+    const domainDir = path.join(__dirname, '..', '..', 'Domain')
 
-    const routesPath = fs.readdirSync(routesDir)
+    const routesPath = fs.readdirSync(routesDomainDir)
 
     routesPath.forEach(routePath => {
-      const domainName = routePath.replace(/Routes\.\w+/, '')
-      const Route = require(path.join(routesDir, routePath))[
+      const [domainName, ext] = routePath.split('Routes')
+      const Route = require(path.join(routesDomainDir, routePath))[
         `${domainName}Routes`
       ]
-      const Controller = require(path.join(
-        __dirname,
-        '..',
-        '..',
-        'Domain',
+
+      const controllerPath = path.join(
+        domainDir,
         domainName,
-        `${domainName}Controller${routePath.replace(/\w+\./, '.')}`
-      ))[`${domainName}Controller`]
+        `${domainName}Controller${ext}`
+      )
+
+      if (!fs.existsSync(controllerPath)) {
+        return
+      }
+
+      const Controller = require(controllerPath)[`${domainName}Controller`]
 
       const route = new Route(new Controller())
 

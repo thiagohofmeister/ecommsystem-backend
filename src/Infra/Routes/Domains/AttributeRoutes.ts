@@ -4,10 +4,6 @@ import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
 export class AttributeRoutes extends AuthRouteContract<AttributeController> {
-  constructor(controller: AttributeController) {
-    super('attribute', controller)
-  }
-
   public getRoutes(): RouteDto[] {
     const controller = this.getController()
 

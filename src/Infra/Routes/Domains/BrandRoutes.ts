@@ -4,10 +4,6 @@ import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
 export class BrandRoutes extends AuthRouteContract<BrandController> {
-  constructor(controller: BrandController) {
-    super('brand', controller)
-  }
-
   public getRoutes(): RouteDto[] {
     const controller = this.getController()
 

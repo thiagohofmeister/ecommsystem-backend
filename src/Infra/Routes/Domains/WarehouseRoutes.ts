@@ -4,10 +4,6 @@ import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
 export class WarehouseRoutes extends AuthRouteContract<WarehouseController> {
-  constructor(controller: WarehouseController) {
-    super('warehouse', controller)
-  }
-
   public getRoutes(): RouteDto[] {
     const controller = this.getController()
 

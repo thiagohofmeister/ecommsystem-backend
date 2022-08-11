@@ -4,10 +4,6 @@ import { AuthRouteContract } from '../Contracts/AuthRouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
 export class VariationRoutes extends AuthRouteContract<VariationController> {
-  constructor(controller: VariationController) {
-    super('variation', controller)
-  }
-
   public getRoutes(): RouteDto[] {
     const controller = this.getController()
 

@@ -1,11 +1,13 @@
+import { kebabCase } from 'lodash'
 import { BaseController } from '../../../Core/Controllers/BaseController'
 import { RouteDto } from '../../Dto/RouteDto'
 
 export abstract class RouteContract<T extends BaseController> {
-  constructor(
-    protected readonly basePath: string,
-    protected readonly controller: T
-  ) {}
+  protected readonly basePath: string
+
+  constructor(protected readonly controller: T) {
+    this.basePath = kebabCase(this.constructor.name.replace('Routes', ''))
+  }
 
   protected getController() {
     return this.controller
