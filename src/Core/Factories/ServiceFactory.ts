@@ -7,6 +7,7 @@ import { BrandService } from '../../Domain/Brand/BrandService'
 import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 import { CategoryService } from '../../Domain/Category/CategoryService'
 import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
+import { EndpointPermissionsService } from '../../Domain/EndpointPermissions/EndpointPermissionsService'
 import { ProductService } from '../../Domain/Product/ProductService'
 import { ProductValidator } from '../../Domain/Product/ProductValidator'
 import { VariationService } from '../../Domain/Variation/VariationService'
@@ -74,6 +75,10 @@ export class ServiceFactory {
       this.repositoryFactory.buildStockRepository(manager),
       this.repositoryFactory.buildAttributeRepository(manager)
     )
+  }
+
+  public buildEndpointPermissionsService() {
+    return new EndpointPermissionsService()
   }
 
   public buildTransactionalService() {
