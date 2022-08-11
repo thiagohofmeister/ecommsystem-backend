@@ -38,6 +38,6 @@ export class EndpointPermissions {
 }
 
 interface Permission {
-  endpoint: string | string[]
+  endpoint: string
   methods: string | string[]
 }

@@ -16,7 +16,7 @@ export class EndpointPermissionsView extends ViewContract<
 export interface EndpointPermissionsResponse {
   roleType: string
   permissions: {
-    endpoint: string | string[]
+    endpoint: string
     methods: string | string[]
   }[]
 }
