@@ -1,9 +1,9 @@
 import { EndpointPermissionsController } from '../../../Domain/EndpointPermissions/EndpointPermissionsController'
 import { RouteDto } from '../../Dto/RouteDto'
-import { AuthRouteContract } from '../Contracts/AuthRouteContract'
+import { RouteContract } from '../Contracts/RouteContract'
 import { MethodEnum } from '../Enums/MethodEnum'
 
-export class EndpointPermissionsRoutes extends AuthRouteContract<EndpointPermissionsController> {
+export class EndpointPermissionsRoutes extends RouteContract<EndpointPermissionsController> {
   public getRoutes(): RouteDto[] {
     const controller = this.getController()
 
