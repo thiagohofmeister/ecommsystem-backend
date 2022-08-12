@@ -74,7 +74,7 @@ export abstract class BaseController {
   }
 
   protected facadeFactory(request: CatalogRequest) {
-    return Factory.getInstance().buildFacadeFactory(request.context.storeId)
+    return Factory.getInstance().buildFacadeFactory(request.context?.storeId)
   }
 
   protected abstract defaultView()
