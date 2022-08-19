@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
+import { Factory } from '../../Shared/Factories/Factory'
 import { PriceView } from './Views/PriceView'
 import { ProductView } from './Views/ProductView'
 
@@ -17,40 +16,40 @@ export class ProductController extends BaseController {
   }
 
   public async post(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).create(req.context.storeId, req.body),
+      this.getFacade(req).create(req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
     )
   }
 
   public async patch(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).update(req.params.id, req.body),
+      this.getFacade(req).update(req.params.id, req.body),
       ResponseTypeEnum.OK
     )
   }
 
   public async putPrices(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).updatePrices(
+      this.getFacade(req).updatePrices(
         req.params.id,
         req.context.storeId,
         req.body
@@ -61,35 +60,38 @@ export class ProductController extends BaseController {
   }
 
   public async getOneById(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getOneById(req.params.id),
+      this.getFacade(req).getOneById(req.params.id),
       ResponseTypeEnum.OK
     )
   }
 
   public async getList(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getList(req.query),
+      this.getFacade(req).getList(req.query),
       ResponseTypeEnum.OK
     )
   }
 
-  protected defaultView() {
+  protected getView() {
     return new ProductView()
   }
-  protected defaultFacade(request: CatalogRequest) {
-    return this.facadeFactory(request).buildProductFacade()
+
+  protected getFacade(req: CoreRequest) {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildProductFacade()
   }
 }

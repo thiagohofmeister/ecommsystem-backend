@@ -1,4 +1,4 @@
-import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../../Shared/Facades/Contracts/FacadeContract'
 import { BrandCreateDto } from './Dto/BrandCreateDto'
 import { BrandGetListFilterDto } from './Dto/BrandGetListFilterDto'
 

@@ -1,6 +1,6 @@
+import { TransactionalService } from 'ecommsystem-core'
 import { EntityManager } from 'typeorm'
 
-import { TransactionalService } from '../../Core/Services/TransactionalService'
 import { AttributeService } from '../../Domain/Attribute/AttributeService'
 import { AttributeValidator } from '../../Domain/Attribute/AttributeValidator'
 import { BrandService } from '../../Domain/Brand/BrandService'

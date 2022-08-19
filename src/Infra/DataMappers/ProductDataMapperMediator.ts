@@ -1,4 +1,4 @@
-import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
+import { EntityDataMapperContract } from 'ecommsystem-core'
 import { Product } from '../../Domain/Product/Models/Product'
 import { ProductDao } from '../Models/ProductDao'
 import { BrandDataMapper } from './BrandDataMapper'

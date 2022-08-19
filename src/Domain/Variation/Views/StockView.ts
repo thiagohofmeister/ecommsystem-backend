@@ -1,4 +1,4 @@
-import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { ViewContract } from 'ecommsystem-core'
 import { Stock } from '../Models/Stock'
 
 export class StockView extends ViewContract<Stock, StockResponse> {

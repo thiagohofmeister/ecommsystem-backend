@@ -1,8 +1,8 @@
+import { CreateContext } from 'ecommsystem-core'
 import { Router } from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { CreateContext } from '../../Core/Middlewares/CreateContext'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
 import { RouteContract } from './Contracts/RouteContract'
 

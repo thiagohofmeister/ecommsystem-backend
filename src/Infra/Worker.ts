@@ -1,7 +1,8 @@
 import * as dotenv from 'dotenv'
-import { Consumer } from '../Core/Events/Consumer'
-import { Factory } from '../Core/Factories/Factory'
-import { QueueFactory } from '../Core/Factories/QueueFactory'
+import { Consumer } from 'ecommsystem-core'
+
+import { Factory } from '../Shared/Factories/Factory'
+import { QueueFactory } from '../Shared/Factories/QueueFactory'
 import { MySQL } from './Database/MySQL'
 import { Redis } from './Database/Redis'
 

@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest as CoreRequest } from '../../Core/Models/Request/CatalogRequest'
+import { Factory } from '../../Shared/Factories/Factory'
 import { EndpointPermissionsView } from './Views/EndpointPermissionsView'
 
 export class EndpointPermissionsController extends BaseController {
@@ -15,16 +14,18 @@ export class EndpointPermissionsController extends BaseController {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).get(),
+      this.getFacade(req).get(),
       ResponseTypeEnum.OK
     )
   }
 
-  protected defaultView() {
+  protected getView() {
     return new EndpointPermissionsView()
   }
 
-  protected defaultFacade(req: CoreRequest) {
-    return this.facadeFactory(req).buildEndpointPermissionsFacade()
+  protected getFacade(req: CoreRequest) {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildEndpointPermissionsFacade()
   }
 }

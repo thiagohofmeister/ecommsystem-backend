@@ -1,7 +1,6 @@
+import { DataNotFoundException, InvalidDataException } from 'ecommsystem-core'
 import { In, Not } from 'typeorm'
 
-import { DataNotFoundException } from '../../Core/Models/Exceptions/DataNotFoundException'
-import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
 import { AttributeRepository } from '../Attribute/Repositories/AttributeRepository'
 import { BrandRepository } from '../Brand/Repositories/BrandRepository'
 import { CategoryRepository } from '../Category/Repositories/CategoryRepository'

@@ -1,7 +1,7 @@
+import { JoiSchemaValidatorContract } from 'ecommsystem-core'
 import { Schema } from 'joi'
 import * as Joi from 'joi'
 
-import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
 import { VariationSavePricesDto } from './Dto/VariationSaveStocksDto'
 
 export class VariationValidator extends JoiSchemaValidatorContract {

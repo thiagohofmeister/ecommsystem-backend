@@ -1,4 +1,4 @@
-import { IEventPayload } from '../../../Core/Models/Interfaces/IEventPayload'
+import { IEventPayload } from 'ecommsystem-core'
 
 export interface CategorySavedEventDto extends IEventPayload {
   categoryId: string

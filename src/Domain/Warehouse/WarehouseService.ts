@@ -1,6 +1,9 @@
-import { DataNotFoundException } from '../../Core/Models/Exceptions/DataNotFoundException'
-import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
-import { IItemListModel } from '../../Core/Models/Interfaces/IItemListModel'
+import {
+  DataNotFoundException,
+  IItemListModel,
+  InvalidDataException
+} from 'ecommsystem-core'
+
 import { WarehouseCreateDto } from './Dto/WarehouseCreateDto'
 import { WarehouseGetListFilterDto } from './Dto/WarehouseGetListFilterDto'
 import { WarehouseSaveDto } from './Dto/WarehouseSaveDto'

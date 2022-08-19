@@ -1,4 +1,4 @@
-import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../../Shared/Facades/Contracts/FacadeContract'
 import { AttributeCreateDto } from './Dto/AttributeCreateDto'
 import { AttributeGetListFilterDto } from './Dto/AttributeGetListFilterDto'
 

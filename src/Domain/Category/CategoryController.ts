@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
+import { Factory } from '../../Shared/Factories/Factory'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
 import { CategoryFacade } from './CategoryFacade'
 import { CategoryTreeView } from './Views/CategoryTreeView'
 import { CategoryView } from './Views/CategoryView'
@@ -17,67 +16,65 @@ export class CategoryController extends BaseController {
   }
 
   public async post(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).create(req.context.storeId, req.body),
+      this.getFacade(req).create(req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
     )
   }
 
   public async patch(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).update(
-        req.params.id,
-        req.context.storeId,
-        req.body
-      ),
+      this.getFacade(req).update(req.params.id, req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
     )
   }
 
   public async getTree(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getTree(),
+      this.getFacade(req).getTree(),
       ResponseTypeEnum.OK,
       new CategoryTreeView()
     )
   }
 
   public async getOneById(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getOneById(req.params.id),
+      this.getFacade(req).getOneById(req.params.id),
       ResponseTypeEnum.OK
     )
   }
 
-  protected defaultFacade(request: CatalogRequest): CategoryFacade {
-    return this.facadeFactory(request).buildCategoryFacade()
+  protected getFacade(req: CoreRequest): CategoryFacade {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildCategoryFacade()
   }
 
-  protected defaultView() {
+  protected getView() {
     return new CategoryView()
   }
 }

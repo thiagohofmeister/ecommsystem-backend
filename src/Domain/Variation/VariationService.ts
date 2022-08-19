@@ -1,6 +1,6 @@
+import { InvalidDataException } from 'ecommsystem-core'
 import { In, Not } from 'typeorm'
 
-import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
 import { AttributeRepository } from '../Attribute/Repositories/AttributeRepository'
 import { Product } from '../Product/Models/Product'
 import { WarehouseRepository } from '../Warehouse/Repositories/WarehouseRepository'

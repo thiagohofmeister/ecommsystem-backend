@@ -1,5 +1,5 @@
 import { CategoryTree } from '../../Domain/Category/Models/CategoryTree'
-import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
+import { EntityDataMapperContract } from 'ecommsystem-core'
 
 export class CategoryTreeCacheDataMapper extends EntityDataMapperContract<
   CategoryTree[],

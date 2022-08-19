@@ -1,5 +1,6 @@
+import { CoreRequest } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
+
 import { MethodEnum } from '../Routes/Enums/MethodEnum'
 
 export class RouteDto {
@@ -7,7 +8,7 @@ export class RouteDto {
     private readonly path: string,
     private readonly method: MethodEnum,
     private readonly handle: (
-      request: CatalogRequest,
+      request: CoreRequest,
       response: Response,
       next: NextFunction
     ) => void

@@ -1,4 +1,4 @@
-import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../../Shared/Facades/Contracts/FacadeContract'
 
 export class EndpointPermissionsFacade extends FacadeContract {
   public get() {

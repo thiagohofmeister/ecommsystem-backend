@@ -1,4 +1,4 @@
-import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../../Shared/Facades/Contracts/FacadeContract'
 import { WarehouseCreateDto } from './Dto/WarehouseCreateDto'
 import { WarehouseGetListFilterDto } from './Dto/WarehouseGetListFilterDto'
 import { WarehouseSavePriorityDto } from './Dto/WarehouseSavePriorityDto'

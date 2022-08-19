@@ -1,6 +1,7 @@
-import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
-import { AttributeDao } from '../Models/AttributeDao'
+import { EntityDataMapperContract } from 'ecommsystem-core'
+
 import { Attribute } from '../../Domain/Attribute/Models/Attribute'
+import { AttributeDao } from '../Models/AttributeDao'
 
 export class AttributeDataMapper extends EntityDataMapperContract<
   Attribute,

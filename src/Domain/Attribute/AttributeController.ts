@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
+import { Factory } from '../../Shared/Factories/Factory'
 import { AttributeFacade } from './AttributeFacade'
 import { AttributeView } from './Views/AttributeView'
 
@@ -15,55 +14,49 @@ export class AttributeController extends BaseController {
     this.getOneById = this.getOneById.bind(this)
   }
 
-  public async post(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async post(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).create(req.context.storeId, req.body),
+      this.getFacade(req).create(req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
     )
   }
 
-  public async patch(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async patch(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).update(
-        req.params.id,
-        req.context.storeId,
-        req.body
-      ),
+      this.getFacade(req).update(req.params.id, req.context.storeId, req.body),
       ResponseTypeEnum.OK
     )
   }
 
-  public async get(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async get(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).list(req.query),
+      this.getFacade(req).list(req.query),
       ResponseTypeEnum.OK
     )
   }
 
-  public async getOneById(
-    req: CatalogRequest,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getOneById(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getOneById(req.params.id),
+      this.getFacade(req).getOneById(req.params.id),
       ResponseTypeEnum.OK
     )
   }
 
-  protected defaultFacade(request: CatalogRequest): AttributeFacade {
-    return this.facadeFactory(request).buildAttributeFacade()
+  protected getFacade(req: CoreRequest): AttributeFacade {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildAttributeFacade()
   }
 
-  protected defaultView() {
+  protected getView() {
     return new AttributeView()
   }
 }

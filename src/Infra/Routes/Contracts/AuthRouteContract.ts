@@ -1,4 +1,5 @@
-import { BaseController } from '../../../Core/Controllers/BaseController'
+import { BaseController } from 'ecommsystem-core'
+
 import { RouteContract } from './RouteContract'
 
 export abstract class AuthRouteContract<

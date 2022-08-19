@@ -1,4 +1,4 @@
-import { FacadeContract } from '../../Core/Facades/Contracts/FacadeContract'
+import { FacadeContract } from '../../Shared/Facades/Contracts/FacadeContract'
 import { VariationSavePricesDto as VariationSaveStocksDto } from './Dto/VariationSaveStocksDto'
 
 export class VariationFacade extends FacadeContract {

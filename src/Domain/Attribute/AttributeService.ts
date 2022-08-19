@@ -1,4 +1,5 @@
-import { IItemListModel } from '../../Core/Models/Interfaces/IItemListModel'
+import { IItemListModel } from 'ecommsystem-core'
+
 import { AttributeValidator } from './AttributeValidator'
 import { AttributeCreateDto } from './Dto/AttributeCreateDto'
 import { AttributeGetListFilterDto } from './Dto/AttributeGetListFilterDto'

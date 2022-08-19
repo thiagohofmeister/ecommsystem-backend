@@ -1,4 +1,5 @@
-import { IRepository } from '../../../Core/Models/Interfaces/IRepository'
+import { IRepository } from 'ecommsystem-core'
+
 import { Category } from '../Models/Category'
 
 export interface CategoryRepository extends IRepository<Category> {

@@ -1,14 +1,16 @@
+import {
+  InvalidDataException,
+  JoiSchemaValidatorContract
+} from 'ecommsystem-core'
 import { Schema } from 'joi'
 import * as Joi from 'joi'
 
-import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
-import { ProductCreateDto } from './Dto/ProductCreateDto'
 import { VariationSaveDto } from '../Variation/Dto/VariationSaveDto'
-import { ProductUpdateDto } from './Dto/ProductUpdateDto'
 import { MeasureUnitEnum } from '../Variation/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../Variation/Enums/WeightUnitEnum'
+import { ProductCreateDto } from './Dto/ProductCreateDto'
 import { ProductSavePriceDto } from './Dto/ProductSavePriceDto'
-import { InvalidDataException } from '../../Core/Models/Exceptions/InvalidDataException'
+import { ProductUpdateDto } from './Dto/ProductUpdateDto'
 
 export class ProductValidator extends JoiSchemaValidatorContract {
   private productCreateSchema: Schema

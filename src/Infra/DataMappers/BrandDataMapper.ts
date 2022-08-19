@@ -1,6 +1,7 @@
-import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
-import { BrandDao } from '../Models/BrandDao'
+import { EntityDataMapperContract } from 'ecommsystem-core'
+
 import { Brand } from '../../Domain/Brand/Models/Brand'
+import { BrandDao } from '../Models/BrandDao'
 
 export class BrandDataMapper extends EntityDataMapperContract<Brand, BrandDao> {
   toDomainEntity(entity: BrandDao): Brand {

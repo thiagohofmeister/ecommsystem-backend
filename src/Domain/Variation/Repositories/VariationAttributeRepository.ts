@@ -1,4 +1,4 @@
-import { IRepository } from '../../../Core/Models/Interfaces/IRepository'
+import { IRepository } from 'ecommsystem-core'
 import { VariationAttribute } from '../Models/VariationAttribute'
 
 export interface VariationAttributeRepository

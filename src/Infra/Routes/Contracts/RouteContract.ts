@@ -1,5 +1,6 @@
+import { BaseController } from 'ecommsystem-core'
 import { kebabCase } from 'lodash'
-import { BaseController } from '../../../Core/Controllers/BaseController'
+
 import { RouteDto } from '../../Dto/RouteDto'
 
 export abstract class RouteContract<T extends BaseController> {

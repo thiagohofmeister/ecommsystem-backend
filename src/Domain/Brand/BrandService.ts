@@ -1,7 +1,6 @@
+import { DataNotFoundException, IItemListModel } from 'ecommsystem-core'
 import { kebabCase } from 'lodash'
 
-import { DataNotFoundException } from '../../Core/Models/Exceptions/DataNotFoundException'
-import { IItemListModel } from '../../Core/Models/Interfaces/IItemListModel'
 import { BrandValidator } from './BrandValidator'
 import { BrandCreateDto } from './Dto/BrandCreateDto'
 import { BrandGetListFilterDto } from './Dto/BrandGetListFilterDto'

@@ -1,4 +1,5 @@
-import { AmqpQueueContract } from '../../Core/Modules/Queue/AmqpQueueContract'
+import { AmqpQueueContract } from 'ecommsystem-core'
+
 import { CategorySavedEventDto } from '../../Domain/Category/Dto/CategorySavedEventDto'
 
 export class CategoryQueue extends AmqpQueueContract<CategorySavedEventDto> {

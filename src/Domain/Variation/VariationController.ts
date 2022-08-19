@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
+import { Factory } from '../../Shared/Factories/Factory'
 import { StockView } from './Views/StockView'
 
 export class VariationController extends BaseController {
@@ -12,14 +11,14 @@ export class VariationController extends BaseController {
   }
 
   public async putStocks(
-    req: CatalogRequest,
+    req: CoreRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     return this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).updateStocks(
+      this.getFacade(req).updateStocks(
         req.params.sku,
         req.context.storeId,
         req.body
@@ -29,10 +28,13 @@ export class VariationController extends BaseController {
     )
   }
 
-  protected defaultView() {
+  protected getView() {
     return null
   }
-  protected defaultFacade(request: CatalogRequest) {
-    return this.facadeFactory(request).buildVariationFacade()
+
+  protected getFacade(req: CoreRequest) {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildVariationFacade()
   }
 }

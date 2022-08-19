@@ -1,5 +1,5 @@
-import { IRepository } from '../../../Core/Models/Interfaces/IRepository'
-import { RedisCollection } from '../../../Core/Models/RedisCollection'
+import { IRepository, RedisCollection } from 'ecommsystem-core'
+
 import { CategoryTree } from '../Models/CategoryTree'
 
 export interface CategoryTreeCacheRepository

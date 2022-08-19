@@ -1,5 +1,5 @@
-import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
-import { IViewResponse } from '../../../Core/Views/Interfaces/IViewResponse'
+import { IViewResponse, ViewContract } from 'ecommsystem-core'
+
 import { Attribute } from '../Models/Attribute'
 
 export class AttributeView extends ViewContract<Attribute, AttributeResponse> {

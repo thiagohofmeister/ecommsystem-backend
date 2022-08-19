@@ -1,6 +1,9 @@
+import {
+  IFilterDefault,
+  TypeOrmMysqlRepositoryContract
+} from 'ecommsystem-core'
 import { SelectQueryBuilder } from 'typeorm'
-import { IFilterDefault } from '../../Core/Models/Interfaces/IFilterDefault'
-import { TypeOrmMysqlRepositoryContract } from '../../Core/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
+
 import { Product } from '../../Domain/Product/Models/Product'
 import { ProductRepository } from '../../Domain/Product/Repositories/ProductRepository'
 import { ProductDao } from '../Models/ProductDao'

@@ -1,4 +1,5 @@
-import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { ViewContract } from 'ecommsystem-core'
+
 import { EndpointPermissions } from '../Models/EndpointPermissions'
 
 export class EndpointPermissionsView extends ViewContract<

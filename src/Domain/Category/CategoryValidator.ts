@@ -1,6 +1,7 @@
+import { JoiSchemaValidatorContract } from 'ecommsystem-core'
 import { Schema } from 'joi'
 import * as Joi from 'joi'
-import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
+
 import { CategoryCreateDto } from './Dto/CategoryCreateDto'
 import { CategoryUpdateDto } from './Dto/CategoryUpdateDto'
 

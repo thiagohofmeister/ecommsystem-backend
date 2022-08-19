@@ -1,8 +1,7 @@
+import { BaseController, CoreRequest, ResponseTypeEnum } from 'ecommsystem-core'
 import { NextFunction, Response } from 'express'
+import { Factory } from '../../Shared/Factories/Factory'
 
-import { BaseController } from '../../Core/Controllers/BaseController'
-import { ResponseTypeEnum } from '../../Core/Enums/ResponseTypeEnum'
-import { CatalogRequest } from '../../Core/Models/Request/CatalogRequest'
 import { BrandFacade } from './BrandFacade'
 import { BrandView } from './Views/BrandView'
 
@@ -15,55 +14,49 @@ export class BrandController extends BaseController {
     this.getOneById = this.getOneById.bind(this)
   }
 
-  public async post(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async post(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).create(req.context.storeId, req.body),
+      this.getFacade(req).create(req.context.storeId, req.body),
       ResponseTypeEnum.CREATED
     )
   }
 
-  public async patch(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async patch(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).update(
-        req.params.id,
-        req.context.storeId,
-        req.body
-      ),
+      this.getFacade(req).update(req.params.id, req.context.storeId, req.body),
       ResponseTypeEnum.OK
     )
   }
 
-  public async get(req: CatalogRequest, res: Response, next: NextFunction) {
+  public async get(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).list(req.query),
+      this.getFacade(req).list(req.query),
       ResponseTypeEnum.OK
     )
   }
 
-  public async getOneById(
-    req: CatalogRequest,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getOneById(req: CoreRequest, res: Response, next: NextFunction) {
     await this.responseHandler(
       res,
       next,
-      this.defaultFacade(req).getOneById(req.params.id),
+      this.getFacade(req).getOneById(req.params.id),
       ResponseTypeEnum.OK
     )
   }
 
-  protected defaultFacade(request: CatalogRequest): BrandFacade {
-    return this.facadeFactory(request).buildBrandFacade()
+  protected getFacade(req: CoreRequest): BrandFacade {
+    return Factory.getInstance()
+      .buildFacadeFactory(req.context?.storeId)
+      .buildBrandFacade()
   }
 
-  protected defaultView() {
+  protected getView() {
     return new BrandView()
   }
 }

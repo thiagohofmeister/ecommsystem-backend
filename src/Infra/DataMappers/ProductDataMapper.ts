@@ -1,6 +1,6 @@
 import { ProductDao } from '../Models/ProductDao'
 import { Product } from '../../Domain/Product/Models/Product'
-import { EntityDataMapperContract } from '../../Core/DataMappers/Contracts/EntityDataMapperContract'
+import { EntityDataMapperContract } from 'ecommsystem-core'
 
 export class ProductDataMapper extends EntityDataMapperContract<
   Product,

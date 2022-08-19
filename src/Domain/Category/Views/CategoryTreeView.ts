@@ -1,4 +1,5 @@
-import { ViewContract } from '../../../Core/Views/Contracts/ViewContract'
+import { ViewContract } from 'ecommsystem-core'
+
 import { CategoryTree } from '../Models/CategoryTree'
 
 export class CategoryTreeView extends ViewContract<

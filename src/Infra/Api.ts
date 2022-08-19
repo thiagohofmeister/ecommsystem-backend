@@ -1,11 +1,11 @@
 import * as cors from 'cors'
 import * as dotenv from 'dotenv'
+import { ErrorHandler } from 'ecommsystem-core'
 import * as express from 'express'
 
 import { MySQL } from './Database/MySQL'
-import { ErrorHandler } from '../Core/Middlewares/ErrorHandler'
-import { RoutesHandler } from './Routes/RoutesHandler'
 import { Redis } from './Database/Redis'
+import { RoutesHandler } from './Routes/RoutesHandler'
 
 class Api {
   private app

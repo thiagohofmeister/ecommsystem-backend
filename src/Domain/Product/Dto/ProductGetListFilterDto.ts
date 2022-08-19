@@ -1,3 +1,3 @@
-import { IFilterDefault } from '../../../Core/Models/Interfaces/IFilterDefault'
+import { IFilterDefault } from 'ecommsystem-core'
 
 export interface ProductGetListFilterDto extends IFilterDefault {}

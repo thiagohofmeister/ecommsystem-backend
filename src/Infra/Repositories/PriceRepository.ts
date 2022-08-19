@@ -1,8 +1,9 @@
+import { TypeOrmMysqlRepositoryContract } from 'ecommsystem-core'
+import { SelectQueryBuilder } from 'typeorm'
+
 import { Price } from '../../Domain/Product/Models/Price'
 import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
-import { TypeOrmMysqlRepositoryContract } from '../../Core/Repositories/Contracts/TypeOrmMysqlRepositoryContract'
 import { PriceDao } from '../Models/PriceDao'
-import { SelectQueryBuilder } from 'typeorm'
 
 export class PriceRepositoryImpl
   extends TypeOrmMysqlRepositoryContract<Price, PriceDao>

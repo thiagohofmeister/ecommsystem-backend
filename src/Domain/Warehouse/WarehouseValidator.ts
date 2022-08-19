@@ -1,10 +1,10 @@
+import { JoiSchemaValidatorContract } from 'ecommsystem-core'
 import { Schema } from 'joi'
 import * as Joi from 'joi'
 
-import { JoiSchemaValidatorContract } from '../../Core/Validators/JoiSchemaValidatorContract'
 import { WarehouseCreateDto } from './Dto/WarehouseCreateDto'
-import { WarehouseUpdateDto } from './Dto/WarehouseUpdateDto'
 import { WarehouseSavePriorityDto } from './Dto/WarehouseSavePriorityDto'
+import { WarehouseUpdateDto } from './Dto/WarehouseUpdateDto'
 
 export class WarehouseValidator extends JoiSchemaValidatorContract {
   private warehouseCreateSchema: Schema
