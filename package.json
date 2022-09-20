@@ -1,5 +1,5 @@
 {
-  "name": "ecommsystem-product-catalog",
+  "name": "ecommsystem-backend",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:thiagohofmeister/product-catalog.git",
