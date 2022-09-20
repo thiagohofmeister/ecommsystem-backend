@@ -1,8 +1,8 @@
-import { CreateContext } from 'ecommsystem-core'
 import { Router } from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 
+import { AuthMiddleware } from '../Middlewares/AuthMiddleware'
 import { AuthRouteContract } from './Contracts/AuthRouteContract'
 import { RouteContract } from './Contracts/RouteContract'
 
@@ -30,15 +30,9 @@ export class RoutesHandler {
 
     routesPath.forEach(routePath => {
       const [domainName, ext] = routePath.split('Routes')
-      const Route = require(path.join(routesDomainDir, routePath))[
-        `${domainName}Routes`
-      ]
+      const Route = require(path.join(routesDomainDir, routePath))[`${domainName}Routes`]
 
-      const controllerPath = path.join(
-        domainDir,
-        domainName,
-        `${domainName}Controller${ext}`
-      )
+      const controllerPath = path.join(domainDir, domainName, `${domainName}Controller${ext}`)
 
       if (!fs.existsSync(controllerPath)) {
         return
@@ -58,7 +52,7 @@ export class RoutesHandler {
   }
 
   private getAuthMiddlewares() {
-    return [new CreateContext().create]
+    return [new AuthMiddleware().all]
   }
 
   private getDefaultMiddlewares() {

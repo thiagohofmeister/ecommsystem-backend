@@ -1,8 +1,9 @@
-import { TransactionalService } from 'ecommsystem-core'
+import { JWT, TransactionalService } from 'ecommsystem-core'
 import { EntityManager } from 'typeorm'
 
 import { AttributeService } from '../../Domain/Attribute/AttributeService'
 import { AttributeValidator } from '../../Domain/Attribute/AttributeValidator'
+import { AuthenticationService } from '../../Domain/Authentication/AuthenticationService'
 import { BrandService } from '../../Domain/Brand/BrandService'
 import { BrandValidator } from '../../Domain/Brand/BrandValidator'
 import { CategoryService } from '../../Domain/Category/CategoryService'
@@ -10,6 +11,12 @@ import { CategoryValidator } from '../../Domain/Category/CategoryValidator'
 import { EndpointPermissionsService } from '../../Domain/EndpointPermissions/EndpointPermissionsService'
 import { ProductService } from '../../Domain/Product/ProductService'
 import { ProductValidator } from '../../Domain/Product/ProductValidator'
+import { RegisterService } from '../../Domain/Register/RegisterService'
+import { RegisterValidator } from '../../Domain/Register/RegisterValidator'
+import { StoreService } from '../../Domain/Store/StoreService'
+import { StoreValidator } from '../../Domain/Store/StoreValidator'
+import { UserService } from '../../Domain/User/UserService'
+import { UserValidator } from '../../Domain/User/UserValidator'
 import { VariationService } from '../../Domain/Variation/VariationService'
 import { VariationValidator } from '../../Domain/Variation/VariationValidator'
 import { WarehouseService } from '../../Domain/Warehouse/WarehouseService'
@@ -18,10 +25,7 @@ import { QueueFactory } from './QueueFactory'
 import { RepositoryFactory } from './RepositoryFactory'
 
 export class ServiceFactory {
-  constructor(
-    private readonly repositoryFactory: RepositoryFactory,
-    private readonly queueFactory: QueueFactory
-  ) {}
+  constructor(private readonly repositoryFactory: RepositoryFactory, private readonly queueFactory: QueueFactory) {}
 
   public buildProductService(manager?: EntityManager) {
     return new ProductService(
@@ -37,24 +41,15 @@ export class ServiceFactory {
   }
 
   public buildBrandService(manager?: EntityManager) {
-    return new BrandService(
-      this.repositoryFactory.buildBrandRepository(manager),
-      new BrandValidator()
-    )
+    return new BrandService(this.repositoryFactory.buildBrandRepository(manager), new BrandValidator())
   }
 
   public buildWarehouseService(manager?: EntityManager) {
-    return new WarehouseService(
-      this.repositoryFactory.buildWarehouseRepository(manager),
-      new WarehouseValidator()
-    )
+    return new WarehouseService(this.repositoryFactory.buildWarehouseRepository(manager), new WarehouseValidator())
   }
 
   public buildAttributeService(manager?: EntityManager) {
-    return new AttributeService(
-      this.repositoryFactory.buildAttributeRepository(manager),
-      new AttributeValidator()
-    )
+    return new AttributeService(this.repositoryFactory.buildAttributeRepository(manager), new AttributeValidator())
   }
 
   public buildCategoryService(manager?: EntityManager) {
@@ -79,6 +74,27 @@ export class ServiceFactory {
 
   public buildEndpointPermissionsService() {
     return new EndpointPermissionsService()
+  }
+
+  public buildAuthenticationService(manager?: EntityManager) {
+    return new AuthenticationService(
+      this.repositoryFactory.buildAuthenticationRepository(),
+      this.buildUserService(manager),
+      this.buildEndpointPermissionsService(),
+      new JWT(process.env.JWT_KEY)
+    )
+  }
+
+  public buildRegisterService(manager?: EntityManager) {
+    return new RegisterService(this.buildUserService(manager), this.buildStoreService(manager), new RegisterValidator())
+  }
+
+  public buildUserService(manager?: EntityManager) {
+    return new UserService(this.repositoryFactory.buildUserRepository(manager), new UserValidator())
+  }
+
+  public buildStoreService(manager?: EntityManager) {
+    return new StoreService(this.repositoryFactory.buildStoreRepository(manager), new StoreValidator())
   }
 
   public buildTransactionalService() {

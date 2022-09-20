@@ -3,6 +3,7 @@ import { DataSource, EntityManager } from 'typeorm'
 
 import { AttributeDataNotFound } from '../../Domain/Attribute/Exceptions/AttributeDataNotFound'
 import { AttributeRepository } from '../../Domain/Attribute/Repositories/AttributeRepository'
+import { AuthenticationRepository } from '../../Domain/Authentication/Repositories/AuthenticationRepository'
 import { BrandDataNotFound } from '../../Domain/Brand/Exceptions/BrandDataNotFound'
 import { BrandRepository } from '../../Domain/Brand/Repositories/BrandRepository'
 import { CategoryDataNotFound } from '../../Domain/Category/Exceptions/CategoryDataNotFound'
@@ -14,6 +15,10 @@ import { PriceDataNotFound } from '../../Domain/Product/Exceptions/PriceDataNotF
 import { ProductDataNotFound } from '../../Domain/Product/Exceptions/ProductDataNotFound'
 import { ImageRepository } from '../../Domain/Product/Repositories/ImageRepository'
 import { PriceRepository } from '../../Domain/Product/Repositories/PriceRepository'
+import { StoreDataNotFound } from '../../Domain/Store/Exceptions/StoreDataNotFound'
+import { StoreRepository } from '../../Domain/Store/Repositories/StoreRepository'
+import { UserDataNotFound } from '../../Domain/User/Exceptions/UserDataNotFound'
+import { UserRepository } from '../../Domain/User/Repositories/UserRepository'
 import { StockDataNotFound } from '../../Domain/Variation/Exceptions/StockDataNotFound'
 import { VariationAttributeDataNotFound } from '../../Domain/Variation/Exceptions/VariationAttributeDataNotFound'
 import { VariationDataNotFound } from '../../Domain/Variation/Exceptions/VariationDataNotFound'
@@ -29,10 +34,13 @@ import { ImageDao } from '../../Infra/Models/ImageDao'
 import { PriceDao } from '../../Infra/Models/PriceDao'
 import { ProductDao } from '../../Infra/Models/ProductDao'
 import { StockDao } from '../../Infra/Models/StockDao'
+import { StoreDao } from '../../Infra/Models/StoreDao'
+import { UserDao } from '../../Infra/Models/UserDao'
 import { VariationAttributeDao } from '../../Infra/Models/VariationAttributeDao'
 import { VariationDao } from '../../Infra/Models/VariationDao'
 import { WarehouseDao } from '../../Infra/Models/WarehouseDao'
 import { AttributeRepositoryImpl } from '../../Infra/Repositories/AttributeRepositoryImpl'
+import { AuthenticationRepositoryImpl } from '../../Infra/Repositories/AuthenticationRepositoryImpl'
 import { BrandRepositoryImpl } from '../../Infra/Repositories/BrandRepositoryImpl'
 import { CategoryRepositoryImpl } from '../../Infra/Repositories/CategoryRepositoryImpl'
 import { CategoryTreeCacheRepositoryImpl } from '../../Infra/Repositories/CategoryTreeCacheRepositoryImpl'
@@ -40,6 +48,8 @@ import { ImageRepositoryImpl } from '../../Infra/Repositories/ImageRepository'
 import { PriceRepositoryImpl } from '../../Infra/Repositories/PriceRepository'
 import { ProductRepositoryImpl } from '../../Infra/Repositories/ProductRepositoryImpl'
 import { StockRepositoryImpl } from '../../Infra/Repositories/StockRepositoryImpl'
+import { StoreRepositoryImpl } from '../../Infra/Repositories/StoreRepositoryImpl'
+import { UserRepositoryImpl } from '../../Infra/Repositories/UserRepositoryImpl'
 import { VariationAttributeRepositoryImpl } from '../../Infra/Repositories/VariationAttributeRepository'
 import { VariationRepositoryImpl } from '../../Infra/Repositories/VariationRepository'
 import { WarehouseRepositoryImpl } from '../../Infra/Repositories/WarehouseRepositoryImpl'
@@ -71,9 +81,7 @@ export class RepositoryFactory {
     )
   }
 
-  public buildAttributeRepository(
-    manager?: EntityManager
-  ): AttributeRepository {
+  public buildAttributeRepository(manager?: EntityManager): AttributeRepository {
     return new AttributeRepositoryImpl(
       this.getManager(manager).getRepository(AttributeDao),
       this.dataMapperFactory.buildAttributeDataMapper(),
@@ -100,9 +108,7 @@ export class RepositoryFactory {
     )
   }
 
-  public buildWarehouseRepository(
-    manager?: EntityManager
-  ): WarehouseRepository {
+  public buildWarehouseRepository(manager?: EntityManager): WarehouseRepository {
     return new WarehouseRepositoryImpl(
       this.getManager(manager).getRepository(WarehouseDao),
       this.dataMapperFactory.buildWarehouseDataMapper(),
@@ -129,9 +135,7 @@ export class RepositoryFactory {
     )
   }
 
-  public buildVariationAttributeRepository(
-    manager?: EntityManager
-  ): VariationAttributeRepository {
+  public buildVariationAttributeRepository(manager?: EntityManager): VariationAttributeRepository {
     return new VariationAttributeRepositoryImpl(
       this.getManager(manager).getRepository(VariationAttributeDao),
       this.dataMapperFactory.buildVariationAttributeDataMapperMediator(),
@@ -149,14 +153,38 @@ export class RepositoryFactory {
     )
   }
 
-  public buildVariationRepository(
-    manager?: EntityManager
-  ): VariationRepository {
+  public buildVariationRepository(manager?: EntityManager): VariationRepository {
     return new VariationRepositoryImpl(
       this.getManager(manager).getRepository(VariationDao),
       this.dataMapperFactory.buildVariationDataMapperMediator(),
       this.storeId,
       new VariationDataNotFound()
+    )
+  }
+
+  public buildUserRepository(manager?: EntityManager): UserRepository {
+    return new UserRepositoryImpl(
+      this.getManager(manager).getRepository(UserDao),
+      this.dataMapperFactory.buildUserDataMapperMediator(),
+      this.storeId,
+      new UserDataNotFound()
+    )
+  }
+
+  public buildStoreRepository(manager?: EntityManager): StoreRepository {
+    return new StoreRepositoryImpl(
+      this.getManager(manager).getRepository(StoreDao),
+      this.dataMapperFactory.buildStoreDataMapperMediator(),
+      this.storeId,
+      new StoreDataNotFound()
+    )
+  }
+
+  public buildAuthenticationRepository(): AuthenticationRepository {
+    return new AuthenticationRepositoryImpl(
+      this.getRedisClient(),
+      this.dataMapperFactory.buildAuthenticationDataMapper(),
+      this.storeId
     )
   }
 

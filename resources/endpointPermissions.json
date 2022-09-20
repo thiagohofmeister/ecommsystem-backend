@@ -10,7 +10,20 @@
   },
   {
     "roleType": "PUBLIC",
-    "permissions": []
+    "permissions": [
+      {
+        "endpoint": "/service",
+        "methods": ["GET"]
+      },
+      {
+        "endpoint": "/authentication",
+        "methods": ["POST"]
+      },
+      {
+        "endpoint": "/register",
+        "methods": ["POST"]
+      }
+    ]
   },
   {
     "roleType": "CUSTOMER",

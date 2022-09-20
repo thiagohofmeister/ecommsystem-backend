@@ -1,4 +1,5 @@
 import { AttributeDataMapper } from '../../Infra/DataMappers/AttributeDataMapper'
+import { AuthenticationDataMapper } from '../../Infra/DataMappers/AuthenticationDataMapper'
 import { BrandDataMapper } from '../../Infra/DataMappers/BrandDataMapper'
 import { CategoryDataMapper } from '../../Infra/DataMappers/CategoryDataMapper'
 import { CategoryTreeCacheDataMapper } from '../../Infra/DataMappers/CategoryTreeCacheDataMapper'
@@ -9,6 +10,10 @@ import { ProductDataMapper } from '../../Infra/DataMappers/ProductDataMapper'
 import { ProductDataMapperMediator } from '../../Infra/DataMappers/ProductDataMapperMediator'
 import { StockDataMapper } from '../../Infra/DataMappers/StockDataMapper'
 import { StockDataMapperMediator } from '../../Infra/DataMappers/StockDataMapperMediator'
+import { StoreDataMapper } from '../../Infra/DataMappers/StoreDataMapper'
+import { StoreDataMapperMediator } from '../../Infra/DataMappers/StoreDataMapperMediator'
+import { UserDataMapper } from '../../Infra/DataMappers/UserDataMapper'
+import { UserDataMapperMediator } from '../../Infra/DataMappers/UserDataMapperMediator'
 import { VariationAttributeDataMapper } from '../../Infra/DataMappers/VariationAttributeDataMapper'
 import { VariationAttributeDataMapperMediator } from '../../Infra/DataMappers/VariationAttributeDataMapperMediator'
 import { VariationDataMapper } from '../../Infra/DataMappers/VariationDataMapper'
@@ -63,10 +68,7 @@ export class DataMapperFactory {
   }
 
   public buildPriceDataMapperMediator() {
-    return new PriceDataMapperMediator(
-      this.buildPriceDataMapper(),
-      this.buildVariationDataMapper()
-    )
+    return new PriceDataMapperMediator(this.buildPriceDataMapper(), this.buildVariationDataMapper())
   }
 
   public buildVariationAttributeDataMapper() {
@@ -101,5 +103,25 @@ export class DataMapperFactory {
       this.buildStockDataMapperMediator(),
       this.buildPriceDataMapperMediator()
     )
+  }
+
+  public buildUserDataMapper() {
+    return new UserDataMapper()
+  }
+
+  public buildStoreDataMapper() {
+    return new StoreDataMapper()
+  }
+
+  public buildStoreDataMapperMediator() {
+    return new StoreDataMapperMediator(this.buildStoreDataMapper(), this.buildUserDataMapper())
+  }
+
+  public buildUserDataMapperMediator() {
+    return new UserDataMapperMediator(this.buildUserDataMapper(), this.buildStoreDataMapper())
+  }
+
+  public buildAuthenticationDataMapper() {
+    return new AuthenticationDataMapper()
   }
 }
