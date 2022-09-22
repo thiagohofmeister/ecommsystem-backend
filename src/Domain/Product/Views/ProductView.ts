@@ -1,4 +1,5 @@
 import { ViewContract } from 'ecommsystem-core'
+
 import { MeasureUnitEnum } from '../../Variation/Enums/MeasureUnitEnum'
 import { WeightUnitEnum } from '../../Variation/Enums/WeightUnitEnum'
 import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
@@ -44,6 +45,11 @@ export class ProductView extends ViewContract<Product, ProductResponse> {
             id: attr.getAttribute().getId()
           },
           value: attr.getValue()
+        })),
+        images: variation.getImages().map(image => ({
+          id: image.getId(),
+          url: image.getUrl(),
+          value: image.getValue()
         })),
         price: variation.getCurrentPrice()
           ? {
@@ -101,6 +107,11 @@ export interface ProductResponse {
       attribute: {
         id: string
       }
+      value: string
+    }[]
+    images: {
+      id: string
+      url: string
       value: string
     }[]
     price: {

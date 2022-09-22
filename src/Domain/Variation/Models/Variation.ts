@@ -1,3 +1,4 @@
+import { Image } from '../../Product/Models/Image'
 import { Price } from '../../Product/Models/Price'
 import { Product } from '../../Product/Models/Product'
 import { MeasureUnitEnum } from '../Enums/MeasureUnitEnum'
@@ -9,6 +10,7 @@ export class Variation {
   private variationAttributes: VariationAttribute[]
   private stocks: Stock[]
   private prices: Price[]
+  private images: Image[]
   private currentPrice: Price
 
   constructor(
@@ -128,9 +130,7 @@ export class Variation {
   public removeStocks(keepWarehouseIds: string[]) {
     if (!this.stocks) this.stocks = []
 
-    this.stocks = this.stocks.filter(stock =>
-      keepWarehouseIds.includes(stock.getWarehouse().getId())
-    )
+    this.stocks = this.stocks.filter(stock => keepWarehouseIds.includes(stock.getWarehouse().getId()))
 
     return this
   }
@@ -149,9 +149,7 @@ export class Variation {
   public removePrices(keepPriceIds: string[]) {
     if (!this.prices) this.prices = []
 
-    this.prices = this.prices.filter(price =>
-      keepPriceIds.includes(price.getId())
-    )
+    this.prices = this.prices.filter(price => keepPriceIds.includes(price.getId()))
 
     return this
   }
@@ -173,5 +171,16 @@ export class Variation {
     }
 
     return this.currentPrice
+  }
+
+  public addImage(image: Image) {
+    if (!this.images) this.images = []
+
+    this.images.push(image)
+    return this
+  }
+
+  public getImages() {
+    return this.images
   }
 }

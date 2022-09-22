@@ -2,9 +2,9 @@ import { randomUUID } from 'crypto'
 
 import { Brand } from '../../Brand/Models/Brand'
 import { Category } from '../../Category/Models/Category'
+import { Variation } from '../../Variation/Models/Variation'
 import { ProductVariationTemplate } from '../Interfaces/ProductVariationTemplate'
 import { Image } from '../Models/Image'
-import { Variation } from '../../Variation/Models/Variation'
 
 export class Product {
   private category: Category
@@ -103,6 +103,12 @@ export class Product {
     return this.variations?.find(variation => variation.getSku() === sku)
   }
 
+  public removeVariations(skusToKeep: string[]) {
+    if (!this.variations) this.variations = []
+    this.variations = this.variations.filter(variation => skusToKeep.includes(variation.getSku()))
+    return this
+  }
+
   public addVariation(variation: Variation) {
     if (!this.variations) this.variations = []
 
@@ -112,6 +118,18 @@ export class Product {
 
   public getImages() {
     return this.images?.sort((a, b) => a.getPosition() - b.getPosition()) || []
+  }
+
+  public getVariationImages(sku: string) {
+    const combination = this.getVariationTemplateImagesCombination(sku)
+
+    return this.getImages().filter(image => image.getValue() === combination || !image.getValue())
+  }
+
+  public fillVariationsImages() {
+    this.getVariations().forEach(variation =>
+      this.getVariationImages(variation.getSku()).forEach(image => variation.addImage(image))
+    )
   }
 
   public removeImages(idsToKeep: string[]) {
@@ -137,5 +155,21 @@ export class Product {
 
   public getImagesIds(): string[] {
     return this.images?.map(image => image.getId()) || []
+  }
+
+  public getVariationTemplateImagesCombination(sku: string) {
+    if (!this.variationTemplate?.images) return null
+
+    const variation = this.getVariationBySku(sku)
+
+    const combination = []
+
+    variation.getAttributes().forEach(attribute => {
+      combination.push(attribute.getValue())
+
+      if (attribute.getAttribute().getId() === this.variationTemplate?.images) return
+    })
+
+    return combination.join('+')
   }
 }

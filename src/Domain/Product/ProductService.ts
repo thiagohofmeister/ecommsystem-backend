@@ -33,10 +33,7 @@ export class ProductService {
     private readonly variationService: VariationService
   ) {}
 
-  public async create(
-    storeId: string,
-    data: ProductCreateDto
-  ): Promise<Product> {
+  public async create(storeId: string, data: ProductCreateDto): Promise<Product> {
     await this.validateProductAlreadyExists(data.id)
 
     await this.productValidator.productCreatePayloadValidate(data)
@@ -58,16 +55,10 @@ export class ProductService {
     return this.productRepository.findOneByPrimaryColumn(id)
   }
 
-  public async savePrices(
-    productId: string,
-    storeId: string,
-    data: ProductSavePriceDto[]
-  ): Promise<Price[]> {
+  public async savePrices(productId: string, storeId: string, data: ProductSavePriceDto[]): Promise<Price[]> {
     await this.productValidator.productSavePricesPayloadValidate(data)
 
-    const product = await this.productRepository.findOneByPrimaryColumn(
-      productId
-    )
+    const product = await this.productRepository.findOneByPrimaryColumn(productId)
 
     await this.clearPrices(storeId, product, data)
 
@@ -78,19 +69,11 @@ export class ProductService {
     return prices
   }
 
-  private async clearPrices(
-    storeId: string,
-    product: Product,
-    data: ProductSavePriceDto[]
-  ) {
+  private async clearPrices(storeId: string, product: Product, data: ProductSavePriceDto[]) {
     const variationSkusSent =
-      data.length === 1 && !data[0].sku
-        ? product.getVariationSkus()
-        : data.map(priceDto => priceDto.sku)
+      data.length === 1 && !data[0].sku ? product.getVariationSkus() : data.map(priceDto => priceDto.sku)
 
-    const variationSkus = product
-      .getVariationSkus()
-      .filter(sku => !variationSkusSent.includes(sku))
+    const variationSkus = product.getVariationSkus().filter(sku => !variationSkusSent.includes(sku))
 
     if (!variationSkus.length) {
       return
@@ -102,11 +85,7 @@ export class ProductService {
     })
   }
 
-  private async createPrices(
-    product: Product,
-    storeId: string,
-    data: ProductSavePriceDto[]
-  ) {
+  private async createPrices(product: Product, storeId: string, data: ProductSavePriceDto[]) {
     const invalidDataException = new InvalidDataException('Invalid data.')
 
     const promises = []
@@ -114,15 +93,7 @@ export class ProductService {
     if (data.length === 1 && !data[0].sku) {
       const priceDto = data[0]
       product.getVariations().forEach(variation => {
-        promises.push(
-          this.createPrice(
-            variation,
-            storeId,
-            priceDto.list,
-            priceDto.sale,
-            invalidDataException
-          )
-        )
+        promises.push(this.createPrice(variation, storeId, priceDto.list, priceDto.sale, invalidDataException))
       })
 
       return await Promise.all(promises)
@@ -139,15 +110,7 @@ export class ProductService {
         return
       }
 
-      promises.push(
-        this.createPrice(
-          variation,
-          storeId,
-          priceDto.list,
-          priceDto.sale,
-          invalidDataException
-        )
-      )
+      promises.push(this.createPrice(variation, storeId, priceDto.list, priceDto.sale, invalidDataException))
     })
 
     if (!!invalidDataException.getReasons().length) {
@@ -165,10 +128,7 @@ export class ProductService {
     invalidDataException: InvalidDataException
   ): Promise<Price> {
     try {
-      const price = await this.priceRepository.findBySkuAndCampaignId(
-        variation.getSku(),
-        null
-      )
+      const price = await this.priceRepository.findBySkuAndCampaignId(variation.getSku(), null)
 
       price.setList(list).setSale(sale)
 
@@ -180,11 +140,7 @@ export class ProductService {
     }
   }
 
-  private async deleteUnusedImages(
-    productId: string,
-    storeId: string,
-    idsToKeep: string | string[]
-  ) {
+  private async deleteUnusedImages(productId: string, storeId: string, idsToKeep: string | string[]) {
     if (typeof idsToKeep === 'string') {
       idsToKeep = [idsToKeep]
     }
@@ -195,21 +151,14 @@ export class ProductService {
     })
   }
 
-  private async save(
-    storeId: string,
-    data: ProductSaveDto,
-    product?: Product
-  ): Promise<Product> {
+  private async save(storeId: string, data: ProductSaveDto, product?: Product): Promise<Product> {
     const productToSave = await this.getProductToSaved(product, storeId, data)
 
     await this.validateVariationTemplate(productToSave.getVariationTemplate())
 
     // TODO: Validate if each attribute exists `data.variations.[].attributes`
 
-    const combinations = await this.getVariationCombinations(
-      productToSave.getVariationTemplate(),
-      data.variations
-    )
+    const combinations = await this.getVariationCombinations(productToSave.getVariationTemplate(), data.variations)
 
     await this.fillImages(productToSave, data.images, combinations['images'])
 
@@ -252,9 +201,7 @@ export class ProductService {
       variationsDto.forEach(varDto => {
         const combination = combinationIds[key]
           .map(combinationId => {
-            const attribute = varDto.attributes.find(
-              varAttr => varAttr.attribute.id === combinationId
-            )
+            const attribute = varDto.attributes.find(varAttr => varAttr.attribute.id === combinationId)
 
             return attribute.value
           })
@@ -267,16 +214,12 @@ export class ProductService {
     return combinations
   }
 
-  private async validateVariationTemplate(
-    variationTemplate: ProductVariationTemplate
-  ) {
+  private async validateVariationTemplate(variationTemplate: ProductVariationTemplate) {
     if (!variationTemplate) {
       return
     }
 
-    const attributes = await this.attributeRepository.findAllByIds(
-      variationTemplate.attributes.map(attr => attr.id)
-    )
+    const attributes = await this.attributeRepository.findAllByIds(variationTemplate.attributes.map(attr => attr.id))
 
     const invalidDataException = new InvalidDataException('Invalid data.')
 
@@ -294,11 +237,7 @@ export class ProductService {
     Object.keys(variationTemplate)
       .filter(k => k !== 'attributes')
       .forEach(key => {
-        if (
-          !!variationTemplate.attributes.find(
-            attr => attr.id === variationTemplate[key]
-          )
-        ) {
+        if (!!variationTemplate.attributes.find(attr => attr.id === variationTemplate[key])) {
           return
         }
 
@@ -313,20 +252,9 @@ export class ProductService {
     }
   }
 
-  private async getProductToSaved(
-    product: Product,
-    storeId: string,
-    data: ProductSaveDto
-  ) {
+  private async getProductToSaved(product: Product, storeId: string, data: ProductSaveDto) {
     if (!product) {
-      return new Product(
-        storeId,
-        data.title,
-        data.description,
-        data.variationTemplate,
-        true,
-        data.id
-      )
+      return new Product(storeId, data.title, data.description, data.variationTemplate, true, data.id)
         .setCategory(await this.getCategory(data.category.id))
         .setBrand(await this.getBrand(data.brand.id))
     }
@@ -354,22 +282,14 @@ export class ProductService {
     return product
   }
 
-  private async fillImages(
-    product: Product,
-    images: ProductCreateDto['images'],
-    combinations: string[]
-  ) {
+  private async fillImages(product: Product, images: ProductCreateDto['images'], combinations: string[]) {
     if (!images) {
       return
     }
 
     product.removeImages(images.filter(i => !!i.id).map(i => i.id))
 
-    await this.deleteUnusedImages(
-      product.getId(),
-      product.getStoreId(),
-      product.getImagesIds()
-    )
+    await this.deleteUnusedImages(product.getId(), product.getStoreId(), product.getImagesIds())
 
     const invalidDataException = new InvalidDataException('Invalid data.')
 
@@ -405,12 +325,7 @@ export class ProductService {
         return
       }
 
-      const image = new Image(
-        imageDto.url,
-        position,
-        imageDto.value,
-        product.getStoreId()
-      )
+      const image = new Image(imageDto.url, position, imageDto.value, product.getStoreId())
 
       product.addImage(image)
     })
@@ -420,15 +335,9 @@ export class ProductService {
     }
   }
 
-  private async saveVariations(
-    product: Product,
-    variations: ProductCreateDto['variations'],
-    isUpdate: boolean
-  ) {
+  private async saveVariations(product: Product, variations: ProductCreateDto['variations'], isUpdate: boolean) {
     if (!!variations) {
-      const skusToRemove = product
-        .getVariationSkus()
-        .filter(sku => !variations.map(v => v.sku).includes(sku))
+      const skusToRemove = product.getVariationSkus().filter(sku => !variations.map(v => v.sku).includes(sku))
 
       await Promise.all(
         variations.map(async (variation, index) => {
@@ -442,20 +351,11 @@ export class ProductService {
             )
           }
 
-          return this.variationService.create(
-            product,
-            variation.sku,
-            variation,
-            index
-          )
+          return this.variationService.create(product, variation.sku, variation, index)
         })
       )
 
-      await this.variationService.delete(
-        product.getId(),
-        product.getStoreId(),
-        skusToRemove
-      )
+      await this.variationService.delete(product.getId(), product.getStoreId(), skusToRemove)
     }
   }
 

@@ -108,15 +108,11 @@ export class AuthMiddleware {
     const servicePermissions = await new EndpointPermissionsService().get()
     const permissions = servicePermissions.find(sp => sp.getRoleType() === roleType)?.getPermissions() || []
 
-    console.log({ permissions, roleType })
     if (!permissions.length) {
       return false
     }
 
-    let urlAccessedAttrs = req.url
-      .split('/')
-      .filter(u => !!u)
-      .splice(1)
+    let urlAccessedAttrs = req.url.split('/').filter(u => !!u)
 
     for (const permission of permissions) {
       const endpointAttrs = permission.endpoint.split('/').filter(e => !!e)
