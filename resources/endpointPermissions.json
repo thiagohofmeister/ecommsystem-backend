@@ -47,6 +47,10 @@
       {
         "endpoint": "/attribute",
         "methods": ["GET"]
+      },
+      {
+        "endpoint": "/user/me",
+        "methods": ["GET"]
       }
     ]
   },

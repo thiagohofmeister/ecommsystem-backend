@@ -12,6 +12,10 @@ export class UserService {
     private readonly validator: UserValidator
   ) {}
 
+  async getById(id: string) {
+    return this.repository.findOneByPrimaryColumn(id)
+  }
+
   async findOneByAuthData(data: AuthenticationCreateDto) {
     try {
       return await this.repository.findOneByAuthData(data.login, data.password)
@@ -27,9 +31,7 @@ export class UserService {
   public async create(data: UserCreateDto): Promise<User> {
     await this.validator.userCreatePayloadValidate(data)
 
-    return this.repository.save(
-      new User(data.name, data.documentNumber, data.email, data.password)
-    )
+    return this.repository.save(new User(data.name, data.documentNumber, data.email, data.password))
   }
 
   public async findOneByDocumentNumber(documentNumber: string): Promise<User> {

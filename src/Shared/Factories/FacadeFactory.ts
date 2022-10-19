@@ -5,6 +5,7 @@ import { CategoryFacade } from '../../Domain/Category/CategoryFacade'
 import { EndpointPermissionsFacade } from '../../Domain/EndpointPermissions/EndpointPermissionsFacade'
 import { ProductFacade } from '../../Domain/Product/ProductFacade'
 import { RegisterFacade } from '../../Domain/Register/RegisterFacade'
+import { UserFacade } from '../../Domain/User/UserFacade'
 import { VariationFacade } from '../../Domain/Variation/VariationFacade'
 import { WarehouseFacade } from '../../Domain/Warehouse/WarehouseFacade'
 import { ServiceFactory } from './ServiceFactory'
@@ -46,5 +47,9 @@ export class FacadeFactory {
 
   public buildAuthenticationFacade() {
     return new AuthenticationFacade(this.serviceFactory)
+  }
+
+  public buildUserFacade() {
+    return new UserFacade(this.serviceFactory)
   }
 }
