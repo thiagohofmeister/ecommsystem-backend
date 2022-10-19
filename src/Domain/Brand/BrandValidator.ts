@@ -14,28 +14,22 @@ export class BrandValidator extends JoiSchemaValidatorContract {
 
     this.brandCreateSchema = Joi.object({
       label: Joi.string().required(),
-      urn: Joi.string().optional(),
-      description: Joi.string().required()
+      urn: Joi.string().allow('', null).optional(),
+      description: Joi.string().allow('', null).required()
     })
 
     this.brandUpdateSchema = Joi.object({
       label: Joi.string().optional(),
-      urn: Joi.string().optional(),
-      description: Joi.string().optional()
+      urn: Joi.string().allow('', null).optional(),
+      description: Joi.string().allow('', null).optional()
     })
   }
 
   public async brandCreatePayloadValidate(payload: BrandCreateDto) {
-    return this.validateBySchema<BrandCreateDto>(
-      payload,
-      this.brandCreateSchema
-    )
+    return this.validateBySchema<BrandCreateDto>(payload, this.brandCreateSchema)
   }
 
   public async brandUpdatePayloadValidate(payload: BrandUpdateDto) {
-    return this.validateBySchema<BrandUpdateDto>(
-      payload,
-      this.brandUpdateSchema
-    )
+    return this.validateBySchema<BrandUpdateDto>(payload, this.brandUpdateSchema)
   }
 }
